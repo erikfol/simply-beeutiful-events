@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SBE Doc Reader - Notes & Contracts</title>
+<link rel="stylesheet" href="styles.css" />
+<link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://unpkg.com/vis-timeline@latest/standalone/umd/vis-timeline-graph2d.min.js"></script>
+</head>
+<body>
+<header>
+  <h1>Simply Beeutiful Events — Doc Reader</h1>
+  <p>Drop in notes, contracts, .txt / .md / .pdf / .docx → get summaries + visual timeline. All local, no upload.</p>
+</header>
+
+<main>
+  <section id="dropzone">
+    <p><strong>Drag & drop files here</strong> or <label class="btn"><input type="file" id="fileInput" multiple accept=".txt,.md,.pdf,.docx" hidden /> Choose files</label></p>
+    <div class="row">
+      <button id="loadSamples">Load sample files</button>
+      <button id="clearAll">Clear</button>
+      <span id="status"></span>
+    </div>
+  </section>
+
+  <section class="controls">
+    <label>View:
+      <select id="viewMode">
+        <option value="summaries">Summaries</option>
+        <option value="timeline">Timeline</option>
+        <option value="combined">Combined report</option>
+      </select>
+    </label>
+    <button id="exportMd">Export Markdown</button>
+    <button id="exportJson">Export JSON</button>
+  </section>
+
+  <section id="summaries"></section>
+
+  <section id="timelineSection">
+    <h2>Timeline</h2>
+    <div id="timeline"></div>
+    <h3>Chronological list</h3>
+    <ul id="timelineList"></ul>
+  </section>
+
+  <section id="combinedSection">
+    <h2>Combined report</h2>
+    <pre id="combinedReport"></pre>
+  </section>
+</main>
+
+<footer>
+  <small>Prototype v0.1 — local-only parsing. Add AI API later for deeper summaries. See README.</small>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
