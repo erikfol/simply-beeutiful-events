@@ -8,37 +8,49 @@
 <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/vis-timeline@latest/standalone/umd/vis-timeline-graph2d.min.js"></script>
 </head>
 <body>
 <header>
   <h1>Simply Beeutiful Events — Doc Reader</h1>
-  <p>Drop in notes, contracts, .txt / .md / .pdf / .docx → get summaries + visual timeline. All local, no upload.</p>
+  <p>Drop in notes, contracts, .txt / .md / .pdf / .docx / .xlsx + images → summaries + visual timeline. All local, no upload.</p>
 </header>
 
 <main>
   <section id="dropzone">
-    <p><strong>Drag & drop files here</strong> or <label class="btn"><input type="file" id="fileInput" multiple accept=".txt,.md,.pdf,.docx" hidden /> Choose files</label></p>
+    <p><strong>Drag & drop files here</strong> or <label class="btn"><input type="file" id="fileInput" multiple accept=".txt,.md,.pdf,.docx,.xlsx,.png,.jpg,.jpeg,.heic" hidden /> Choose files</label>
+    <label class="btn">Choose event folder<input type="file" id="folderInput" webkitdirectory directory multiple hidden /></label></p>
     <div class="row">
       <button id="loadSamples">Load sample files</button>
+      <button id="loadReport">Load Mistretta-Petran report</button>
       <button id="clearAll">Clear</button>
       <span id="status"></span>
     </div>
+    <small>Tip: run via <code>python -m http.server</code> inside <code>doc-reader/</code> so “Load report” can fetch <code>reports/</code>. HEIC photos list only (browsers can’t preview HEIC).</small>
   </section>
 
   <section class="controls">
     <label>View:
       <select id="viewMode">
-        <option value="summaries">Summaries</option>
-        <option value="timeline">Timeline</option>
-        <option value="combined">Combined report</option>
+        <option value="everything" selected>Everything</option>
+        <option value="summaries">Summaries only</option>
+        <option value="timeline">Timeline only</option>
       </select>
     </label>
-    <button id="exportMd">Export Markdown</button>
-    <button id="exportJson">Export JSON</button>
   </section>
 
   <section id="summaries"></section>
+
+  <section id="budgetSection">
+    <h2>Budget totals</h2>
+    <div id="budget"></div>
+  </section>
+
+  <section id="vendorsSection">
+    <h2>Vendors</h2>
+    <div id="vendors"></div>
+  </section>
 
   <section id="timelineSection">
     <h2>Timeline</h2>
