@@ -1,6 +1,91 @@
 # Simply Beeutiful Events — Improvement Plan
 
-This document captures recommended improvements for the Simply Beeutiful Events project, prioritized from high-impact product capabilities to lower-effort refinements.
+This document captures recommended improvements for the Simply Beeutiful Events project, prioritized from high-impact product capabilities to lower-effort refinements. The **Current plan and progress** section below is the up-to-date roadmap; the numbered sections further down are the original brainstorm and are kept for reference.
+
+## Current plan and progress
+
+_Last updated September 27, 2026 (app v0.4)._
+
+### Goal
+
+An internal tool for SBE staff (not a product for sale): **one place to go for every event**. It reads everything from SBE's Google Drive, shows what needs doing, builds day-of timelines, and answers questions about any event. Timeline Genius (timelinegenius.com, $54.95/mo) is the reference for the timeline features.
+
+The four jobs:
+
+1. **Event hub**: everything about an event (vendors, contacts, budget, payments, contracts, documents), read from Drive.
+2. **Action center**: overdue, due this week, coming up, and what changed in Drive, for one event or all of them.
+3. **Timeline builder**: create, edit, and shift day-of run sheets (Timeline Genius-style), seeded from times in the contracts.
+4. **Ask SBE**: search, and later optionally chat, across event documents, with links to sources.
+
+### Principles
+
+- **Google Drive stays the source of truth for documents.** The app only reads Drive; it never edits it.
+- **The app owns its own work**: timelines, task status, payment statuses, notes.
+- **Every extracted fact links to the document it came from**, and planners can correct it.
+- **No AI by default.** Client documents are not sent to any AI service. The chatbot is optional and decided later (see privacy options below).
+- **Hosting stays on GitHub Pages.** The public site shows only the fictional demo event; real events stay private.
+
+### Decisions
+
+| Decision | Status |
+|---|---|
+| Drive layout | ✅ One shared folder with a subfolder per event (naming rules in `README.md` → *Google Drive event folders*) |
+| Build order | ✅ Timeline builder first, tested on the demo event |
+| Sending documents to AI | ✅ Not by default; Phases 1–4 use no AI |
+| Who uses it | ✅ SBE staff only |
+| Sign-in accounts | ⏳ Needed for Phase 2: which Google account owns the shared folder, and which email addresses may sign in. SBE's domain email (simplybeeutifulevents.com) runs on Stackmail, not Google Workspace, so sign-in will use an allowlist of Google accounts. |
+| Database / sign-in service | ⏳ Needed for Phase 2: Supabase recommended (free tier, keeps GitHub Pages hosting) |
+| Chatbot privacy option | ⏳ Needed for Phase 5 (options below) |
+
+### Phases
+
+| # | Phase | Status | Rough effort |
+|---|---|---|---|
+| 0 | Groundwork: split the app into modules, automated tests on every push, Drive naming rules | ✅ Done (commit `77c8911`) | ~1 week |
+| 1 | Timeline builder | ✅ Done, v0.4 (commit `2fee2e4`) | 3–4 weeks |
+| 2 | Sign-in + Google Drive connection; timelines and statuses move to a shared database | ⏳ Next; waiting on the two decisions above | 2–3 weeks |
+| 3 | Reading the documents: facts with source links, "needs a look" list, planner corrections, event hub page | Planned | 2–3 weeks |
+| 4 | Action center: overdue / this week / next 30 days / changed in Drive, date-based checklist, done / snooze / assign | Planned | 2–3 weeks |
+| 5 | Ask SBE: search first; optional private AI chat later | Planned | 1–2 weeks |
+| + | Later, if wanted: daily email digest, client/vendor share links, wedding-day texts, time tracking, calendar (.ics) export | Not scheduled | — |
+
+Estimates assume part-time work with Claude doing most of the coding. Expected running cost: $0–25/month without AI (Supabase free tier, then $25/mo Pro for backups).
+
+### What's done
+
+**Cleanup and privacy (September 2026)**
+- Consolidated the app into `docs/` (the GitHub Pages folder); removed the duplicate `doc-reader/` copy and the unused save server.
+- Real client files (`events/`) and real reports are untracked and git-ignored. The public site shows a **fictional demo event** (Harper-Bennett wedding, 6.12.27) generated from made-up source documents in `tests/demo_event/`.
+- Real events still work locally through the git-ignored `docs/reports/local-index.json`.
+
+**Phase 0: groundwork**
+- `docs/js/` ES modules (no build step); pure logic separated from DOM code.
+- JavaScript tests (`npm test`) and Python tests (`pytest`) run on every push via GitHub Actions.
+
+**Phase 1: timeline builder (v0.4)**
+- **Generate draft** questionnaire: ceremony time and length; traditional / first look / elopement; hair and makeup headcount and artists; cocktail and reception length; shuttles; sunset; which moments to include.
+- Day templates (rehearsal + dinner, welcome party, farewell brunch) and **Save as template** for reuse.
+- **Shift times** for a whole day or **Shift from here**; edits can move later stops by the same amount and keep a stop's length.
+- **From the documents**: contract times offered as one-click *confirmed* stops that cite their source.
+- Warnings when the timeline disagrees with the documents (e.g. ceremony at 4:15 vs the venue's 4:00).
+- Role tags on every stop, **View as** a single vendor or role, and a branded **Print / PDF** sheet.
+- Inline forms instead of pop-up prompts; works on phone-width screens.
+- 33 JavaScript tests and 6 Python tests.
+
+### Next steps
+
+1. Try the timeline builder on the demo event and note what a planner would change.
+2. Decide the Phase 2 items: the Google account that owns the events folder, the allowed sign-in emails, and Supabase.
+3. Start Phase 2.
+
+### Chatbot privacy options (for Phase 5)
+
+| Option | Who sees the documents | Trade-off |
+|---|---|---|
+| No AI (start here) | Only Google Drive and the SBE database | Search instead of conversation |
+| Claude through Google Cloud (Vertex AI) | Google, which already stores the documents in Drive | Real conversation; needs a Google Cloud account; about $15–40/mo |
+| Send facts, not documents | The AI sees extracted facts with names, emails, and phones masked | Good for "what's overdue", weak for contract wording |
+| AI on SBE's own computer | Nobody outside SBE | Needs a capable PC left on; slower and less accurate |
 
 ## To do
 
