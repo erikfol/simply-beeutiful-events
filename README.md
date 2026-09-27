@@ -31,3 +31,21 @@ Then open http://localhost:8000/docs/ (the repository root redirects there). See
 The published site shows only a fictional demo event. Real client reports are git-ignored and listed in `docs/reports/local-index.json`, so they appear only when running locally — see [`docs/README.md`](docs/README.md).
 
 Actual client event data should live in Google Drive rather than in Git. The `events/` directory is git-ignored: keep event folders there locally to scan them, but never commit them.
+
+## Google Drive event folders
+
+The app will read events from SBE's shared Google Drive folder. These conventions keep that reliable; they match how folders are named today.
+
+- **One shared folder, one subfolder per event**, named `M.D.YY Last-Last Event`, e.g. `6.12.27 Harper-Bennett Wedding`. The date in the name is the event date.
+- **Budget:** a spreadsheet with `Budget` in its name and a tab called `Budget Calculator` (category in column B; actual, paid, and due in columns G, H, I; a `Total Cost:` row).
+- **Vendors:** a spreadsheet with `Vendor Options` in its name and a tab called `Booked` (vendor, location, event, category, contact, email, cost).
+- **Contracts and quotes:** any file whose name contains `contract`, `agreement`, `quote`, `estimate`, `invoice`, or `receipt` is listed as a vendor document.
+- Everything else (notes, menus, inspiration photos) can be named freely.
+
+`tests/demo_event/` is a working example of this layout.
+
+## Development
+
+- The app is plain JavaScript modules in `docs/js/` with no build step (see [`docs/README.md`](docs/README.md) for the file layout).
+- `npm test` runs the JavaScript tests (`tests/js/`, Node 24+); `python -m pytest tests` runs the scanner tests.
+- GitHub Actions runs both on every push (`.github/workflows/tests.yml`).

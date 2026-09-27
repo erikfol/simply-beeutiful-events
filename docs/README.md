@@ -30,5 +30,23 @@ Edits save in the viewer's browser only. Use **Export JSON** to download the fil
 3. Add an entry to `reports/local-index.json` with `id, name, report, timeline, status, weddingDate, venue`.
 4. Run locally to view it. Nothing to commit — real events are never pushed.
 
+## Code layout
+Plain ES modules, no build step. `index.html` loads `js/main.js`.
+
+| File | Job |
+|---|---|
+| `js/main.js` | Entry point: loads the event list, wires up buttons |
+| `js/state.js` | Shared app state (current event, report, timeline, statuses) |
+| `js/events.js` | Loads `reports/index.json`, `local-index.json`, and one event's files |
+| `js/timeline.js` | Create Timeline view: editable run sheet + document evidence |
+| `js/generator.js` | Toolbar actions: Generate draft, Shift times |
+| `js/draft.js` | Pure timeline logic: draft template, time shifting (tested) |
+| `js/status.js` | Status Update view: alerts, budget and vendor tables |
+| `js/checks.js` | Pure validation rules: conflicts, missing items, due dates (tested) |
+| `js/util.js` | Pure helpers: formatting, time parsing (tested) |
+| `js/dom.js`, `js/storage.js` | DOM helpers and browser-saved edits |
+
+Keep anything without DOM access in the pure files so `npm test` can cover it.
+
 ## Local development
-From the repo root: `python -m http.server`, then open http://localhost:8000/docs/
+From the repo root: `python -m http.server`, then open http://localhost:8000/docs/. Modules don't load from `file://`.

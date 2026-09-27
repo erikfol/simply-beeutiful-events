@@ -1,0 +1,9 @@
+{
+  "name": "sbe-event-manager",
+  "private": true,
+  "type": "module",
+  "description": "Browser app lives in docs/ (no build step); this file only configures the JavaScript tests.",
+  "scripts": {
+    "test": "node --test \"tests/js/*.test.js\""
+  }
+}
