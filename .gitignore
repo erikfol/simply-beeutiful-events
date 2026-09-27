@@ -1,0 +1,24 @@
+# Secrets and local configuration
+credentials.json
+*.json.key
+.env
+.env.*
+
+# Local databases and runtime data
+*.db
+*.sqlite
+*.sqlite3
+sbe_sync/
+backend/tmp/
+downloads/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Generated reports and temporary files
+*.tmp
+*.log
