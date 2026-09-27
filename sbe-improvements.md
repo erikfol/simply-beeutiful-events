@@ -269,6 +269,17 @@ Create an intake workflow for collecting:
 
 Use questionnaire responses to seed the event record and generate an initial planning checklist.
 
+## Competitive reference: Timeline Genius (https://www.timelinegenius.com/)
+
+Paid planner software ($55/mo, $550/yr, or $195 one-time for 5 events). Reviewed September 2026. Features worth borrowing, cheapest first:
+
+- **Genius auto-generation** — enter basics, get a starter timeline. Could generate our first-draft `.timeline.json` from wedding date + ceremony time.
+- **Bulk time-shifting** — change one item, shift the rest. Natural fit for our editable spine.
+- **Templates** (preset + custom) — a shared template library our per-event timelines start from.
+- **Tailored events** — filtered views per audience (client vs vendor). Could be a role filter on the run sheet.
+- **PDF export / email** — already covered by item 7 above.
+- **Vendor rolodex, file management, text reminders, collaboration, time tracking** — backend territory; revisit with item 1.
+
 ## Suggested implementation order
 
 1. Stop tracking event data in Git and move to Google Drive.
