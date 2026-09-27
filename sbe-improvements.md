@@ -2,6 +2,30 @@
 
 This document captures recommended improvements for the Simply Beeutiful Events project, prioritized from high-impact product capabilities to lower-effort refinements.
 
+## Critical storage and data workflow update
+
+### 0. Move event data out of Git and into Google Drive
+
+The repository should no longer be the source of truth for actual wedding/event documents. Client files, PDFs, budgets, vendor contracts, and inspiration assets should live in Google Drive (or another managed storage location), not in a Git repository.
+
+Why:
+
+- Git is a code versioning tool, not a secure file management system.
+- Client data should not be embedded in commit history.
+- Repositories become bloated as PDFs and photos accumulate.
+- Shared documents are easier to manage in Google Drive than in Git.
+- Real-time editing and collaboration work far better in Google Docs/Sheets than in Git.
+
+Recommended approach:
+
+- Create a shared Google Drive folder structure per event.
+- Use Google Sheets/Docs for collaborative planning and contract tracking.
+- Export Google Docs/Sheets to PDF/XLSX when the app needs to parse them.
+- Treat the repo as code and app logic only, not as storage for event data.
+- Add a sync layer that pulls Drive files into a temporary working directory and parses them.
+
+This update is now the top-priority change in the project, because it affects the quality and safety of the entire data model.
+
 ## High-impact improvements
 
 ### 1. Add a backend API and database
@@ -247,19 +271,25 @@ Use questionnaire responses to seed the event record and generate an initial pla
 
 ## Suggested implementation order
 
-1. Add tests for `tools/scan_event.py` and the core JavaScript parsing functions.
-2. Improve documentation and add a dependency file for the Python scanner.
-3. Add budget and contract status dashboards to the existing frontend.
-4. Add timeline validation and actionable deadline alerts.
-5. Improve file categorization, search, and source-document links.
-6. Add PDF, CSV, and ICS exports.
-7. Introduce a backend and database for persistence and multi-event support.
-8. Add optional, privacy-conscious AI summaries after the deterministic workflow is reliable.
+1. Stop tracking event data in Git and move to Google Drive.
+2. Add tests for `tools/scan_event.py` and the core JavaScript parsing functions.
+3. Add a minimal Google Drive sync prototype for one event folder.
+4. Improve documentation and add a dependency file for the Python scanner.
+5. Add budget and contract status dashboards to the existing frontend.
+6. Add timeline validation and actionable deadline alerts.
+7. Improve file categorization, search, and source-document links.
+8. Add PDF, CSV, and ICS exports.
+9. Introduce a backend and database for persistence and multi-event support.
+10. Add optional, privacy-conscious AI summaries after the deterministic workflow is reliable.
 
 ## Recommended first three features
 
 If development time is limited, start with:
 
-1. **Budget alerts and reconciliation** — this provides immediate operational value to planners.
-2. **Timeline validation** — this turns extracted dates into actionable planning information.
-3. **Tests and documentation** — this makes future improvements safer and easier to maintain.
+1. **Google Drive sync + storage separation** — this protects client data and preserves the actual working workflow.
+2. **Budget alerts and reconciliation** — this provides immediate operational value to planners.
+3. **Timeline validation** — this turns extracted dates into actionable planning information.
+
+## Practical next step
+
+The immediate project priority is no longer “more UI features”; it is “keeping client files out of Git and making the app read from managed storage.” That change reduces risk and aligns the project with the real collaboration workflow.
