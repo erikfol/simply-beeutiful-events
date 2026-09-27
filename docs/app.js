@@ -6,6 +6,9 @@ let currentCurated = null;
 let curatedFile = null;
 let isDirty = false;
 let editing = null; // {day, item} or {day, isNew:true}
+let currentStatus = null;
+let statusFile = null;
+let statusDirty = false;
 
 const $ = (id) => document.getElementById(id);
 const statusEl = $('status');
@@ -85,6 +88,10 @@ async function init() {
   $('btnRevert').addEventListener('click', revertTimeline);
   $('btnExport').addEventListener('click', exportTimeline);
   $('btnAddDay').addEventListener('click', addDay);
+  $('btnSaveStatus').addEventListener('click', saveStatus);
+  $('btnRevertStatus').addEventListener('click', revertStatus);
+  $('btnExportStatus').addEventListener('click', exportStatus);
+  $('statusSection').addEventListener('change', onStatusChange);
   $('curated').addEventListener('click', onCuratedClick);
   $('curated').addEventListener('submit', onCuratedSubmit);
 }
@@ -117,6 +124,18 @@ async function loadEvent(id) {
       // local edits override file
       const local = loadLocal();
       if (local) { currentCurated = local; isDirty = true; updateDirty(); }
+    }
+    // contract + payment status overlay
+    currentStatus = null;
+    statusFile = currentMeta.status || null;
+    statusDirty = false; updateStatusDirty();
+    if (statusFile) {
+      try {
+        const rs = await fetch(`reports/${statusFile}`);
+        if (rs.ok) currentStatus = await rs.json();
+      } catch { /* overlay optional */ }
+      const slocal = loadStatusLocal();
+      if (slocal) { currentStatus = slocal; statusDirty = true; updateStatusDirty(); }
     }
     setStatus(`Loaded ${currentMeta.name}: ${currentReport.timeline.length} dated items${currentCurated ? ' + curated run sheet' : ''}.`);
     $('timelineSection').hidden = true;
@@ -337,11 +356,7 @@ function showStatus() {
   const b = currentReport.budget || {};
   const v = currentReport.vendors || {};
   const dueCats = (b.categories || []).filter(c => (c.due || 0) > 0.005).sort((x, y) => y.due - x.due);
-  const cards = [];
-  cards.push(`<div class="stat"><h4>Budget</h4><p>Planned <strong>${fmt$(b.budget_total)}</strong><br>Actual <strong>${fmt$(b.total_actual)}</strong><br>Paid <strong>${fmt$(b.total_paid)}</strong><br>Still due <strong class="${(b.total_due || 0) > 0 ? 'due' : 'ok'}">${fmt$(b.total_due)}</strong></p>${dueCats.length ? `<p>Unpaid: ${dueCats.map(c => `${esc(c.category)} (${fmt$(c.due)})`).join('; ')}</p>` : '<p class="ok">Nothing outstanding in budget sheet.</p>'}</div>`);
-  cards.push(`<div class="stat"><h4>Vendors (${(v.booked || []).length})</h4><ul>${(v.booked || []).map(x => `<li><strong>${esc(x.vendor)}</strong> — ${esc(x.cost || 'cost n/a')}</li>`).join('') || '<li>No vendor list</li>'}</ul></div>`);
-  cards.push(`<div class="stat"><h4>Files</h4><p>${currentReport.num_files} files, ${currentReport.num_text_parsed} parsed, ${currentReport.timeline.length} dated items.<br>Contracts on file: ${(v.contract_files || []).length}</p></div>`);
-  $('statusCards').innerHTML = cards.join('');
+  renderStatusDashboard(b, v, dueCats, today, dayDiff);
 
   const upcoming = currentReport.timeline.filter(e => e.date_iso >= today).slice(0, 15);
   const past = currentReport.timeline.filter(e => e.date_iso < today).slice(-10).reverse();
@@ -354,6 +369,129 @@ function showStatus() {
     $('nextUp').innerHTML = dueCats.map(c => `<li>💰 <strong>${esc(c.category)}</strong> still due <strong>${fmt$(c.due)}</strong> (paid ${fmt$(c.paid)} of ${fmt$(c.actual)}).</li>`).join('') + $('nextUp').innerHTML;
   }
   setStatus(`Status as of ${today}: ${upcoming.length} upcoming, ${(b.total_due || 0) > 0 ? fmt$(b.total_due) + ' still due' : 'no balance due'}.`);
+}
+
+// ---------- Budget + contract status dashboard ----------
+const CONTRACTS = ['Unknown', 'Draft', 'Sent', 'Signed', 'Expired', 'Needs Review'];
+const PAYMENTS = ['Unknown', 'Not Due', 'Due', 'Partially Paid', 'Paid', 'Overdue'];
+
+function stKey() { return `sbe-status-${currentMeta ? currentMeta.id : 'none'}`; }
+function loadStatusLocal() {
+  try { const raw = localStorage.getItem(stKey()); return raw ? JSON.parse(raw) : null; } catch { return null; }
+}
+function persistStatusLocal() { try { localStorage.setItem(stKey(), JSON.stringify(currentStatus)); } catch { /* ignore */ } }
+function updateStatusDirty() { const el = $('dirtyStatus'); if (el) el.textContent = statusDirty ? '● unsaved changes' : ''; }
+function statusFor(key, name) {
+  const found = (currentStatus && currentStatus.vendors || []).find(x => (x.name || '').toLowerCase() === (name || '').toLowerCase());
+  if (found) return found;
+  return { name, contract: 'Unknown', payment: 'Unknown', dueDate: '', notes: '' };
+}
+function pill(cls, txt) { return `<span class="pill ${cls}">${esc(txt)}</span>`; }
+function budgetPill(c) {
+  if ((c.due || 0) <= 0.005 && (c.actual || 0) > 0) return pill('st-paid', 'Paid');
+  if ((c.paid || 0) > 0) return pill('st-partial', 'Partially paid');
+  if ((c.due || 0) > 0.005) return pill('st-due', 'Due');
+  return pill('st-na', '—');
+}
+
+function renderStatusDashboard(b, v, dueCats, today, dayDiff) {
+  // --- alerts ---
+  const alerts = [];
+  if ((b.budget_total || 0) > 0 && (b.total_actual || 0) > (b.budget_total || 0)) {
+    alerts.push(`<div class="alert warn">⚠️ Over budget: actual <strong>${fmt$(b.total_actual)}</strong> vs planned <strong>${fmt$(b.budget_total)}</strong> (${fmt$((b.total_actual || 0) - (b.budget_total || 0))} over).</div>`);
+  }
+  if ((b.total_due || 0) > 0.005) {
+    alerts.push(`<div class="alert due">💰 <strong>${fmt$(b.total_due)}</strong> still due across ${dueCats.length} categor${dueCats.length === 1 ? 'y' : 'ies'} (paid ${fmt$(b.total_paid)} of ${fmt$(b.total_actual)}).</div>`);
+  } else {
+    alerts.push(`<div class="alert ok">✅ No balance due in the budget sheet.</div>`);
+  }
+  const sts = (currentStatus && currentStatus.vendors) || [];
+  const unsigned = sts.filter(s => s.contract !== 'Signed').length;
+  const unknownPay = sts.filter(s => s.payment === 'Unknown').length;
+  const overduePay = sts.filter(s => s.payment === 'Overdue' || (s.dueDate && s.dueDate < today && s.payment !== 'Paid')).length;
+  if (unsigned) alerts.push(`<div class="alert warn">📝 ${unsigned} vendor${unsigned === 1 ? '' : 's'} without a signed contract.</div>`);
+  if (overduePay) alerts.push(`<div class="alert due">⏰ ${overduePay} vendor payment${overduePay === 1 ? '' : 's'} overdue.</div>`);
+  if (unknownPay) alerts.push(`<div class="alert info">❓ ${unknownPay} vendor payment status${unknownPay === 1 ? '' : 'es'} still unknown — set them below.</div>`);
+  $('alerts').innerHTML = alerts.join('');
+
+  // --- budget table ---
+  const cats = (b.categories || []).filter(c => (c.actual || 0) > 0 || (c.due || 0) > 0);
+  $('budgetTable').innerHTML = `<table class="grid"><tr><th>Category</th><th class="num">Actual</th><th class="num">Paid</th><th class="num">Due</th><th>Status</th></tr>` +
+    `<tr class="total"><td><strong>Total</strong> <small>(planned ${fmt$(b.budget_total)})</small></td><td class="num"><strong>${fmt$(b.total_actual)}</strong></td><td class="num">${fmt$(b.total_paid)}</td><td class="num"><strong>${fmt$(b.total_due)}</strong></td><td>${(b.total_due || 0) > 0.005 ? pill('st-due', 'Balance due') : pill('st-paid', 'Settled')}</td></tr>` +
+    cats.map(c => `<tr><td>${esc(c.category)}</td><td class="num">${fmt$(c.actual)}</td><td class="num">${fmt$(c.paid)}</td><td class="num">${fmt$(c.due)}</td><td>${budgetPill(c)}</td></tr>`).join('') +
+    `</table>`;
+
+  // --- vendor / contract table (editable) ---
+  const booked = v.booked || [];
+  if (!currentStatus) currentStatus = { updated: todayISO(), vendors: [] };
+  if (!Array.isArray(currentStatus.vendors)) currentStatus.vendors = [];
+  // ensure every booked vendor has a row
+  for (const x of booked) {
+    if (!currentStatus.vendors.some(s => (s.name || '').toLowerCase() === (x.vendor || '').toLowerCase())) {
+      currentStatus.vendors.push({ name: x.vendor, contract: 'Unknown', payment: 'Unknown', dueDate: '', notes: '' });
+    }
+  }
+  const costOf = (n) => (booked.find(x => (x.vendor || '').toLowerCase() === (n || '').toLowerCase()) || {}).cost || '';
+  $('vendorTable').innerHTML = `<table class="grid"><tr><th>Vendor</th><th>Cost</th><th>Contract</th><th>Payment</th><th>Due date</th><th>Notes</th></tr>` +
+    currentStatus.vendors.map((s, i) => `<tr><td><strong>${esc(s.name)}</strong></td><td><small>${esc(costOf(s.name) || '—')}</small></td>` +
+      `<td><select data-vrow="${i}" data-field="contract">${CONTRACTS.map(c => `<option${c === s.contract ? ' selected' : ''}>${c}</option>`).join('')}</select></td>` +
+      `<td><select data-vrow="${i}" data-field="payment">${PAYMENTS.map(c => `<option${c === s.payment ? ' selected' : ''}>${c}</option>`).join('')}</select></td>` +
+      `<td><input type="date" data-vrow="${i}" data-field="dueDate" value="${esc(s.dueDate || '')}" /></td>` +
+      `<td><input type="text" data-vrow="${i}" data-field="notes" value="${esc(s.notes || '')}" placeholder="notes" /></td></tr>`).join('') +
+    `</table><p class="legend">Contract: Draft / Sent / Signed / Expired / Needs Review · Payment: Not Due / Due / Partially Paid / Paid / Overdue</p>`;
+
+  const cards = [];
+  cards.push(`<div class="stat"><h4>Files</h4><p>${currentReport.num_files} files, ${currentReport.num_text_parsed} parsed, ${currentReport.timeline.length} dated items.<br>Contracts on file: ${(v.contract_files || []).length}</p></div>`);
+  $('statusCards').innerHTML = cards.join('');
+}
+
+function onStatusChange(ev) {
+  const t = ev.target.closest('[data-vrow]');
+  if (!t || !currentStatus) return;
+  const row = currentStatus.vendors[+t.dataset.vrow];
+  if (!row) return;
+  row[t.dataset.field] = t.value;
+  currentStatus.updated = todayISO();
+  statusDirty = true; persistStatusLocal(); updateStatusDirty();
+}
+
+async function saveStatus() {
+  if (!currentStatus) { setStatus('Nothing to save.'); return; }
+  persistStatusLocal();
+  if (statusFile) {
+    try {
+      const r = await fetch('/api/save-status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ file: statusFile.split('/').pop(), data: currentStatus }) });
+      const j = await r.json();
+      if (j.ok) { statusDirty = false; updateStatusDirty(); setStatus(`Saved statuses to reports/${statusFile}.`); return; }
+      throw new Error(j.error || r.status);
+    } catch (e) {
+      setStatus(`Server save failed (${e.message}) — kept in browser + downloading file.`);
+      downloadStatus();
+      return;
+    }
+  }
+  setStatus('Saved in browser (no server file linked).');
+}
+
+async function revertStatus() {
+  if (!confirm('Discard status edits and reload from file?')) return;
+  try { localStorage.removeItem(stKey()); } catch { /* ignore */ }
+  statusDirty = false; updateStatusDirty();
+  await loadEvent(currentMeta.id);
+  showStatus();
+}
+
+function downloadStatus() {
+  const blob = new Blob([JSON.stringify(currentStatus, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (statusFile || 'status.json').split('/').pop();
+  a.click();
+}
+function exportStatus() {
+  if (!currentStatus) return;
+  downloadStatus();
+  setStatus('Exported statuses JSON (put it in doc-reader/reports/ to share).');
 }
 
 init();

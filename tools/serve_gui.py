@@ -1,6 +1,7 @@
-"""SBE GUI server: serves doc-reader/ + saves edited timelines.
+"""SBE GUI server: serves doc-reader/ + saves edited timelines and status overlays.
 Usage: python tools/serve_gui.py [--port 8000]
-POST /api/save-timeline {"file": "6-6-26-....timeline.json", "data": {...}}
+POST /api/save-timeline {"file": "....timeline.json", "data": {...}}
+POST /api/save-status {"file": "....status.json", "data": {...}}
 Writes into doc-reader/reports/. Local-only.
 """
 import json
@@ -13,7 +14,8 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parent.parent
 DOCROOT = ROOT / "doc-reader"
 REPORTS = DOCROOT / "reports"
-SAFE = re.compile(r"^[a-z0-9][a-z0-9._-]*\.timeline\.json$", re.I)
+SAFE_TIMELINE = re.compile(r"^[a-z0-9][a-z0-9._-]*\.timeline\.json$", re.I)
+SAFE_STATUS = re.compile(r"^[a-z0-9][a-z0-9._-]*\.status\.json$", re.I)
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -32,17 +34,39 @@ class Handler(SimpleHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_POST(self):
-        if urlparse(self.path).path != "/api/save-timeline":
-            return self._json(404, {"ok": False, "error": "unknown endpoint"})
+        path = urlparse(self.path).path
+        if path == "/api/save-timeline":
+            return self._save_timeline()
+        if path == "/api/save-status":
+            return self._save_status()
+        return self._json(404, {"ok": False, "error": "unknown endpoint"})
+
+    def _save_timeline(self):
         try:
             n = int(self.headers.get("Content-Length", 0))
             payload = json.loads(self.rfile.read(n) or b"{}")
             fname = payload.get("file", "")
             data = payload.get("data")
-            if not SAFE.match(fname):
+            if not SAFE_TIMELINE.match(fname):
                 return self._json(400, {"ok": False, "error": "bad filename"})
             if not isinstance(data, dict) or not isinstance(data.get("days"), list):
                 return self._json(400, {"ok": False, "error": "bad timeline data"})
+            REPORTS.mkdir(parents=True, exist_ok=True)
+            (REPORTS / fname).write_text(json.dumps(data, indent=2), encoding="utf-8")
+            return self._json(200, {"ok": True, "file": fname})
+        except Exception as e:  # noqa: BLE001
+            return self._json(500, {"ok": False, "error": str(e)})
+
+    def _save_status(self):
+        try:
+            n = int(self.headers.get("Content-Length", 0))
+            payload = json.loads(self.rfile.read(n) or b"{}")
+            fname = payload.get("file", "")
+            data = payload.get("data")
+            if not SAFE_STATUS.match(fname):
+                return self._json(400, {"ok": False, "error": "bad filename"})
+            if not isinstance(data, dict) or not isinstance(data.get("vendors"), list):
+                return self._json(400, {"ok": False, "error": "bad status data"})
             REPORTS.mkdir(parents=True, exist_ok=True)
             (REPORTS / fname).write_text(json.dumps(data, indent=2), encoding="utf-8")
             return self._json(200, {"ok": True, "file": fname})

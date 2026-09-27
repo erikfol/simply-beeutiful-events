@@ -113,3 +113,18 @@ button.danger { background:#b3261e; } .addbtn { margin:.4rem 0 1rem; background:
 .tcard label { display:grid; gap:.15rem; font-size:.85em; }
 .tcard input, .tcard select { padding:.35rem; border-radius:6px; border:1px solid #ccc; font-size:.95rem; }
 .newform { margin:.4rem auto 1rem; max-width:520px; }
+.tablewrap { overflow-x:auto; margin:.5rem 0 1rem; }
+table.grid { width:100%; border-collapse:collapse; font-size:.9rem; background:#fff; }
+table.grid th, table.grid td { border:1px solid #e5dcc8; padding:.4rem .5rem; text-align:left; vertical-align:top; }
+table.grid th { background:#2d2a26; color:#f9e8c9; }
+table.grid td.num, table.grid th.num { text-align:right; font-variant-numeric:tabular-nums; }
+table.grid tr.total td { background:#fff8e6; }
+table.grid select, table.grid input { padding:.25rem; border-radius:6px; border:1px solid #ccc; font-size:.85rem; max-width:140px; }
+.pill { display:inline-block; border-radius:20px; padding:1px 10px; font-size:.8em; font-weight:600; white-space:nowrap; }
+.st-paid { background:#e6f4ea; color:#2e7d32; } .st-partial { background:#fff3cd; color:#856404; }
+.st-due { background:#fdecea; color:#b3261e; } .st-na { background:#eee; color:#777; }
+.alert { border-radius:10px; padding:.55rem .8rem; margin:.4rem 0; }
+.alert.warn { background:#fff8e6; border:1px solid #b89b5e; }
+.alert.due { background:#fdecea; border:1px solid #b3261e; }
+.alert.ok { background:#e6f4ea; border:1px solid #2e7d32; }
+.alert.info { background:#eef4ff; border:1px solid #90a4c8; }
