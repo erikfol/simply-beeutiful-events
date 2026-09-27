@@ -2,6 +2,10 @@
 
 This document captures recommended improvements for the Simply Beeutiful Events project, prioritized from high-impact product capabilities to lower-effort refinements.
 
+## To do
+
+- [ ] **Purge client files from Git history.** As of September 2026 `events/` is untracked and git-ignored, but every contract, budget, and photo committed before then can still be recovered from past commits (and from any existing clone or fork). Fixing it means rewriting history with `git filter-repo --path events --invert-paths` (or BFG), force-pushing `main`, and asking anyone with a clone to re-clone. Deferred for now; do it before the repo gets more collaborators or clients. Note that GitHub may still serve old commits by SHA until cached views expire; contact GitHub Support if a full purge is required.
+
 ## Critical storage and data workflow update
 
 ### 0. Move event data out of Git and into Google Drive
