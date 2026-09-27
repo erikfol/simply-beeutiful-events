@@ -87,6 +87,8 @@ async function init() {
   $('btnSave').addEventListener('click', saveTimeline);
   $('btnRevert').addEventListener('click', revertTimeline);
   $('btnExport').addEventListener('click', exportTimeline);
+  $('btnGenerate').addEventListener('click', generateDraft);
+  $('btnShift').addEventListener('click', shiftTimes);
   $('btnAddDay').addEventListener('click', addDay);
   $('btnSaveStatus').addEventListener('click', saveStatus);
   $('btnRevertStatus').addEventListener('click', revertStatus);
@@ -289,6 +291,79 @@ function exportTimeline() {
   if (!currentCurated) return;
   downloadTimeline();
   setStatus('Exported timeline JSON (put it in doc-reader/reports/ to share).');
+}
+
+// ---------- Draft generator (Genius-style): ceremony time -> starter run sheet ----------
+const DRAFT_TEMPLATE = [
+  { off: -390, title: 'Venue access / vendor load-in begins', detail: 'Setup in ceremony + reception spaces.' },
+  { off: -330, title: 'Hair and makeup team arrives', detail: 'Bride + party at prep location.' },
+  { off: -300, title: 'Wedding-party transport pickup', detail: 'Shuttle to venue.' },
+  { off: -210, title: 'Hair & makeup complete', detail: 'Buffer before photos.' },
+  { off: -120, title: 'Photographer arrives / pre-ceremony coverage', detail: 'Details, getting ready, portraits.' },
+  { off: -65, title: 'Guest transport pickup', detail: 'Buses from hotels.' },
+  { off: -35, title: 'Guest transport arrives at venue', detail: 'Guests seated ahead of prelude.' },
+  { off: -30, title: 'Ceremony prelude music begins', detail: '' },
+  { off: 0, title: 'Ceremony begins', detail: '' },
+  { off: 30, endOff: 90, title: 'Cocktail hour', detail: 'Family + wedding party portraits.' },
+  { off: 90, endOff: 330, title: 'Reception', detail: 'Dinner, dances, speeches.' },
+  { off: 100, title: 'Wedding party + couple entrance', detail: '' },
+  { off: 145, title: 'First dance / welcome speech / dinner', detail: 'Confirm order with band.' },
+  { off: 245, title: 'Speeches + parent dances', detail: '' },
+  { off: 315, title: 'Cake / dessert + open dancing', detail: '' },
+  { off: 330, title: 'Last dance / reception ends', detail: '' },
+];
+
+function shiftHHMM(hhmm, mins) {
+  const [h, m] = hhmm.split(':').map(Number);
+  let t = (h * 60 + m + mins) % 1440;
+  if (t < 0) t += 1440;
+  return `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`;
+}
+
+function generateDraft() {
+  const day = prompt('Wedding day date (YYYY-MM-DD):', currentMeta.weddingDate || todayISO());
+  if (!day || !/^\d{4}-\d{2}-\d{2}$/.test(day)) return;
+  const cer = prompt('Ceremony time (HH:MM, 24h):', '16:30');
+  if (!cer || !/^\d{1,2}:\d{2}$/.test(cer)) return;
+  const [ch, cm] = cer.split(':').map(Number);
+  const base = `${String(ch).padStart(2, '0')}:${String(cm).padStart(2, '0')}`;
+  const items = DRAFT_TEMPLATE.map(t => {
+    const o = { time: shiftHHMM(base, t.off), title: t.title, detail: t.detail, source: 'Generated draft — confirm', confidence: 'estimated' };
+    if (t.endOff != null) o.timeEnd = shiftHHMM(base, t.endOff);
+    return o;
+  });
+  if (!currentCurated) currentCurated = { template: 'generated draft', days: [] };
+  const ix = currentCurated.days.findIndex(d => d.date === day);
+  if (ix >= 0 && !confirm(`${day} already has ${currentCurated.days[ix].items.length} stops. Replace with generated draft?`)) return;
+  const entry = { date: day, title: `Wedding Day — ${currentMeta.name}`, items };
+  if (ix >= 0) currentCurated.days[ix] = entry;
+  else currentCurated.days.push(entry);
+  currentCurated.days.sort((a, b) => a.date.localeCompare(b.date));
+  editing = null; isDirty = true; persistLocal(); updateDirty(); renderCurated();
+  setStatus(`Generated ${items.length}-stop draft for ${day} from ${base} ceremony. Review, edit, then Save.`);
+}
+
+// ---------- Bulk time-shift: move every stop on a day by +/- minutes ----------
+function shiftTimes() {
+  if (!currentCurated || !currentCurated.days.length) { setStatus('No timeline to shift. Generate a draft first.'); return; }
+  let day = currentMeta.weddingDate;
+  if (currentCurated.days.length > 1) {
+    day = prompt(`Which day? (${currentCurated.days.map(d => d.date).join(', ')})`, day || currentCurated.days[0].date);
+    if (!day) return;
+  }
+  const d = currentCurated.days.find(x => x.date === day);
+  if (!d) { setStatus(`No stops on ${day}.`); return; }
+  const raw = prompt(`Shift all ${d.items.length} stops on ${day} by minutes (e.g. 15 or -15):`, '15');
+  if (raw === null) return;
+  const mins = parseInt(raw, 10);
+  if (isNaN(mins) || mins === 0) { setStatus('No shift applied.'); return; }
+  for (const it of d.items) {
+    if (it.time) it.time = shiftHHMM(it.time, mins);
+    if (it.timeEnd) it.timeEnd = shiftHHMM(it.timeEnd, mins);
+  }
+  sortDay(d);
+  editing = null; isDirty = true; persistLocal(); updateDirty(); renderCurated();
+  setStatus(`Shifted ${day} by ${mins > 0 ? '+' : ''}${mins} min. Save to keep.`);
 }
 
 function renderDocEvidence() {
