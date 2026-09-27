@@ -10,6 +10,16 @@ header {
   color: #f9e8c9;
   padding: 1.5rem 1rem 1rem;
   text-align: center;
+  position: relative;
+}
+
+.version {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.9rem;
+  font-size: 0.8rem;
+  color: #f9e8c9;
+  opacity: 0.75;
 }
 
 .brand-row {
