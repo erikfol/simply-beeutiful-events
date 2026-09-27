@@ -11,6 +11,7 @@ credentials.json
 sbe_sync/
 backend/tmp/
 downloads/
+events/
 
 # Python
 __pycache__/
