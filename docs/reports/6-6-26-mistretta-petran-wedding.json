@@ -1,0 +1,2041 @@
+{
+  "event": "events/6.6.26 Mistretta-Petran Wedding",
+  "generated": "2026-09-20T19:00:58",
+  "num_files": 46,
+  "num_text_parsed": 34,
+  "num_timeline_events": 44,
+  "all_amounts": [
+    "$0",
+    "$0.00",
+    "$0.01",
+    "$0.70",
+    "$1",
+    "$1,175.00",
+    "$1,300",
+    "$1,375.00",
+    "$1,480.00",
+    "$1,795",
+    "$10",
+    "$100",
+    "$100.00",
+    "$1000",
+    "$105",
+    "$110.00",
+    "$12",
+    "$12.99",
+    "$120.00",
+    "$1200",
+    "$129",
+    "$1400",
+    "$15",
+    "$15.00",
+    "$150",
+    "$150.00",
+    "$1520.00",
+    "$160.00",
+    "$162",
+    "$170",
+    "$178.75",
+    "$180",
+    "$180.00",
+    "$1845.63",
+    "$1850",
+    "$188.00",
+    "$190",
+    "$195.00",
+    "$1982",
+    "$199",
+    "$2",
+    "$2,100",
+    "$2,350.00",
+    "$2,500.56",
+    "$2,750",
+    "$2,750.00",
+    "$2,900.00",
+    "$2.00",
+    "$2.50",
+    "$20.99"
+  ],
+  "budget": {
+    "file": "Mistretta_Petran Wedding - Budget.xlsx",
+    "budget_total": 50000.0,
+    "total_actual": 67911.28,
+    "total_paid": 60343.27,
+    "total_due": 7568.01,
+    "remaining_budget": -10611.28,
+    "categories": [
+      {
+        "category": "Venue",
+        "actual": 9100.0,
+        "paid": 9100.0,
+        "due": 0.0
+      },
+      {
+        "category": "Welcome Party",
+        "actual": 2350.0,
+        "paid": 2350.0,
+        "due": 0.0
+      },
+      {
+        "category": "Ceremony Reservation",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Reception Reservation",
+        "actual": 6750.0,
+        "paid": 6750.0,
+        "due": 0.0
+      },
+      {
+        "category": "Food & Beverage",
+        "actual": 21763.91,
+        "paid": 18571.0,
+        "due": 3192.91
+      },
+      {
+        "category": "Catering",
+        "actual": 9852.0,
+        "paid": 9852.0,
+        "due": 0.0
+      },
+      {
+        "category": "Bar & Beverages",
+        "actual": 5580.0,
+        "paid": 5580.0,
+        "due": 0.0
+      },
+      {
+        "category": "Catering Welcome Party",
+        "actual": 2728.18,
+        "paid": 2728.0,
+        "due": 0.18
+      },
+      {
+        "category": "Bar & Beverages - WP",
+        "actual": 1500.0,
+        "paid": 0.0,
+        "due": 1500.0
+      },
+      {
+        "category": "Catering After Party",
+        "actual": 742.73,
+        "paid": 0.0,
+        "due": 742.73
+      },
+      {
+        "category": "Bar & Beverages - AP",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Wedding Cake",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Desserts",
+        "actual": 411.0,
+        "paid": 411.0,
+        "due": 0.0
+      },
+      {
+        "category": "Staff",
+        "actual": 950.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Vendors",
+        "actual": 28738.63,
+        "paid": 24563.63,
+        "due": 4175.0
+      },
+      {
+        "category": "Photographer",
+        "actual": 2100.0,
+        "paid": 2100.0,
+        "due": 0.0
+      },
+      {
+        "category": "Videographer",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Welcome Party Band",
+        "actual": 300.0,
+        "paid": 0.0,
+        "due": 300.0
+      },
+      {
+        "category": "DJ / Band",
+        "actual": 7000.0,
+        "paid": 3500.0,
+        "due": 3500.0
+      },
+      {
+        "category": "Officiant",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Hair & Makeup",
+        "actual": 1645.0,
+        "paid": 1645.0,
+        "due": 0.0
+      },
+      {
+        "category": "Florist",
+        "actual": 3318.0,
+        "paid": 3318.0,
+        "due": 0.0
+      },
+      {
+        "category": "Wedding Planner",
+        "actual": 10000.0,
+        "paid": 10000.0,
+        "due": 0.0
+      },
+      {
+        "category": "Transportation - Wedding Party",
+        "actual": 750.0,
+        "paid": 375.0,
+        "due": 375.0
+      },
+      {
+        "category": "Transportation",
+        "actual": 1845.63,
+        "paid": 1845.63,
+        "due": 0.0
+      },
+      {
+        "category": "Tent Rentals",
+        "actual": 1780.0,
+        "paid": 1780.0,
+        "due": 0.0
+      },
+      {
+        "category": "Event Rentals",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Photo Booth",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Dress & Attire",
+        "actual": 3030.0,
+        "paid": 3030.0,
+        "due": 0.0
+      },
+      {
+        "category": "Bride Attire",
+        "actual": 1900.0,
+        "paid": 1900.0,
+        "due": 0.0
+      },
+      {
+        "category": "Groom Attire",
+        "actual": 300.0,
+        "paid": 300.0,
+        "due": 0.0
+      },
+      {
+        "category": "Alterations",
+        "actual": 830.0,
+        "paid": 830.0,
+        "due": 0.0
+      },
+      {
+        "category": "Shoes & Accessories",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Invitations Etc.",
+        "actual": 566.74,
+        "paid": 566.64,
+        "due": 0.1
+      },
+      {
+        "category": "Invitations",
+        "actual": 566.74,
+        "paid": 566.64,
+        "due": 0.1
+      },
+      {
+        "category": "Save-the-Dates",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Stationaries",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Thank You Cards",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Lighting & D\u00e9cor",
+        "actual": 200.0,
+        "paid": 0.0,
+        "due": 200.0
+      },
+      {
+        "category": "D\u00e9cor",
+        "actual": 200.0,
+        "paid": 0.0,
+        "due": 200.0
+      },
+      {
+        "category": "Signage",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Lighting",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Misc. Accessories",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Misc.",
+        "actual": 4512.0,
+        "paid": 4512.0,
+        "due": 0.0
+      },
+      {
+        "category": "Wedding Favors",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Wedding Rings",
+        "actual": 3945.0,
+        "paid": 3945.0,
+        "due": 0.0
+      },
+      {
+        "category": "Vendor Tips",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Welcome Bags",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Marriage License",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Emergency Kit",
+        "actual": 0.0,
+        "paid": 0.0,
+        "due": 0.0
+      },
+      {
+        "category": "Etc.",
+        "actual": 567.0,
+        "paid": 567.0,
+        "due": 0.0
+      }
+    ]
+  },
+  "vendors": {
+    "booked": [
+      {
+        "vendor": "Salt Hill Pub Shanty",
+        "location": "Newbury, NH",
+        "event": "After Party",
+        "contact": "Cooper Racine, Manager",
+        "email": "cooper.racine@salthillpub.com",
+        "cost": "$500 Food Minimum, plus 20% gratuity and 8.5% tax"
+      },
+      {
+        "vendor": "Hoptimystic Brewery",
+        "location": "Sunapee, NH",
+        "event": "Welcome Party",
+        "contact": "Dan Thomas, Owner",
+        "email": "hoptimysticbrewingnh@gmail.com",
+        "cost": "$2000-$2500 for rental"
+      },
+      {
+        "vendor": "Beth Rexford Photography",
+        "location": "Newport, NH",
+        "event": "",
+        "contact": "",
+        "email": "bethrexford@gmail.com",
+        "cost": "$1,300 starting 1 hour prior to the ceremony, $2,100 based on the timeline with first look & travel to Grantham for photos prior to the ceremony "
+      },
+      {
+        "vendor": "Grumpa's Lunchbox",
+        "location": "",
+        "event": "Wedding Day",
+        "contact": "",
+        "email": "",
+        "cost": "7201.5"
+      },
+      {
+        "vendor": "Kearsarge Tent",
+        "location": "New London, NH",
+        "event": "Back up",
+        "contact": "Troy Robertson",
+        "email": "",
+        "cost": "Tents: 30x45-$1000; 40x40-$1400; 40x60-$2000"
+      },
+      {
+        "vendor": "Mica Mine Floral",
+        "location": "Claremont, NH",
+        "event": "",
+        "contact": "",
+        "email": "",
+        "cost": ""
+      },
+      {
+        "vendor": "Beauty by Bethany Anne",
+        "location": "Hanover, NH",
+        "event": "",
+        "contact": "Bethany",
+        "email": "beautybybethanyanne@gmail.com",
+        "cost": "$1982 total: $650 bride hair & makup which includes trial & touchup kit for the day of, $250 for each bridal party member, also included is the travel fee to Greatful Dane"
+      }
+    ],
+    "contract_files": [
+      "Beauty by Bethany Anne - Agreement - K Mistretta 6_6_26.pdf",
+      "Blood_s Rental Quote -Simply Beeutiful - Mistretta-Petran Rentals 11.11.25 (2).pdf",
+      "Condor (Friday Food)(Service_agreement_completed.pdf",
+      "Door to Door Driving - Petran Contract.pdf",
+      "First Charter Quote - 2 buses.pdf",
+      "Grumpa_s Contract - Petran Mistretta Wedding.pdf",
+      "HOPTIMYSTIC EVENT SPACE RENTAL AGREEMENT - Mistretta_Petran Welcome Party.docx",
+      "Hoptimistic Signed Contract.pdf",
+      "Katie_Mike 6.6.26 Agreement (1).pdf",
+      "Mica Mine Floral - updated quote 4.25.26.docx",
+      "Mica Mine Floral Updated Quote 3.13.26 - Katie And Mike.docx",
+      "Mountains Edge Petran Mistretta Contract.pdf",
+      "PETRAN WEDDING Contract Signed.jpg",
+      "Swell Oyster Co Estimate.pdf",
+      "Tent receipt first payment.pdf",
+      "Welcome Party Taco Pricing Estimate - Hoptimystic.pdf"
+    ]
+  },
+  "timeline": [
+    {
+      "date_raw": "11.8.2025",
+      "date_iso": "2025-11-08",
+      "snippet": "\u2026Agreement Room Block Agreement Room Block Agreement Room Block Agreement Organization    Draft Date 11.8.2025 Event Title Mistretta.Petran wedding Check In Date 6.05.2026 Contact Nicole Follensbee Check Out Da\u2026",
+      "source": "Mistretta.Petran wedding 6.5.2026 - Mountain Edge Suites.docx"
+    },
+    {
+      "date_raw": "11/11/2025",
+      "date_iso": "2025-11-11",
+      "snippet": "\u2026rice DELIVERY/PICK UP NEWPORT NH 03773 $363.00 $363.00 1 contract-params.SQL.rpt (1) Printed On Tue 11/11/2025  2:00:41PM Software by Point-of-Rental Software   www.point-of-rental.com Modification #4  Page 2 o\u2026",
+      "source": "Blood_s Rental Quote -Simply Beeutiful - Mistretta-Petran Rentals 11.11.25 (2).pdf"
+    },
+    {
+      "date_raw": "11.21.2025",
+      "date_iso": "2025-11-21",
+      "snippet": "\u2026f this agreement are mutually accepted by both parties. Please review, sign and return via email by 11.21.2025 to confirm this group booking.         X   ___________    Group Contact ___________________________\u2026",
+      "source": "Mistretta.Petran wedding 6.5.2026 - Mountain Edge Suites.docx"
+    },
+    {
+      "date_raw": "11/25/2025",
+      "date_iso": "2025-11-25",
+      "snippet": "\u2026QUOTE DOCUMENT             QUOTE NUMBER: Q-357802 QUOTE DATE: 11/25/2025, 8:30 AM Created for: Nicole Follensbee Account Name: Simply Beautiful Events Event Name: The Great\u2026",
+      "source": "First Charter Quote - 2 buses.pdf"
+    },
+    {
+      "date_raw": "12/10/2025",
+      "date_iso": "2025-12-10",
+      "snippet": "\u2026l Events Event Name: The Greatful Dane Lodge Wedding Bus 1-2 Event Date: 6/6/2026 Quote Expires on: 12/10/2025                                     This quote is valid for 15 days. Pricing is based on informatio\u2026",
+      "source": "First Charter Quote - 2 buses.pdf"
+    },
+    {
+      "date_raw": "12/17/2025",
+      "date_iso": "2025-12-17",
+      "snippet": "\u2026er, Vibrant Productions LLC  17 Barton Dr.  Sudbury, MA. 01776  508-863-3433  info@bandvibrant.com  12/17/2025\u2026",
+      "source": "06.06.26 Mistretta & Petran Wedding Vibrant Productions Signed.docx"
+    },
+    {
+      "date_raw": "1/10/2026",
+      "date_iso": "2026-01-10",
+      "snippet": "\u2026WEDDING CATERING AGREEMENT  This Wedding Catering Agreement (\u201cAgreement\u201d) is entered into on 1/10/2026  by and between:  Caterer (Vendor):\u200b  Business Name: Grumpa\u2019s Lunchbox LLC\u200b  Address: Newport, NH\u200b\u2026",
+      "source": "Katie_Mike 6.6.26 Agreement (1).pdf"
+    },
+    {
+      "date_raw": "1/26/26",
+      "date_iso": "2026-01-26",
+      "snippet": "\u2026.0 BBQ Meatball | 2.0 | 4650 Shrimp Cocktail | 4.0 | Service Fee | 950.0 | <is this gratuity?  from 1/26/26 Email Charcuterie Skewers | 3.0 | Subtotal plus 20% grat | 5580 | 1.2 BBQ Base Fee Chicken + Briske\u2026",
+      "source": "Grumpa_s Menu Choices.xlsx"
+    },
+    {
+      "date_raw": "1/29/2026",
+      "date_iso": "2026-01-29",
+      "snippet": "\u2026Representative:\u200b  Name: Ernie Shepard/ Brittany Spear\u200b \u200b  Signature: ______________________\u200b  Date: 1/29/2026       Client (s):\u200b  Name: __________________________\u200b  Signature: ______________________\u200b  Date: __\u2026",
+      "source": "Katie_Mike 6.6.26 Agreement (1).pdf"
+    },
+    {
+      "date_raw": "2.1.2026",
+      "date_iso": "2026-02-01",
+      "snippet": "\u2026on for food at $9-$12 for 2 tacos Lake Sunapee Cruise | Newbury, NH | Welcome Party | Pricing avail 2.1.2026 | Dinner\u00a0Cruise:\u00a0https://sunapeecruises.com/dinner-charter/ Cocktail\u00a0Cruise:\u00a0https://sunapeecruises\u2026",
+      "source": "Katie & Mike Vendor Options.xlsx"
+    },
+    {
+      "date_raw": "2/4/26",
+      "date_iso": "2026-02-04",
+      "snippet": "\u2026Drinks - Grateful Dane Appetizers | Open Bar Per Hour | 10.0 Caprese Crustini | 2.0 | (pricing per 2/4/26 email) | Hours | 5.0 BBQ Meatball | 2.0 | 4650 Shrimp Cocktail | 4.0 | Service Fee | 950.0 | <is th\u2026",
+      "source": "Grumpa_s Menu Choices.xlsx"
+    },
+    {
+      "date_raw": "February 21, 2026",
+      "date_iso": "2026-02-21",
+      "snippet": "\u2026___________ __________________________ Service Provider Signature: Date: __________________________ February 21, 2026 SIGN\u2026",
+      "source": "Beauty by Bethany Anne - Agreement - K Mistretta 6_6_26.pdf"
+    },
+    {
+      "date_raw": "March 7, 2026",
+      "date_iso": "2026-03-07",
+      "snippet": "\u2026000004 Customer Invoice Details Payment Mike Petran mpetran398@gmail.com (847) 721-6508 PDF created March 7, 2026 $0.01 Service date June 6, 2026 Due March 7, 2026 $0.01 Items Quantity Price Amount deposit for 6/6\u2026",
+      "source": "johnny c_s party bus sqinv-Mike-Petran-000004.pdf"
+    },
+    {
+      "date_raw": "March 8, 2026",
+      "date_iso": "2026-03-08",
+      "snippet": "\u2026of the event June 6, 2026    90 Day Cancellation Policy -    If the event is canceled on or before March 8, 2026 the balance is waived, the deposit is  retained.  If the event is canceled on or after March 9, 202\u2026",
+      "source": "06.06.26 Mistretta & Petran Wedding - Vibrant Wedding Band.pdf"
+    },
+    {
+      "date_raw": "March 9, 2026",
+      "date_iso": "2026-03-09",
+      "snippet": "\u2026arch 8, 2026 the balance is waived, the deposit is  retained.  If the event is canceled on or after March 9, 2026 the deposit is retained and the total balance is due on the original  date of the event.     Perfor\u2026",
+      "source": "06.06.26 Mistretta & Petran Wedding - Vibrant Wedding Band.pdf"
+    },
+    {
+      "date_raw": "3/10/26",
+      "date_iso": "2026-03-10",
+      "snippet": "\u2026Mistretta/Petran Welcome Created 3/10/26, 1:58 PM 1 of 1 Appleseed Restaurant Customer Hoptimystic Brewing Dan Thomas  31 River Road  Sunape\u2026",
+      "source": "Welcome Party Taco Pricing Estimate - Hoptimystic.pdf"
+    },
+    {
+      "date_raw": "4/9/2026",
+      "date_iso": "2026-04-09",
+      "snippet": "\u2026lance 5/4/26 Wedding Planner | 0.1 | 5000 | 0.15 | 7500 | 10000.0 | 10000.0 | 0 | paid full balance 4/9/2026 Transportation - Wedding Party | 750.0 | 375.0 | 375 Transportation | 0.02 | 1000 | 0.02 | 1000 | 1\u2026",
+      "source": "Mistretta_Petran Wedding - Budget.xlsx"
+    },
+    {
+      "date_raw": "4/27/2026",
+      "date_iso": "2026-04-27",
+      "snippet": "\u2026ception Reservation | 0.03 | 1500 | 0.09 | 4500 | 6750.0 | 6750.0 | 0 | paid Grateful Dane $1850 on 4/27/2026 Food & Beverage | 0.2 | 10000 | 0.2875 | 14375 | 21763.91 | 18571 | 3192.91 Catering | 0.1 | 5000 |\u2026",
+      "source": "Mistretta_Petran Wedding - Budget.xlsx"
+    },
+    {
+      "date_raw": "5/4/26",
+      "date_iso": "2026-05-04",
+      "snippet": "\u2026| 21763.91 | 18571 | 3192.91 Catering | 0.1 | 5000 | 0.12 | 6000 | 9852.0 | 9852.0 | 0 | 3592 paid 5/4/26 (half of remaining balance), 4260 paid 5/26/26 (remaining balance, paid in full) Bar & Beverages |\u2026",
+      "source": "Mistretta_Petran Wedding - Budget.xlsx"
+    },
+    {
+      "date_raw": "05/05/2026",
+      "date_iso": "2026-05-05",
+      "snippet": "\u2026tract is between Condor Restaurant Group, LLC (the \"Business\") and Mike Petran (the \"Client\") dated 05/05/2026. The Client is hiring the Business for the services described in this contract. Terms Final Sale an\u2026",
+      "source": "Vendor Agreements/Condor (Friday Food)(Service_agreement_completed.pdf"
+    },
+    {
+      "date_raw": "May 05, 2026",
+      "date_iso": "2026-05-05",
+      "snippet": "\u2026Condor Restaurant Group, LLC Signed on May 05, 2026 Service agreement Business: Condor Restaurant Group, LLC Recipient: Mike Petran info@theboxfoodtruc\u2026",
+      "source": "Vendor Agreements/Condor (Friday Food)(Service_agreement_completed.pdf"
+    },
+    {
+      "date_raw": "May 6, 2026",
+      "date_iso": "2026-05-06",
+      "snippet": "\u2026\u25cf\u200b Deposit: $2000 due upon signing (non-refundable unless stated otherwise)  \u25cf\u200b Half Remainder Due: May 6, 2026  \u25cf\u200b Final Payment Due: May 23, 2026  \u25cf\u200b Payment Method: cash/check, venmo or by Square (3% fee adde\u2026",
+      "source": "Katie_Mike 6.6.26 Agreement (1).pdf"
+    },
+    {
+      "date_raw": "5/19/26",
+      "date_iso": "2026-05-19",
+      "snippet": "\u2026| 300.0 | 300.0 | 0 Alterations | 0.005 | 250 | 0.01 | 500 | 830.0 | 830.0 | 0 | paid full balance 5/19/26 Shoes & Accessories | 0.005 | 250 | 0.01 | 500 | 0.0 | 0.0 | 0 Invitations Etc. | 0.02 | 1000 | 0.0\u2026",
+      "source": "Mistretta_Petran Wedding - Budget.xlsx"
+    },
+    {
+      "date_raw": "May 22, 2026",
+      "date_iso": "2026-05-22",
+      "snippet": "\u2026this Agreement. The deposit shall be fully refundable if the Client cancels the event on or before May 22, 2026 (fourteen (14) days prior to the Event Date). Cancellations made within fourteen (14) days of the E\u2026",
+      "source": "HOPTIMYSTIC EVENT SPACE RENTAL AGREEMENT - Mistretta_Petran Welcome Party.docx"
+    },
+    {
+      "date_raw": "5/22/26",
+      "date_iso": "2026-05-22",
+      "snippet": "\u2026| 0.0 | 0.0 | 0 Hair & Makeup | 0.02 | 1000 | 0.02 | 1000 | 1645.0 | 1645.0 | 0 | paid full balance 5/22/26 Florist | 0.035 | 1750 | 0.05 | 2500 | 3318.0 | 3318.0 | 0 | paid full balance 5/4/26 Wedding Plann\u2026",
+      "source": "Mistretta_Petran Wedding - Budget.xlsx"
+    },
+    {
+      "date_raw": "May 23, 2026",
+      "date_iso": "2026-05-23",
+      "snippet": "\u2026(non-refundable unless stated otherwise)  \u25cf\u200b Half Remainder Due: May 6, 2026  \u25cf\u200b Final Payment Due: May 23, 2026  \u25cf\u200b Payment Method: cash/check, venmo or by Square (3% fee added for each charge)  \u25cf\u200b 9% NH Tax app\u2026",
+      "source": "Katie_Mike 6.6.26 Agreement (1).pdf"
+    },
+    {
+      "date_raw": "5/23/26",
+      "date_iso": "2026-05-23",
+      "snippet": "\u2026| 1845.63 | 1845.63 | 0.0 Tent Rentals | 2000.0 | 5000.0 | 1780.0 | 1780.0 | 0 | paid full balance 5/23/26 Event Rentals | 0.02 | 1000 | 0.02 | 1000 | 0.0 | 0.0 | 0.0 Photo Booth | 0.01 | 500 | 0.02 | 1000\u2026",
+      "source": "Mistretta_Petran Wedding - Budget.xlsx"
+    },
+    {
+      "date_raw": "5/26/26",
+      "date_iso": "2026-05-26",
+      "snippet": "\u20265000 | 0.12 | 6000 | 9852.0 | 9852.0 | 0 | 3592 paid 5/4/26 (half of remaining balance), 4260 paid 5/26/26 (remaining balance, paid in full) Bar & Beverages | 0.07 | 3500 | 0.12 | 6000 | 5580.0 | 5580.0 | 0\u2026",
+      "source": "Mistretta_Petran Wedding - Budget.xlsx"
+    },
+    {
+      "date_raw": "May 28, 2026",
+      "date_iso": "2026-05-28",
+      "snippet": "\u2026First Student Charter Center Office Hours: 8:00am \u2013 5:00 pm  Number 855-272-3222 Printed on May 28, 2026 at 09:39:59 AM EDT Notice of Trip Confirmation Customer # Order Date Trip Date Order Number 2707653\u2026",
+      "source": "FINAL First Charter Trip Confirmation - The Greatful Dane Lodge Wedding Bus 1-2.pdf"
+    },
+    {
+      "date_raw": "June 5, 2026",
+      "date_iso": "2026-06-05",
+      "snippet": "\u2026ke Petran (collectively, the \u201cClient\u201d).  1. Event Details Event: Welcome Dinner Event Date: Friday, June 5, 2026 Event Time: 6:00 PM \u2013 9:00 PM Rental Duration: Three (3) hours Location: Hoptimystic Brewing \u2013 Suna\u2026",
+      "source": "HOPTIMYSTIC EVENT SPACE RENTAL AGREEMENT - Mistretta_Petran Welcome Party.docx"
+    },
+    {
+      "date_raw": "6.05.2026",
+      "date_iso": "2026-06-05",
+      "snippet": "\u2026k Agreement Organization    Draft Date 11.8.2025 Event Title Mistretta.Petran wedding Check In Date 6.05.2026 Contact Nicole Follensbee Check Out Date 6.07.2026 Title Wedding Planner Contact Katerina Tourville\u2026",
+      "source": "Mistretta.Petran wedding 6.5.2026 - Mountain Edge Suites.docx"
+    },
+    {
+      "date_raw": "June 5, 2026",
+      "date_iso": "2026-06-05",
+      "snippet": "\u2026n Thomas  31 River Road  Sunapee, NH 03782  danielthomas3266@gmail.com  (603) 540-5001 Date Friday, June 5, 2026  6:00 PM Deliver To 31 River Road  Sunapee, NH 03782 Mistretta/Petran  Welcome Catering BEO Order #\u2026",
+      "source": "Welcome Party Taco Pricing Estimate - Hoptimystic.pdf"
+    },
+    {
+      "date_raw": "June 6, 2026",
+      "date_iso": "2026-06-06",
+      "snippet": "\u2026a@gmail.com\u200b   Phone:\u200b \u200b 847-721-6508\u200b Event Name: \u200b Mistretta & Petran Wedding \u200b \u200b   Event Date: \u200b June 6, 2026\u200b   Event Times:\u200b Ceremony 4pm  \u200b Cocktail Hour 5pm  \u200b Reception 6-10pm  Event Location:\u200b The Greatf\u2026",
+      "source": "06.06.26 Mistretta & Petran Wedding - Vibrant Wedding Band.pdf"
+    },
+    {
+      "date_raw": "June 6, 2026",
+      "date_iso": "2026-06-06",
+      "snippet": "\u2026katherine.mistretta@gmail.com  847-721-6508  Event Name:  Mistretta & Petran Wedding  Event Date:  June 6, 2026  Event Times:  Ceremony 4pm  Cocktail Hour 5pm  Reception 6-10pm  Event Location: The Greatful Dane\u2026",
+      "source": "06.06.26 Mistretta & Petran Wedding Vibrant Productions Signed.docx"
+    },
+    {
+      "date_raw": "6/6/26",
+      "date_iso": "2026-06-06",
+      "snippet": "\u2026ince Bellini (if attending) Emily Petran  Zoey Petran              Quantity Unit Price Cost Wedding 6/6/26 The wedding price includes two hours before the ceremony, the ceremony itself, family photos, and w\u2026",
+      "source": "BETH REXFORD PHOTOGRAPHY - MISTRETTA.PETRAN.WEDDING.6.6.2026.docx"
+    },
+    {
+      "date_raw": "June 6, 2026",
+      "date_iso": "2026-06-06",
+      "snippet": "\u2026uld be better.  I welcome honest feedback and am always open to suggestions\u2026       Date of wedding  June 6, 2026 Date of wedding  June 6, 2026 Bride Katherine \u201cKatie\u201d Mistretta Groom   Mike Petran Address  609 Ne\u2026",
+      "source": "BETH REXFORD PHOTOGRAPHY - MISTRETTA.PETRAN.WEDDING.6.6.2026.docx"
+    },
+    {
+      "date_raw": "6/6/2026",
+      "date_iso": "2026-06-06",
+      "snippet": "\u2026count Name: Simply Beautiful Events Event Name: The Greatful Dane Lodge Wedding Bus 1-2 Event Date: 6/6/2026 Quote Expires on: 12/10/2025                                     This quote is valid for 15 days. P\u2026",
+      "source": "First Charter Quote - 2 buses.pdf"
+    },
+    {
+      "date_raw": "June 6, 2026",
+      "date_iso": "2026-06-06",
+      "snippet": "\u2026ayment Mike Petran mpetran398@gmail.com (847) 721-6508 PDF created March 7, 2026 $0.01 Service date June 6, 2026 Due March 7, 2026 $0.01 Items Quantity Price Amount deposit for 6/6 wedding 1 $0.01 $0.01 Deposit f\u2026",
+      "source": "johnny c_s party bus sqinv-Mike-Petran-000004.pdf"
+    },
+    {
+      "date_raw": "June 6, 2026",
+      "date_iso": "2026-06-06",
+      "snippet": "\u2026dress: \u200b  Phone/Email:      1. EVENT DETAILS  \u25cf\u200b Event: Catered Wedding Reception\u200b   \u25cf\u200b Event Date: June 6, 2026\u200b   \u25cf\u200b Event Location: The Greatful Dane Lodge Newport, NH\u200b    \u25cf\u200b Event Time: \u200b   \u25cf\u200b Estimated Guest\u2026",
+      "source": "Katie_Mike 6.6.26 Agreement (1).pdf"
+    },
+    {
+      "date_raw": "6.06.2026",
+      "date_iso": "2026-06-06",
+      "snippet": "\u2026al Guest (over 2 adults) 6.05.2026 10 5 2 2 1 $10  +fees & taxes Rates 269.00 289.00 369.00 409.00  6.06.2026 10              5            2 2 1 $10 +fees & taxes Rates        269.00 289.00 369.00 409.00\u2026",
+      "source": "Mistretta.Petran wedding 6.5.2026 - Mountain Edge Suites.docx"
+    },
+    {
+      "date_raw": "06/06/2026",
+      "date_iso": "2026-06-06",
+      "snippet": "\u2026SS 150 AQ Estimate ADDRESS Mike Petran 609 New Aldrich Rd.  Grantham, NH 03753 ESTIMATE # 1021 DATE 06/06/2026   PRODUCT CATEGORY QTY PRICE PER AMOUNT Swell Oysters Catering 250 2.25 562.50T XL Shrimp Cocktail\u2026",
+      "source": "Swell Oyster Co Estimate.pdf"
+    },
+    {
+      "date_raw": "06/6/26",
+      "date_iso": "2026-06-06",
+      "snippet": "\u2026nt Fee Catering 1 100.00 100.00 Transportation Catering 180 2.00 360.00   Event Type: Wedding When: 06/6/26 Where: The Greatful Dane Lodge - Newport, NH Time: 4:00-7:00pm Number of Guests: 100 Contact: Mike\u2026",
+      "source": "Swell Oyster Co Estimate.pdf"
+    },
+    {
+      "date_raw": "6/6/2026",
+      "date_iso": "2026-06-06",
+      "snippet": "\u2026Review Phone Call  Social Media Platforms                      IMPORTANT INFORMATION  Wedding Date: 6/6/2026   Start Time:  Prelude: 4pm Ceremony: 4:30pm Cocktail Hour: 5-6pm Reception 6-10pm End Time: 10pm\u2026",
+      "source": "Vibrant Band - Wedding Planner Worksheet - Due 1 month out.docx"
+    },
+    {
+      "date_raw": "6.07.2026",
+      "date_iso": "2026-06-07",
+      "snippet": "\u2026ent Title Mistretta.Petran wedding Check In Date 6.05.2026 Contact Nicole Follensbee Check Out Date 6.07.2026 Title Wedding Planner Contact Katerina Tourville Phone  Title General Manager Fax  Phone  Email Sim\u2026",
+      "source": "Mistretta.Petran wedding 6.5.2026 - Mountain Edge Suites.docx"
+    }
+  ],
+  "files": [
+    {
+      "file": "06.06.26 Mistretta & Petran Wedding - Vibrant Wedding Band.pdf",
+      "ext": ".pdf",
+      "size": 105566,
+      "text_len": 2664,
+      "dates": [
+        "June 6, 2026",
+        "March 8, 2026",
+        "March 9, 2026"
+      ],
+      "amounts": [
+        "$1200",
+        "$200",
+        "$300",
+        "$3500",
+        "$6500",
+        "$7000"
+      ],
+      "keywords": [
+        "event",
+        "vibrant",
+        "productions",
+        "date",
+        "hour",
+        "llc",
+        "band",
+        "agreement"
+      ],
+      "summary": "Vibrant Productions \nPerformance Agreement  \nTo secure our services: \n\u25cf\u200b\nPlease verify all information below (date, times, location, etc.), sign \nthe agreement at the bottom, make a copy for your records. \u25cf\u200b\nSend, or scan and email, the signed agreement as soon as possible to \nVibrant Productions LLC 17 Barton Drive Sudbury, MA. 01776 or \ninfo@bandvibrant.com \n\u25cf\u200b\nPlease make check payable to Vibrant Productions LLC \nPurchaser:\u200b\nMike Petran & Katherine Mistretta\u200b\n \nAddress:\u200b \u200b\n609 New Aldrich Rd, Grantham, NH 03753\u200b\n \nEmail:\u200b\n\u200b\nMike - mpetran398@gmail.com, Katherine - katherine.mistretta@gmail.com\u200b\n \nPhone:\u200b\n\u200b\n847-721-6508\u200b\nEvent Name: \u200b\nMistretta & Petran Wedding \u200b \u200b\n \nEvent Date: \u200b\nJune 6, ",
+      "events": [
+        {
+          "date_raw": "March 8, 2026",
+          "date_iso": "2026-03-08",
+          "snippet": "\u2026of the event June 6, 2026    90 Day Cancellation Policy -    If the event is canceled on or before March 8, 2026 the balance is waived, the deposit is  retained.  If the event is canceled on or after March 9, 202\u2026",
+          "source": "06.06.26 Mistretta & Petran Wedding - Vibrant Wedding Band.pdf"
+        },
+        {
+          "date_raw": "March 9, 2026",
+          "date_iso": "2026-03-09",
+          "snippet": "\u2026arch 8, 2026 the balance is waived, the deposit is  retained.  If the event is canceled on or after March 9, 2026 the deposit is retained and the total balance is due on the original  date of the event.     Perfor\u2026",
+          "source": "06.06.26 Mistretta & Petran Wedding - Vibrant Wedding Band.pdf"
+        },
+        {
+          "date_raw": "June 6, 2026",
+          "date_iso": "2026-06-06",
+          "snippet": "\u2026a@gmail.com\u200b   Phone:\u200b \u200b 847-721-6508\u200b Event Name: \u200b Mistretta & Petran Wedding \u200b \u200b   Event Date: \u200b June 6, 2026\u200b   Event Times:\u200b Ceremony 4pm  \u200b Cocktail Hour 5pm  \u200b Reception 6-10pm  Event Location:\u200b The Greatf\u2026",
+          "source": "06.06.26 Mistretta & Petran Wedding - Vibrant Wedding Band.pdf"
+        }
+      ]
+    },
+    {
+      "file": "06.06.26 Mistretta & Petran Wedding Vibrant Productions Signed.docx",
+      "ext": ".docx",
+      "size": 10086,
+      "text_len": 1079,
+      "dates": [
+        "12/17/2025",
+        "June 6, 2026"
+      ],
+      "amounts": [],
+      "keywords": [
+        "vibrant",
+        "productions",
+        "com",
+        "event",
+        "hour",
+        "agreement",
+        "llc",
+        "katherine"
+      ],
+      "summary": "Vibrant Productions Performance Agreement \nTo secure our services: \nPlease verify all information below (date, times, location, etc.), sign the agreement at the bottom, make a copy for your records. Send, or scan and email, the signed agreement as soon as possible to Vibrant Productions LLC 17 Barton Drive Sudbury, MA. 01776 or \ninfo@bandvibrant.com \n\u2022 Please make check payable to Vibrant Productions LLC \nPurchaser: \nMike Petran & Katherine Mistretta \nAddress: \n609 New Aldrich Rd, Grantham, NH 03753 \nEmail: \nPhone: \nMike-mpetran398@gmail.com, Katherine - katherine.mistretta@gmail.com \n847-721-6508 \nEvent Name: \nMistretta & Petran Wedding \nEvent Date: \nJune 6, 2026 \nEvent Times: \nCeremony 4pm",
+      "events": [
+        {
+          "date_raw": "12/17/2025",
+          "date_iso": "2025-12-17",
+          "snippet": "\u2026er, Vibrant Productions LLC  17 Barton Dr.  Sudbury, MA. 01776  508-863-3433  info@bandvibrant.com  12/17/2025\u2026",
+          "source": "06.06.26 Mistretta & Petran Wedding Vibrant Productions Signed.docx"
+        },
+        {
+          "date_raw": "June 6, 2026",
+          "date_iso": "2026-06-06",
+          "snippet": "\u2026katherine.mistretta@gmail.com  847-721-6508  Event Name:  Mistretta & Petran Wedding  Event Date:  June 6, 2026  Event Times:  Ceremony 4pm  Cocktail Hour 5pm  Reception 6-10pm  Event Location: The Greatful Dane\u2026",
+          "source": "06.06.26 Mistretta & Petran Wedding Vibrant Productions Signed.docx"
+        }
+      ]
+    },
+    {
+      "file": "6.6.26 Katie & Mike - Wedding Vision-Inspo/53865A1B-1768-4A09-98A8-04D381D5FB66.heic",
+      "ext": ".heic",
+      "size": 2462138,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "6.6.26 Katie & Mike - Wedding Vision-Inspo/Screenshot 2026-02-15 at 2.52.38\u202fPM.png",
+      "ext": ".png",
+      "size": 2622701,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "6.6.26 Katie & Mike - Wedding Vision-Inspo/Screenshot 2026-02-15 at 2.54.58\u202fPM.png",
+      "ext": ".png",
+      "size": 3151211,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "6.6.26 Katie & Mike - Wedding Vision-Inspo/Screenshot 2026-02-15 at 2.55.16\u202fPM.png",
+      "ext": ".png",
+      "size": 3682464,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "6.6.26 Katie & Mike - Wedding Vision-Inspo/Screenshot 2026-02-15 at 2.57.20\u202fPM.png",
+      "ext": ".png",
+      "size": 2174584,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "6.6.26 Katie & Mike - Wedding Vision-Inspo/Wedding Invitation & Color Inspo.jpeg",
+      "ext": ".jpeg",
+      "size": 930553,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "Beauty by Bethany Anne - Agreement - K Mistretta 6_6_26.pdf",
+      "ext": ".pdf",
+      "size": 118096,
+      "text_len": 5111,
+      "dates": [
+        "February 21, 2026"
+      ],
+      "amounts": [
+        "$0.70",
+        "$1982",
+        "$25",
+        "$250.00",
+        "$741",
+        "$991"
+      ],
+      "keywords": [
+        "services",
+        "hair",
+        "makeup",
+        "date",
+        "service",
+        "wedding",
+        "total",
+        "not"
+      ],
+      "summary": "Wedding Hair & Makeup Services \nAgreement \n1. Service Provider \nName: B\u2019s Beauty Bar - Beauty by Bethany Anne \nEmail: beautybybethanyanne@gmail.com \nPhone: (802) 307-8214 \n2. Client Informa6on \nFull Name: Katherine Mistretta \nAddress:609 New Aldrich Rd, Granthem,NH 03753 \nPhone Number: _________________________________ \nEmail Address:Katherine.mistretta@gmail.com \n3.",
+      "events": [
+        {
+          "date_raw": "February 21, 2026",
+          "date_iso": "2026-02-21",
+          "snippet": "\u2026___________ __________________________ Service Provider Signature: Date: __________________________ February 21, 2026 SIGN\u2026",
+          "source": "Beauty by Bethany Anne - Agreement - K Mistretta 6_6_26.pdf"
+        }
+      ]
+    },
+    {
+      "file": "BETH REXFORD PHOTOGRAPHY - MISTRETTA.PETRAN.WEDDING.6.6.2026.docx",
+      "ext": ".docx",
+      "size": 480354,
+      "text_len": 3343,
+      "dates": [
+        "6/6/26",
+        "June 6, 2026"
+      ],
+      "amounts": [
+        "$500.00"
+      ],
+      "keywords": [
+        "wedding",
+        "petran",
+        "mistretta",
+        "tbd",
+        "names",
+        "com",
+        "address",
+        "road"
+      ],
+      "summary": "MISTRETTA.PETRAN WEDDING DAY INFORMATION\n\nAdditional Information:\n\n\nWedding Day timeline \n\n\n\n\n\n\n\n\n\n\nPlease include any special requests:\n**Please provide a list of family photos. Assign one person from each side of the family to coordinate gathering individuals, and let me know who these contacts are. Your person\tSusan Mistretta\t\t\t\tYour person\tHolly Petran\n\n\nInvoice\n\n\nPAYABLE TO:\nBeth Rexford\n395 Washington Rd\nGoshen NH  03752\nC.",
+      "events": [
+        {
+          "date_raw": "6/6/26",
+          "date_iso": "2026-06-06",
+          "snippet": "\u2026ince Bellini (if attending) Emily Petran  Zoey Petran              Quantity Unit Price Cost Wedding 6/6/26 The wedding price includes two hours before the ceremony, the ceremony itself, family photos, and w\u2026",
+          "source": "BETH REXFORD PHOTOGRAPHY - MISTRETTA.PETRAN.WEDDING.6.6.2026.docx"
+        },
+        {
+          "date_raw": "June 6, 2026",
+          "date_iso": "2026-06-06",
+          "snippet": "\u2026uld be better.  I welcome honest feedback and am always open to suggestions\u2026       Date of wedding  June 6, 2026 Date of wedding  June 6, 2026 Bride Katherine \u201cKatie\u201d Mistretta Groom   Mike Petran Address  609 Ne\u2026",
+          "source": "BETH REXFORD PHOTOGRAPHY - MISTRETTA.PETRAN.WEDDING.6.6.2026.docx"
+        }
+      ]
+    },
+    {
+      "file": "Blood_s Rental Quote -Simply Beeutiful - Mistretta-Petran Rentals 11.11.25 (2).pdf",
+      "ext": ".pdf",
+      "size": 161357,
+      "text_len": 3086,
+      "dates": [
+        "11/11/2025"
+      ],
+      "amounts": [
+        "$0.00",
+        "$0.01",
+        "$1,480.00",
+        "$160.00",
+        "$178.75",
+        "$2,900.00",
+        "$2.50",
+        "$300.00",
+        "$35.75",
+        "$363.00",
+        "$370.00",
+        "$47.88",
+        "$5,018.75",
+        "$5,429.63",
+        "$80.00"
+      ],
+      "keywords": [
+        "disc",
+        "discount",
+        "event",
+        "tent",
+        "white",
+        "blood's",
+        "prep",
+        "order"
+      ],
+      "summary": "White River Junction, VT 05001\n802-295-5393 Phone\nwww.bloodscatering.com\nQuote\nq108600\nSat 6/ 6/2026   7:00AM\nSat 6/ 6/2026  5:00PM\nKelsey Brown\nOn Account\nStatus:\nQuote #:\nTerms:\nOperator:\nEvent End:\nEvent Beg:\nBLOOD'S CATERING & PARTY RENTALS, INC\nCustomer #:   3738\nPhone 802-295-5393\nJob Descr: \n1147 HARTFORD AVE\nWHITE RIVER JUNCTION, VT 05001\nMISTRETTA/PETRAN WEDDING - SIMPLY BEEUTIFUL\nOrdered By: NICOLE FOLLENSBEE     \n \n  Sales Rep: Kelsey Brown     \nDelivery Wed 6/ 3/2026   8:00AM - 5:00PM\nPickup Mon 6/ 8/2026   8:00AM - 5:00PM\nNICOLE EVANS 603-359-9174\nNICOLE EVANS 603-359-9174\nTHE GREATFUL DANE LODGE\nTHE GREATFUL DANE LODGE\n5 SCHOOLHOUSE ROAD\nNEWPORT, NH 03773\n5 SCHOOLHOUSE ROAD\nNEW",
+      "events": [
+        {
+          "date_raw": "11/11/2025",
+          "date_iso": "2025-11-11",
+          "snippet": "\u2026rice DELIVERY/PICK UP NEWPORT NH 03773 $363.00 $363.00 1 contract-params.SQL.rpt (1) Printed On Tue 11/11/2025  2:00:41PM Software by Point-of-Rental Software   www.point-of-rental.com Modification #4  Page 2 o\u2026",
+          "source": "Blood_s Rental Quote -Simply Beeutiful - Mistretta-Petran Rentals 11.11.25 (2).pdf"
+        }
+      ]
+    },
+    {
+      "file": "Door to Door Driving - Petran Contract.pdf",
+      "ext": ".pdf",
+      "size": 792268,
+      "text_len": 4219,
+      "dates": [],
+      "amounts": [
+        "$150",
+        "$180.00",
+        "$350.00",
+        "$400.00"
+      ],
+      "keywords": [
+        "shuttle",
+        "any",
+        "vehicle",
+        "customer",
+        "door",
+        "contract",
+        "vendor",
+        "services"
+      ],
+      "summary": "Door to Door Driving Services, LLC \n \n603-448-0538   \n \n \n \n \n \n1032 ROUTE 12A, PLAINFIELD, NH 03781 \nWWW.DOORTODOORDRIVINGSERVICES.COM \nDOORTODOORDRIVINGSERVICES@GMAIL.COM \n \n1 \n \nContract for Shuttle Services \n \nThis contract is entered into by Door To Door Driving Services, LLC (\u201cVendor\u201d) and (\u201cCustomer\u201d) \n \nCustomer Name: Katherine Mistretta & Mike Petran  \nPhone #:  \nEmail Address:  \nDay of Event contact: Nicole Follensbee \nContact Details: Simplybeeutifulevents@gmail.com \nAddress of event:  \nGreatful Dane Lodge, 5 Schoolhouse Road, Newport NH \nDate of event: June 6th, 2026 \nCeremony Time:  4:30 PM  \nPick up time: 12:30 PM  \nPick up address(es):  \nHideaway Inn, 1403 Rt-103 Newbury NH  \n",
+      "events": []
+    },
+    {
+      "file": "FINAL First Charter Trip Confirmation - The Greatful Dane Lodge Wedding Bus 1-2.pdf",
+      "ext": ".pdf",
+      "size": 67809,
+      "text_len": 24025,
+      "dates": [
+        "May 28, 2026"
+      ],
+      "amounts": [
+        "$0",
+        "$0.00",
+        "$150.00",
+        "$1845.63",
+        "$30.00",
+        "$5",
+        "$50.00"
+      ],
+      "keywords": [
+        "company",
+        "any",
+        "customer",
+        "passengers",
+        "not",
+        "may",
+        "jun",
+        "agreement"
+      ],
+      "summary": "First Student Charter Center\nOffice Hours: 8:00am \u2013 5:00 pm \nNumber 855-272-3222\nPrinted on May 28, 2026 at 09:39:59 AM EDT\nNotice of Trip Confirmation\nCustomer #\nOrder Date\nTrip Date\nOrder Number\n2707653\nJan 14, 2026\nJun 6, 2026\n00233223\nSIMPLY BEEUTIFUL EVENTS \n10 Georgia Avenue \nEnfield, NH 03748 \nATTN: Nicole Follensbee\nEvent\nThe Greatful Dane Lodge Wedding Bus 1-2\nComments\nYour trip will be handled by our Kearsarge 6 branch. For changes prior to\nyour trip, call the charter center at 855-272-3222. Concerns on the day of\nthe event, call 603-547-9550 / 6035479550 / 6033937770 6034949488\nPhone Number\nPassenger Count\nPO/Contract\nAmount Paid\nPayment Method\nPayment Due Date\nVehicle Special Nee",
+      "events": [
+        {
+          "date_raw": "May 28, 2026",
+          "date_iso": "2026-05-28",
+          "snippet": "\u2026First Student Charter Center Office Hours: 8:00am \u2013 5:00 pm  Number 855-272-3222 Printed on May 28, 2026 at 09:39:59 AM EDT Notice of Trip Confirmation Customer # Order Date Trip Date Order Number 2707653\u2026",
+          "source": "FINAL First Charter Trip Confirmation - The Greatful Dane Lodge Wedding Bus 1-2.pdf"
+        }
+      ]
+    },
+    {
+      "file": "First Charter Quote - 2 buses.pdf",
+      "ext": ".pdf",
+      "size": 41651,
+      "text_len": 19942,
+      "dates": [
+        "11/25/2025",
+        "12/10/2025",
+        "6/6/2026"
+      ],
+      "amounts": [
+        "$150.00",
+        "$30.00",
+        "$5",
+        "$50.00"
+      ],
+      "keywords": [
+        "company",
+        "any",
+        "customer",
+        "jun",
+        "agreement",
+        "services",
+        "other",
+        "not"
+      ],
+      "summary": "QUOTE DOCUMENT\n \n \n \n \n \n \nQUOTE NUMBER: Q-357802\nQUOTE DATE: 11/25/2025, 8:30 AM\nCreated for: Nicole Follensbee\nAccount Name: Simply Beautiful Events\nEvent Name: The Greatful Dane Lodge Wedding Bus 1-2\nEvent Date: 6/6/2026\nQuote Expires on: 12/10/2025\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nThis quote is valid for 15 days. Pricing is based on information provided at the time of submission and is subject to change. Page 1 of 12\n\nNicole Follensbee\nSimply Beautiful Events\n55 Butler Street Unit 1\nSalem,MA, 01970\n \n \n \nDear Nicole Follensbee,\n \nThank you for choosing First Student.",
+      "events": [
+        {
+          "date_raw": "11/25/2025",
+          "date_iso": "2025-11-25",
+          "snippet": "\u2026QUOTE DOCUMENT             QUOTE NUMBER: Q-357802 QUOTE DATE: 11/25/2025, 8:30 AM Created for: Nicole Follensbee Account Name: Simply Beautiful Events Event Name: The Great\u2026",
+          "source": "First Charter Quote - 2 buses.pdf"
+        },
+        {
+          "date_raw": "12/10/2025",
+          "date_iso": "2025-12-10",
+          "snippet": "\u2026l Events Event Name: The Greatful Dane Lodge Wedding Bus 1-2 Event Date: 6/6/2026 Quote Expires on: 12/10/2025                                     This quote is valid for 15 days. Pricing is based on informatio\u2026",
+          "source": "First Charter Quote - 2 buses.pdf"
+        },
+        {
+          "date_raw": "6/6/2026",
+          "date_iso": "2026-06-06",
+          "snippet": "\u2026count Name: Simply Beautiful Events Event Name: The Greatful Dane Lodge Wedding Bus 1-2 Event Date: 6/6/2026 Quote Expires on: 12/10/2025                                     This quote is valid for 15 days. P\u2026",
+          "source": "First Charter Quote - 2 buses.pdf"
+        }
+      ]
+    },
+    {
+      "file": "First Charter Trip Confirmation - The Greatful Dane Lodge Wedding Bus 1-2.pdf",
+      "ext": ".pdf",
+      "size": 72157,
+      "text_len": 24684,
+      "dates": [],
+      "amounts": [
+        "$0",
+        "$0.00",
+        "$150.00",
+        "$2193.42",
+        "$30.00",
+        "$5",
+        "$50.00"
+      ],
+      "keywords": [
+        "company",
+        "any",
+        "customer",
+        "passengers",
+        "jun",
+        "not",
+        "agreement",
+        "services"
+      ],
+      "summary": "First Student Charter Center\nOffice Hours: 8:00am \u2013 5:00 pm \nNumber 855-272-3222\nPrinted on Jan 15, 2026 at 08:46:28 AM EST\nNotice of Trip Confirmation\nCustomer #\nOrder Date\nTrip Date\nOrder Number\n2707653\nJan 14, 2026\nJun 6, 2026\n00233223\nSIMPLY BEEUTIFUL EVENTS \n10 Georgia Avenue \nEnfield, NH 03748 \nATTN: Nicole Follensbee\nEvent\nThe Greatful Dane Lodge Wedding Bus 1-2\nComments\nYour trip will be handled by our Kearsarge 6 branch. For changes prior to\nyour trip, call the charter center at 855-272-3222. Concerns on the day of\nthe event, call 603-547-9550 / 6035479550 / 6033937770 6034949488\nPhone Number\nPassenger Count\nPO/Contract\nAmount Paid\nPayment Method\nPayment Due Date\nVehicle Special Nee",
+      "events": []
+    },
+    {
+      "file": "Grumpa_s Contract - Petran Mistretta Wedding.pdf",
+      "ext": ".pdf",
+      "size": 18436111,
+      "text_len": 3,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "",
+      "events": []
+    },
+    {
+      "file": "Grumpa_s Menu Choices.xlsx",
+      "ext": ".xlsx",
+      "size": 11221,
+      "text_len": 698,
+      "dates": [
+        "1/26/26",
+        "2/4/26"
+      ],
+      "amounts": [],
+      "keywords": [
+        "total",
+        "food",
+        "grateful",
+        "dane",
+        "email",
+        "bbq",
+        "fee",
+        "gratuity"
+      ],
+      "summary": "[sheet: Sheet1]\nFood - Grumpas | Drinks - Grateful Dane\nAppetizers | Open Bar Per Hour | 10.0\nCaprese Crustini | 2.0 | (pricing per 2/4/26 email) | Hours | 5.0\nBBQ Meatball | 2.0 | 4650\nShrimp Cocktail | 4.0 | Service Fee | 950.0 | <is this gratuity? from 1/26/26 Email\nCharcuterie Skewers | 3.0 | Subtotal\nplus 20% grat | 5580 | 1.2\nBBQ Base Fee Chicken + Brisket | 49.0 | Total | 6530\nMac and Cheese | 4.0\nCole Slaw | 2.0\n300 extra grat to Grateful dane? Plates | 2.0\nGuests | 93.0\ncoffee | 100.0\nFood Total | 6424\nSet Up/Clean Up | 500.0\nBooking | 500.0\nLabor | 300.0\nSubtotal | 7724\nGratuity | 1544.8 | 0.2\nTax | 695.16 | 0.09\nCash discount | 772.4 | 0.1\nTotal | 9191.56\nGrand Total | 15721.56",
+      "events": [
+        {
+          "date_raw": "1/26/26",
+          "date_iso": "2026-01-26",
+          "snippet": "\u2026.0 BBQ Meatball | 2.0 | 4650 Shrimp Cocktail | 4.0 | Service Fee | 950.0 | <is this gratuity?  from 1/26/26 Email Charcuterie Skewers | 3.0 | Subtotal plus 20% grat | 5580 | 1.2 BBQ Base Fee Chicken + Briske\u2026",
+          "source": "Grumpa_s Menu Choices.xlsx"
+        },
+        {
+          "date_raw": "2/4/26",
+          "date_iso": "2026-02-04",
+          "snippet": "\u2026Drinks - Grateful Dane Appetizers | Open Bar Per Hour | 10.0 Caprese Crustini | 2.0 | (pricing per 2/4/26 email) | Hours | 5.0 BBQ Meatball | 2.0 | 4650 Shrimp Cocktail | 4.0 | Service Fee | 950.0 | <is th\u2026",
+          "source": "Grumpa_s Menu Choices.xlsx"
+        }
+      ]
+    },
+    {
+      "file": "GRUMPAS LUNCHBOX CATERING MENU 2.2026.pdf",
+      "ext": ".pdf",
+      "size": 387153,
+      "text_len": 6606,
+      "dates": [],
+      "amounts": [
+        "$1",
+        "$10",
+        "$100",
+        "$1000",
+        "$150",
+        "$2",
+        "$2.00",
+        "$2000",
+        "$24",
+        "$3",
+        "$30",
+        "$300",
+        "$32",
+        "$34",
+        "$36",
+        "$4",
+        "$45",
+        "$48",
+        "$5",
+        "$50",
+        "$500",
+        "$6",
+        "$70",
+        "$750",
+        "$8"
+      ],
+      "keywords": [
+        "buffet",
+        "person",
+        "salad",
+        "cheese",
+        "choice",
+        "lunchbox",
+        "service",
+        "grumpas"
+      ],
+      "summary": "BUFFET DINNER SERVICE\nBuffet dinners are priced per guest. There is a 20-guest minimum for all buffet\noptions. Disposable dinnerware and cutlery provided.",
+      "events": []
+    },
+    {
+      "file": "Hoptimistic Signed Contract.pdf",
+      "ext": ".pdf",
+      "size": 7956490,
+      "text_len": 3,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "",
+      "events": []
+    },
+    {
+      "file": "HOPTIMYSTIC EVENT SPACE RENTAL AGREEMENT - Mistretta_Petran Welcome Party.docx",
+      "ext": ".docx",
+      "size": 18320,
+      "text_len": 5536,
+      "dates": [
+        "June 5, 2026",
+        "May 22, 2026"
+      ],
+      "amounts": [
+        "$2,350.00",
+        "$587.50"
+      ],
+      "keywords": [
+        "venue",
+        "event",
+        "client",
+        "any",
+        "food",
+        "date",
+        "agreement",
+        "deposit"
+      ],
+      "summary": "EVENT SPACE RENTAL AGREEMENT\nThis Event Space Rental Agreement (\u201cAgreement\u201d) is made and entered into as of the date of the last signature below (the \u201cEffective Date\u201d), by and between:\nHoptimystic Brewing (\u201cVenue\u201d)\nand\nKatie Mistretta and Mike Petran (collectively, the \u201cClient\u201d). Event Details\nEvent: Welcome Dinner\nEvent Date: Friday, June 5, 2026\nEvent Time: 6:00 PM \u2013 9:00 PM\nRental Duration: Three (3) hours\nLocation: Hoptimystic Brewing \u2013 Sunapee\n\n2. Rental Fee\nThe Client agrees to pay a space rental fee of Two Thousand Three Hundred Fifty Dollars ($2,350.00) for exclusive use of the designated event space during the rental period described above.",
+      "events": [
+        {
+          "date_raw": "May 22, 2026",
+          "date_iso": "2026-05-22",
+          "snippet": "\u2026this Agreement. The deposit shall be fully refundable if the Client cancels the event on or before May 22, 2026 (fourteen (14) days prior to the Event Date). Cancellations made within fourteen (14) days of the E\u2026",
+          "source": "HOPTIMYSTIC EVENT SPACE RENTAL AGREEMENT - Mistretta_Petran Welcome Party.docx"
+        },
+        {
+          "date_raw": "June 5, 2026",
+          "date_iso": "2026-06-05",
+          "snippet": "\u2026ke Petran (collectively, the \u201cClient\u201d).  1. Event Details Event: Welcome Dinner Event Date: Friday, June 5, 2026 Event Time: 6:00 PM \u2013 9:00 PM Rental Duration: Three (3) hours Location: Hoptimystic Brewing \u2013 Suna\u2026",
+          "source": "HOPTIMYSTIC EVENT SPACE RENTAL AGREEMENT - Mistretta_Petran Welcome Party.docx"
+        }
+      ]
+    },
+    {
+      "file": "IMG_8183.heic",
+      "ext": ".heic",
+      "size": 1951159,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "IMG_8184.heic",
+      "ext": ".heic",
+      "size": 1912890,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "IMG_8185.heic",
+      "ext": ".heic",
+      "size": 1839892,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "IMG_8186.heic",
+      "ext": ".heic",
+      "size": 2049198,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "IMG_8187.heic",
+      "ext": ".heic",
+      "size": 2061621,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "johnny c_s party bus sqinv-Mike-Petran-000004.pdf",
+      "ext": ".pdf",
+      "size": 63634,
+      "text_len": 604,
+      "dates": [
+        "June 6, 2026",
+        "March 7, 2026"
+      ],
+      "amounts": [
+        "$0.01",
+        "$375"
+      ],
+      "keywords": [
+        "invoice",
+        "com",
+        "gmail",
+        "march",
+        "date",
+        "due",
+        "deposit",
+        "pay"
+      ],
+      "summary": "Invoice #000004\nCustomer\nInvoice Details\nPayment\nMike Petran\nmpetran398@gmail.com\n(847) 721-6508\nPDF created March 7, 2026\n$0.01\nService date June 6, 2026\nDue March 7, 2026\n$0.01\nItems\nQuantity\nPrice\nAmount\ndeposit for 6/6 wedding\n1\n$0.01\n$0.01\nDeposit for 4 hours paid through venmo $375\nSubtotal\n$0.01\nTotal Due\n$0.01\nPage 1 of 1\nJohnny C\u2019s Party Express LLC\njohnnycpartyexpress@gmail.com | (603) 419-0030\nInvoice #000004\nIssue date\nMar 7, 2026\nPay online\nTo pay your invoice go to https://squareup.com/u/l8xb2gMG  x\nOr open the camera on your mobile device and place the QR code in the camera's\nview.",
+      "events": [
+        {
+          "date_raw": "March 7, 2026",
+          "date_iso": "2026-03-07",
+          "snippet": "\u2026000004 Customer Invoice Details Payment Mike Petran mpetran398@gmail.com (847) 721-6508 PDF created March 7, 2026 $0.01 Service date June 6, 2026 Due March 7, 2026 $0.01 Items Quantity Price Amount deposit for 6/6\u2026",
+          "source": "johnny c_s party bus sqinv-Mike-Petran-000004.pdf"
+        },
+        {
+          "date_raw": "June 6, 2026",
+          "date_iso": "2026-06-06",
+          "snippet": "\u2026ayment Mike Petran mpetran398@gmail.com (847) 721-6508 PDF created March 7, 2026 $0.01 Service date June 6, 2026 Due March 7, 2026 $0.01 Items Quantity Price Amount deposit for 6/6 wedding 1 $0.01 $0.01 Deposit f\u2026",
+          "source": "johnny c_s party bus sqinv-Mike-Petran-000004.pdf"
+        }
+      ]
+    },
+    {
+      "file": "Kaite And Mike 6_6_26.docx",
+      "ext": ".docx",
+      "size": 807287,
+      "text_len": 4266,
+      "dates": [],
+      "amounts": [
+        "$100.00",
+        "$110.00",
+        "$120.00",
+        "$15.00",
+        "$188.00",
+        "$195.00",
+        "$350",
+        "$50.00",
+        "$85",
+        "$903"
+      ],
+      "keywords": [
+        "flowers",
+        "style",
+        "focal",
+        "total",
+        "wedding",
+        "accent",
+        "greens",
+        "filled"
+      ],
+      "summary": "Mica Mine Floral LLC\nUnity, NH 03743\n(603)477-3442\nmicaminefloral@protonmail.com\nKatie And Mike\u2019s Wedding Quote \nWedding Date: June 6th 2026\n\nLocation: The Greatful Dane Lodge - 5 Schoolhouse Road, Newport, NH 03773\n\nTime Of Ceremony: ? ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\nStyle: Whimsical/Earthy/Wildflower Garden \n\nColors: Soft Colors; Peaches, Corals, Creams, Yellows, Pinks, Oranges, Greens And Whites\n\nPossible Flowers: Roses, Peonies, Poppies, Snap Dragons, Larkspur, Queen Annes Lace, Ranunculus, Cosmos, Eucalyptus, Ferns And Wildflowers. (Local Flowers Will Be Used As Much As Possible; With Flowers Being Chosen That Work With Color And St",
+      "events": []
+    },
+    {
+      "file": "Katie & Mike Vendor Options.xlsx",
+      "ext": ".xlsx",
+      "size": 16677,
+      "text_len": 6831,
+      "dates": [
+        "2.1.2026"
+      ],
+      "amounts": [
+        "$1",
+        "$1,300",
+        "$1,795",
+        "$1000",
+        "$12",
+        "$1400",
+        "$15",
+        "$180",
+        "$1982",
+        "$2,100",
+        "$2,750",
+        "$2000",
+        "$225",
+        "$250",
+        "$2500",
+        "$269",
+        "$310",
+        "$409",
+        "$450",
+        "$500",
+        "$600",
+        "$650",
+        "$720",
+        "$750",
+        "$9"
+      ],
+      "keywords": [
+        "com",
+        "party",
+        "gmail",
+        "includes",
+        "day",
+        "event",
+        "welcome",
+        "date"
+      ],
+      "summary": "[sheet: Vendor Quotes]\n[sheet: Booked]\nKatie & Mike Vendor/Venue Options\nVenue | Location | Event | Phone Number | Contact Person | Email | Cost/Quote: | Notes\nFlying Goose | Welcome Party | 603-526-6899 | N/A | Can only do larger events during off-season. They could however, accommodate a lunch for 10-15 people in June\nBlue Canoe | Sunapee, NH | Welcome Party | 603-414-3050 | Claudia Bron, FOH GM | thebluecanoenh@gmail.com | N/A | We\u2019re not able to offer buyouts or large private gatherings during peak season, Memorial Day to Columbus day\nSalt Hill Pub Shanty | Newbury, NH | After Party | 603-763-2667 | Cooper Racine, Manager | cooper.racine@salthillpub.com | $500 Food Minimum, plus 20% grat",
+      "events": [
+        {
+          "date_raw": "2.1.2026",
+          "date_iso": "2026-02-01",
+          "snippet": "\u2026on for food at $9-$12 for 2 tacos Lake Sunapee Cruise | Newbury, NH | Welcome Party | Pricing avail 2.1.2026 | Dinner\u00a0Cruise:\u00a0https://sunapeecruises.com/dinner-charter/ Cocktail\u00a0Cruise:\u00a0https://sunapeecruises\u2026",
+          "source": "Katie & Mike Vendor Options.xlsx"
+        }
+      ]
+    },
+    {
+      "file": "Katie_Mike 6.6.26 Agreement (1).pdf",
+      "ext": ".pdf",
+      "size": 253773,
+      "text_len": 3702,
+      "dates": [
+        "1/10/2026",
+        "1/29/2026",
+        "June 6, 2026",
+        "May 23, 2026",
+        "May 6, 2026"
+      ],
+      "amounts": [
+        "$2000"
+      ],
+      "keywords": [
+        "event",
+        "caterer",
+        "client",
+        "agreement",
+        "count",
+        "due",
+        "name",
+        "guest"
+      ],
+      "summary": "WEDDING CATERING AGREEMENT \nThis Wedding Catering Agreement (\u201cAgreement\u201d) is entered into on 1/10/2026  by and between: \nCaterer (Vendor):\u200b\n Business Name: Grumpa\u2019s Lunchbox LLC\u200b\n Address: Newport, NH\u200b\n Phone/Email: 603-477-5172/ 603-477-5393\u200b\n Representative: Ernie Shepard/ Brittany Spear \n \nClient (s): \n\u200b\n \n Name:\u200b\n Address: \u200b\n Phone/Email: \n \n \n1. EVENT DETAILS \n\u25cf\u200b Event: Catered Wedding Reception\u200b\n \n\u25cf\u200b Event Date: June 6, 2026\u200b\n \n\u25cf\u200b Event Location: The Greatful Dane Lodge Newport, NH\u200b\n \n\n\u25cf\u200b Event Time: \u200b\n \n\u25cf\u200b Estimated Guest Count: 100-120 \n \n2. SERVICES PROVIDED \nThe Caterer agrees to provide the following services: \n\u25cf\u200b Food preparation and service as outlined in INVOICE by SQUAREUP \n\u25cf\u200b",
+      "events": [
+        {
+          "date_raw": "1/10/2026",
+          "date_iso": "2026-01-10",
+          "snippet": "\u2026WEDDING CATERING AGREEMENT  This Wedding Catering Agreement (\u201cAgreement\u201d) is entered into on 1/10/2026  by and between:  Caterer (Vendor):\u200b  Business Name: Grumpa\u2019s Lunchbox LLC\u200b  Address: Newport, NH\u200b\u2026",
+          "source": "Katie_Mike 6.6.26 Agreement (1).pdf"
+        },
+        {
+          "date_raw": "1/29/2026",
+          "date_iso": "2026-01-29",
+          "snippet": "\u2026Representative:\u200b  Name: Ernie Shepard/ Brittany Spear\u200b \u200b  Signature: ______________________\u200b  Date: 1/29/2026       Client (s):\u200b  Name: __________________________\u200b  Signature: ______________________\u200b  Date: __\u2026",
+          "source": "Katie_Mike 6.6.26 Agreement (1).pdf"
+        },
+        {
+          "date_raw": "May 6, 2026",
+          "date_iso": "2026-05-06",
+          "snippet": "\u2026\u25cf\u200b Deposit: $2000 due upon signing (non-refundable unless stated otherwise)  \u25cf\u200b Half Remainder Due: May 6, 2026  \u25cf\u200b Final Payment Due: May 23, 2026  \u25cf\u200b Payment Method: cash/check, venmo or by Square (3% fee adde\u2026",
+          "source": "Katie_Mike 6.6.26 Agreement (1).pdf"
+        },
+        {
+          "date_raw": "May 23, 2026",
+          "date_iso": "2026-05-23",
+          "snippet": "\u2026(non-refundable unless stated otherwise)  \u25cf\u200b Half Remainder Due: May 6, 2026  \u25cf\u200b Final Payment Due: May 23, 2026  \u25cf\u200b Payment Method: cash/check, venmo or by Square (3% fee added for each charge)  \u25cf\u200b 9% NH Tax app\u2026",
+          "source": "Katie_Mike 6.6.26 Agreement (1).pdf"
+        },
+        {
+          "date_raw": "June 6, 2026",
+          "date_iso": "2026-06-06",
+          "snippet": "\u2026dress: \u200b  Phone/Email:      1. EVENT DETAILS  \u25cf\u200b Event: Catered Wedding Reception\u200b   \u25cf\u200b Event Date: June 6, 2026\u200b   \u25cf\u200b Event Location: The Greatful Dane Lodge Newport, NH\u200b    \u25cf\u200b Event Time: \u200b   \u25cf\u200b Estimated Guest\u2026",
+          "source": "Katie_Mike 6.6.26 Agreement (1).pdf"
+        }
+      ]
+    },
+    {
+      "file": "Mica Mine Floral - updated quote 4.25.26.docx",
+      "ext": ".docx",
+      "size": 807331,
+      "text_len": 4219,
+      "dates": [],
+      "amounts": [
+        "$100.00",
+        "$120.00",
+        "$15.00",
+        "$150.00",
+        "$1520.00",
+        "$180.00",
+        "$188.00",
+        "$195.00",
+        "$3,053.00",
+        "$3233.00",
+        "$350",
+        "$480.00",
+        "$50.00",
+        "$95.00"
+      ],
+      "keywords": [
+        "flowers",
+        "total",
+        "wedding",
+        "focal",
+        "style",
+        "whimsical",
+        "greens",
+        "filled"
+      ],
+      "summary": "Mica Mine Floral LLC\nUnity, NH 03743\n(603)477-3442\nmicaminefloral@protonmail.com\nKatie And Mike\u2019s Wedding Quote \nWedding Date: June 6th 2026\n\nLocation: The Greatful Dane Lodge - 5 Schoolhouse Road, Newport, NH 03773\n\nTime Of Ceremony: 4:30 \n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\nStyle: Whimsical/Earthy/Wildflower Garden \n\nColors: Soft Colors; Peaches, Corals, Creams, Yellows, Pinks, Oranges, Greens And Whites\n\nPossible Flowers: Roses, Spray Roses, Chrysanthemums, Poppies, Queen Annes Lace, Ranunculus, Cosmos, Snap dragons, Larkspur, Stock, Eucalyptus, Ferns And Wildflowers. (Local Flowers Will Be Used As Much As Possible; With Flowers Being Ch",
+      "events": []
+    },
+    {
+      "file": "Mica Mine Floral Updated Quote 3.13.26 - Katie And Mike.docx",
+      "ext": ".docx",
+      "size": 807208,
+      "text_len": 4066,
+      "dates": [],
+      "amounts": [
+        "$100.00",
+        "$120.00",
+        "$15.00",
+        "$150.00",
+        "$1520.00",
+        "$188.00",
+        "$195.00",
+        "$2573.00",
+        "$2723.00",
+        "$350",
+        "$50.00",
+        "$95.00"
+      ],
+      "keywords": [
+        "flowers",
+        "total",
+        "wedding",
+        "style",
+        "focal",
+        "greens",
+        "accent",
+        "event"
+      ],
+      "summary": "Mica Mine Floral LLC\nUnity, NH 03743\n(603)477-3442\nmicaminefloral@protonmail.com\nKatie And Mike\u2019s Wedding Quote \nWedding Date: June 6th 2026\n\nLocation: The Greatful Dane Lodge - 5 Schoolhouse Road, Newport, NH 03773\n\nTime Of Ceremony: 4:30 \n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\nStyle: Whimsical/Earthy/Wildflower Garden \n\nColors: Soft Colors; Peaches, Corals, Creams, Yellows, Pinks, Oranges, Greens And Whites\n\nPossible Flowers: Roses, Spray Roses, Chrysanthemums, Poppies, Queen Annes Lace, Ranunculus, Cosmos, Snap dragons, Larkspur, Stock, Eucalyptus, Ferns And Wildflowers. (Local Flowers Will Be Used As Much As Possible; With Flowers Being Ch",
+      "events": []
+    },
+    {
+      "file": "Mike Petran and Katie Mistretta - Greatful Dane Lodge 6.6.26.docx",
+      "ext": ".docx",
+      "size": 148042,
+      "text_len": 14373,
+      "dates": [],
+      "amounts": [
+        "$1,375.00",
+        "$150",
+        "$170",
+        "$2,750.00",
+        "$200",
+        "$250",
+        "$250.00",
+        "$300",
+        "$5,500.00",
+        "$50"
+      ],
+      "keywords": [
+        "lodge",
+        "greatful",
+        "dane",
+        "any",
+        "event",
+        "guests",
+        "not",
+        "understand"
+      ],
+      "summary": "PEAK SEASON One Day WEDDING CONTRACT- THE GREATFUL DANE LODGE  \nWe, Mike Petran and Katie Mistretta , wish to reserve the Greatful Dane Lodge in Newport, NH for the purpose of holding an event and housing our guests on the day of Saturday June 6,2026 . We wish to guarantee the use of the buildings and grounds from 10AM to 12AM/Midnight on Saturday June 6,2026 . We understand that we will have full use of the facility starting at 10AM on Saturday June 6,2026 with the opportunity to start setting up activities in the ceremony and reception spaces if we desire.",
+      "events": []
+    },
+    {
+      "file": "Mistretta.Petran wedding 6.5.2026 - Mountain Edge Suites.docx",
+      "ext": ".docx",
+      "size": 41558,
+      "text_len": 2652,
+      "dates": [
+        "11.21.2025",
+        "11.8.2025",
+        "6.05.2026",
+        "6.06.2026",
+        "6.07.2026"
+      ],
+      "amounts": [
+        "$10",
+        "$15"
+      ],
+      "keywords": [
+        "room",
+        "guest",
+        "rates",
+        "rooms",
+        "hotel",
+        "tax",
+        "block",
+        "date"
+      ],
+      "summary": "Please See Next Page for More Information\n\nRoom Block Policies\nCall-In Reservations:\nGuests will need to call the Hotel directly to make individual reservations by 60 days prior to Friday, June 05,2026. A credit card is required for each guest to confirm their reservation. Sixty days prior to June 05,2026, any rooms that have not been reserved in the group block will be released for general sale.",
+      "events": [
+        {
+          "date_raw": "11.8.2025",
+          "date_iso": "2025-11-08",
+          "snippet": "\u2026Agreement Room Block Agreement Room Block Agreement Room Block Agreement Organization    Draft Date 11.8.2025 Event Title Mistretta.Petran wedding Check In Date 6.05.2026 Contact Nicole Follensbee Check Out Da\u2026",
+          "source": "Mistretta.Petran wedding 6.5.2026 - Mountain Edge Suites.docx"
+        },
+        {
+          "date_raw": "11.21.2025",
+          "date_iso": "2025-11-21",
+          "snippet": "\u2026f this agreement are mutually accepted by both parties. Please review, sign and return via email by 11.21.2025 to confirm this group booking.         X   ___________    Group Contact ___________________________\u2026",
+          "source": "Mistretta.Petran wedding 6.5.2026 - Mountain Edge Suites.docx"
+        },
+        {
+          "date_raw": "6.05.2026",
+          "date_iso": "2026-06-05",
+          "snippet": "\u2026k Agreement Organization    Draft Date 11.8.2025 Event Title Mistretta.Petran wedding Check In Date 6.05.2026 Contact Nicole Follensbee Check Out Date 6.07.2026 Title Wedding Planner Contact Katerina Tourville\u2026",
+          "source": "Mistretta.Petran wedding 6.5.2026 - Mountain Edge Suites.docx"
+        },
+        {
+          "date_raw": "6.06.2026",
+          "date_iso": "2026-06-06",
+          "snippet": "\u2026al Guest (over 2 adults) 6.05.2026 10 5 2 2 1 $10  +fees & taxes Rates 269.00 289.00 369.00 409.00  6.06.2026 10              5            2 2 1 $10 +fees & taxes Rates        269.00 289.00 369.00 409.00\u2026",
+          "source": "Mistretta.Petran wedding 6.5.2026 - Mountain Edge Suites.docx"
+        },
+        {
+          "date_raw": "6.07.2026",
+          "date_iso": "2026-06-07",
+          "snippet": "\u2026ent Title Mistretta.Petran wedding Check In Date 6.05.2026 Contact Nicole Follensbee Check Out Date 6.07.2026 Title Wedding Planner Contact Katerina Tourville Phone  Title General Manager Fax  Phone  Email Sim\u2026",
+          "source": "Mistretta.Petran wedding 6.5.2026 - Mountain Edge Suites.docx"
+        }
+      ]
+    },
+    {
+      "file": "Mistretta_Petran Wedding - Budget.xlsx",
+      "ext": ".xlsx",
+      "size": 120849,
+      "text_len": 5182,
+      "dates": [
+        "4/27/2026",
+        "4/9/2026",
+        "5/19/26",
+        "5/22/26",
+        "5/23/26",
+        "5/26/26",
+        "5/4/26"
+      ],
+      "amounts": [
+        "$1850",
+        "$950"
+      ],
+      "keywords": [
+        "budget",
+        "paid",
+        "wedding",
+        "party",
+        "estimate",
+        "cost",
+        "remaining",
+        "total"
+      ],
+      "summary": "[sheet: Budget Calculator]\n[sheet: Catering]\n[sheet: Honeymoon]\n[sheet: Party]\nTotal Wedding Budget: | 50000.0 | Enter your Total Wedding Budget\nIndustry Standard | Our Wedding Budget Breakdown | Click the      symbols on the left side pane to expand each sub-category. Low Estimate | High Estimate | Actual Cost | Deposit Paid | Remaining Due\nVenue | 0.07 | 3500 | 0.115 | 5750 | 9100 | 9100 | 0\nWelcome Party | 0.02 | 2000.0 | 0.025 | 2500.0 | 2350.0 | 2350.0 | 0\nCeremony Reservation | 0.02 | 1000 | 0.0 | 0 | 0.0 | 0.0 | 0\nReception Reservation | 0.03 | 1500 | 0.09 | 4500 | 6750.0 | 6750.0 | 0 | paid Grateful Dane $1850 on 4/27/2026\nFood & Beverage | 0.2 | 10000 | 0.2875 | 14375 | 21763.91 | 1",
+      "events": [
+        {
+          "date_raw": "4/9/2026",
+          "date_iso": "2026-04-09",
+          "snippet": "\u2026lance 5/4/26 Wedding Planner | 0.1 | 5000 | 0.15 | 7500 | 10000.0 | 10000.0 | 0 | paid full balance 4/9/2026 Transportation - Wedding Party | 750.0 | 375.0 | 375 Transportation | 0.02 | 1000 | 0.02 | 1000 | 1\u2026",
+          "source": "Mistretta_Petran Wedding - Budget.xlsx"
+        },
+        {
+          "date_raw": "4/27/2026",
+          "date_iso": "2026-04-27",
+          "snippet": "\u2026ception Reservation | 0.03 | 1500 | 0.09 | 4500 | 6750.0 | 6750.0 | 0 | paid Grateful Dane $1850 on 4/27/2026 Food & Beverage | 0.2 | 10000 | 0.2875 | 14375 | 21763.91 | 18571 | 3192.91 Catering | 0.1 | 5000 |\u2026",
+          "source": "Mistretta_Petran Wedding - Budget.xlsx"
+        },
+        {
+          "date_raw": "5/4/26",
+          "date_iso": "2026-05-04",
+          "snippet": "\u2026| 21763.91 | 18571 | 3192.91 Catering | 0.1 | 5000 | 0.12 | 6000 | 9852.0 | 9852.0 | 0 | 3592 paid 5/4/26 (half of remaining balance), 4260 paid 5/26/26 (remaining balance, paid in full) Bar & Beverages |\u2026",
+          "source": "Mistretta_Petran Wedding - Budget.xlsx"
+        },
+        {
+          "date_raw": "5/19/26",
+          "date_iso": "2026-05-19",
+          "snippet": "\u2026| 300.0 | 300.0 | 0 Alterations | 0.005 | 250 | 0.01 | 500 | 830.0 | 830.0 | 0 | paid full balance 5/19/26 Shoes & Accessories | 0.005 | 250 | 0.01 | 500 | 0.0 | 0.0 | 0 Invitations Etc. | 0.02 | 1000 | 0.0\u2026",
+          "source": "Mistretta_Petran Wedding - Budget.xlsx"
+        },
+        {
+          "date_raw": "5/22/26",
+          "date_iso": "2026-05-22",
+          "snippet": "\u2026| 0.0 | 0.0 | 0 Hair & Makeup | 0.02 | 1000 | 0.02 | 1000 | 1645.0 | 1645.0 | 0 | paid full balance 5/22/26 Florist | 0.035 | 1750 | 0.05 | 2500 | 3318.0 | 3318.0 | 0 | paid full balance 5/4/26 Wedding Plann\u2026",
+          "source": "Mistretta_Petran Wedding - Budget.xlsx"
+        },
+        {
+          "date_raw": "5/23/26",
+          "date_iso": "2026-05-23",
+          "snippet": "\u2026| 1845.63 | 1845.63 | 0.0 Tent Rentals | 2000.0 | 5000.0 | 1780.0 | 1780.0 | 0 | paid full balance 5/23/26 Event Rentals | 0.02 | 1000 | 0.02 | 1000 | 0.0 | 0.0 | 0.0 Photo Booth | 0.01 | 500 | 0.02 | 1000\u2026",
+          "source": "Mistretta_Petran Wedding - Budget.xlsx"
+        },
+        {
+          "date_raw": "5/26/26",
+          "date_iso": "2026-05-26",
+          "snippet": "\u20265000 | 0.12 | 6000 | 9852.0 | 9852.0 | 0 | 3592 paid 5/4/26 (half of remaining balance), 4260 paid 5/26/26 (remaining balance, paid in full) Bar & Beverages | 0.07 | 3500 | 0.12 | 6000 | 5580.0 | 5580.0 | 0\u2026",
+          "source": "Mistretta_Petran Wedding - Budget.xlsx"
+        }
+      ]
+    },
+    {
+      "file": "Mountains Edge Petran Mistretta Contract.pdf",
+      "ext": ".pdf",
+      "size": 12546563,
+      "text_len": 1,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "",
+      "events": []
+    },
+    {
+      "file": "Music Requests.xlsx",
+      "ext": ".xlsx",
+      "size": 6387,
+      "text_len": 1025,
+      "dates": [],
+      "amounts": [],
+      "keywords": [
+        "artist",
+        "song",
+        "love",
+        "one",
+        "hour",
+        "beatles",
+        "walk",
+        "baby"
+      ],
+      "summary": "[sheet: Sheet1]\nCeremony - Solo guitar for one (1) hour | Cocktail Hour - DJ for one (1) hour | Reception - 8 Piece for four (4) continuous | https://bandvibrant.com/song-list\nArtist | Song | Artist | Song | Artist | Song\nBeatles | Here comes the sun | Katie Walk out | Billy Strings | Gild the Lilly | Franki valli | I love you baby\nJack Johnson | Better Together | Mike Walk out | Phish | Shade\nStevie Wonder | Signed Sealed Delivered | Recessional | Goose | Shama Lama Ding Dong (Live in Buffalo 2019.11.16)\nMusic Sounds Better with you | Neal Frances\nGrateful Dead | They Love Each Other\nLumineers | This must be the place\nToploader | Dancing in the Moonlight\nRay LaMontagne | You are the Best Th",
+      "events": []
+    },
+    {
+      "file": "PETRAN WEDDING Contract Signed.jpg",
+      "ext": ".jpg",
+      "size": 112867,
+      "text_len": 0,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "[image - visual inspo/photo, not text-parsed]",
+      "events": []
+    },
+    {
+      "file": "Salt Hil Catering Menu.pdf",
+      "ext": ".pdf",
+      "size": 230173,
+      "text_len": 3338,
+      "dates": [],
+      "amounts": [
+        "$100",
+        "$105",
+        "$129",
+        "$162",
+        "$190",
+        "$199",
+        "$210",
+        "$239",
+        "$299",
+        "$300",
+        "$325",
+        "$329",
+        "$370",
+        "$500",
+        "$90"
+      ],
+      "keywords": [
+        "ppl",
+        "cheese",
+        "includes",
+        "sauce",
+        "fresh",
+        "baked",
+        "chicken",
+        "pub"
+      ],
+      "summary": "Salt hill Pub \nMt Sunapee, NH 603-763-2667 \nCatering Buffet Menu\nSW Chicken Eggrolls \nCrispy eggrolls filled with spicy chicken, black beans, corn, and jack \ncheese. Served with creamy ranch for dipping \n$239 (30ppl)  \nHummus Platter \nWarm pitas, homemade hummus, tomatoes, red onions, cucumbers, \nCarrots, Celery, Kalamata olives & feta cheese \n$129 (30ppl)   \nAssorted Crackers & Cheese Board \nIncludes a variety of cheeses with crackers \n \n$190 (30 ppl) \nAssorted Fruit OR Veggie Platter \n(30ppl) Market Price \n \nMushroom Meatballs in a creamy Mushroom sauce \nHouse Parmesan Meatballs covered with our Creamy \nmushroom Gravy. Add build your own meatball sub fixings for additional $ \n$162 (30ppl) ",
+      "events": []
+    },
+    {
+      "file": "Seating Chart.xlsx",
+      "ext": ".xlsx",
+      "size": 7305,
+      "text_len": 1688,
+      "dates": [],
+      "amounts": [],
+      "keywords": [
+        "table",
+        "petran",
+        "mistretta",
+        "alex",
+        "michael",
+        "pashkevich",
+        "mike",
+        "dan"
+      ],
+      "summary": "[sheet: Sheet1]\nHead Table | Table 1 | Table 2 | Table 3 | Table 4 | Table 5\nMike Petran | Mark Mistretta | Michael Petran | Dan Kemock | William Choy | Ali Adil\nKatie Mistretta | Susan Mistretta | Andy Petran | Kellie Kemock | Margaret Choy | Ilya Bendich\nDre Andrews | Holly Petran | Emily Petran | Michael Hamilton | Ryan Beecher | Joe Kromka | Color code:\nBrooke Lubinski | Dave Mistretta | Zoey Petran | Lindsey Hamilton | Nicole Wiedmann | Chandler Caufield | Solo\nDavid Park | Bill Toth | Jim Petran | Richelle Heaverly | Jonathan Joyce | Bill Zuke | Hasnt RSVPed yet\nGrant Duvall | Cathy Mehlenbacher | Janet Petran | Paul Heaverly | Nicole Joyce | Ashley Zuke\nCassie Bair | Michael Mistretta",
+      "events": []
+    },
+    {
+      "file": "Swell Oyster Co Estimate.pdf",
+      "ext": ".pdf",
+      "size": 59832,
+      "text_len": 934,
+      "dates": [
+        "06/06/2026",
+        "06/6/26"
+      ],
+      "amounts": [
+        "$2,500.56",
+        "$25"
+      ],
+      "keywords": [
+        "catering",
+        "dealer",
+        "certification",
+        "fee",
+        "swell",
+        "gmail",
+        "com",
+        "estimate"
+      ],
+      "summary": "Dealer Certification # NH SS 150 AQ\nA $25 late fee will be added to all overdue invoices. Swell Oyster Company LLC\n196 Drinkwater Rd\nHampton Falls, NH  03844\n+12033135856\nswelloysterco@gmail.com\nDealer Certification # NH SS 150 AQ\nEstimate\nADDRESS\nMike Petran\n609 New Aldrich Rd. Grantham, NH 03753\nESTIMATE # 1021\nDATE 06/06/2026\n \nPRODUCT\nCATEGORY\nQTY\nPRICE PER\nAMOUNT\nSwell Oysters\nCatering\n250\n2.25\n562.50T\nXL Shrimp Cocktail\nCatering\n200\n3.00\n600.00T\nSauces + Lemon\nCatering\n1\n50.00\n50.00T\nPlates + Utensils\nCatering\n1\n50.00\n50.00\nIce\nCatering\n1\n75.00\n75.00\nShucker Labor 75/HR\nCatering\n8\n75.00\n600.00\nEquipment Fee\nCatering\n1\n100.00\n100.00\nTransportation\nCatering\n180\n2.00\n360.00\n \nEvent Type: ",
+      "events": [
+        {
+          "date_raw": "06/06/2026",
+          "date_iso": "2026-06-06",
+          "snippet": "\u2026SS 150 AQ Estimate ADDRESS Mike Petran 609 New Aldrich Rd.  Grantham, NH 03753 ESTIMATE # 1021 DATE 06/06/2026   PRODUCT CATEGORY QTY PRICE PER AMOUNT Swell Oysters Catering 250 2.25 562.50T XL Shrimp Cocktail\u2026",
+          "source": "Swell Oyster Co Estimate.pdf"
+        },
+        {
+          "date_raw": "06/6/26",
+          "date_iso": "2026-06-06",
+          "snippet": "\u2026nt Fee Catering 1 100.00 100.00 Transportation Catering 180 2.00 360.00   Event Type: Wedding When: 06/6/26 Where: The Greatful Dane Lodge - Newport, NH Time: 4:00-7:00pm Number of Guests: 100 Contact: Mike\u2026",
+          "source": "Swell Oyster Co Estimate.pdf"
+        }
+      ]
+    },
+    {
+      "file": "Tent receipt first payment.pdf",
+      "ext": ".pdf",
+      "size": 19116,
+      "text_len": 520,
+      "dates": [],
+      "amounts": [
+        "$1,175.00"
+      ],
+      "keywords": [
+        "kearsarge",
+        "tent",
+        "date",
+        "mar",
+        "llc",
+        "gmail",
+        "com",
+        "katherine"
+      ],
+      "summary": "#000077-002\n$1,175.00\n01:12 am | Mar 31, 2026\nMar 31, 2026\nvisa (XXXX-9940)\nFrom:\nKearsarge Tent LLC\nKearsarge Tent LLC\n(603) 748-4755\nkearsargetent@gmail.com\nBill To:\nKatherine Mistretta\nkatherine.mistretta@gmail.com\nProject:\nNicole Follensbee's Project\nType\nWedding\nDate\nJun 06, 2026\nTime\nTBD\nLocation\nThe Greatful Dane Lodge, 5 Schoolhouse Road, Newport, NH 03773\nPAYMENT CONFIRMATION\nYou've completed 1 of 2 payments / Retainer for \"Kearsarge Tent Contract/Invoice\"\nINVOICE\nTOTAL\nCHARGE DATE\nDUE DATE\nPAYMENT METHOD",
+      "events": []
+    },
+    {
+      "file": "Vendor Agreements/Condor (Friday Food)(Service_agreement_completed.pdf",
+      "ext": ".pdf",
+      "size": 49246,
+      "text_len": 2957,
+      "dates": [
+        "05/05/2026",
+        "May 05, 2026"
+      ],
+      "amounts": [],
+      "keywords": [
+        "petran",
+        "recipient",
+        "condor",
+        "restaurant",
+        "group",
+        "llc",
+        "mike",
+        "signed"
+      ],
+      "summary": "Condor Restaurant Group, LLC\nSigned on May 05, 2026\nService agreement\nBusiness: Condor Restaurant Group, LLC\nRecipient: Mike Petran\ninfo@theboxfoodtruck.com\n(802) 369-8185\nmpetran398@gmail.com\n(847) 721-6508\nThis contract is between Condor Restaurant Group, LLC (the \"Business\") and Mike Petran (the\n\"Client\") dated 05/05/2026. The Client is hiring the Business for the services described in this contract. Terms\nFinal Sale and Payment Terms\nWe, theBOX, will fulfill all service details as outlined.",
+      "events": [
+        {
+          "date_raw": "05/05/2026",
+          "date_iso": "2026-05-05",
+          "snippet": "\u2026tract is between Condor Restaurant Group, LLC (the \"Business\") and Mike Petran (the \"Client\") dated 05/05/2026. The Client is hiring the Business for the services described in this contract. Terms Final Sale an\u2026",
+          "source": "Vendor Agreements/Condor (Friday Food)(Service_agreement_completed.pdf"
+        },
+        {
+          "date_raw": "May 05, 2026",
+          "date_iso": "2026-05-05",
+          "snippet": "\u2026Condor Restaurant Group, LLC Signed on May 05, 2026 Service agreement Business: Condor Restaurant Group, LLC Recipient: Mike Petran info@theboxfoodtruc\u2026",
+          "source": "Vendor Agreements/Condor (Friday Food)(Service_agreement_completed.pdf"
+        }
+      ]
+    },
+    {
+      "file": "Vibrant Band - Wedding Planner Worksheet - Due 1 month out.docx",
+      "ext": ".docx",
+      "size": 476834,
+      "text_len": 12676,
+      "dates": [
+        "6/6/2026"
+      ],
+      "amounts": [],
+      "keywords": [
+        "please",
+        "time",
+        "ceremony",
+        "start",
+        "special",
+        "song",
+        "instructions",
+        "music"
+      ],
+      "summary": "Wedding Planner Worksheet \n \nPlanner MUST be returned NO LATER THAN 4 WEEKS BEFORE the wedding. Please use the below checklist to ensure that you properly fill out all necessary components of the wedding planner worksheet. Important Contact Information \nParking Details for Vendors \nEntertainment Services & Load In Procedures (if applicable) \nTimeline of Events \nCeremony Music \nCocktail Music \nReception \nMusic Style (Play/Do Not Play) \nHotel Details (if applicable) \nFerry Details (if applicable) \nFinal Review Phone Call \nSocial Media Platforms \n \n \n \n \n \n \n \n \n \n \nIMPORTANT INFORMATION \nWedding Date: 6/6/2026\n \nStart Time: \nPrelude: 4pm\nCeremony: 4:30pm\nCocktail Hour: 5-6pm\nReception 6-10pm\nE",
+      "events": [
+        {
+          "date_raw": "6/6/2026",
+          "date_iso": "2026-06-06",
+          "snippet": "\u2026Review Phone Call  Social Media Platforms                      IMPORTANT INFORMATION  Wedding Date: 6/6/2026   Start Time:  Prelude: 4pm Ceremony: 4:30pm Cocktail Hour: 5-6pm Reception 6-10pm End Time: 10pm\u2026",
+          "source": "Vibrant Band - Wedding Planner Worksheet - Due 1 month out.docx"
+        }
+      ]
+    },
+    {
+      "file": "Vibrant Band Song Spreadsheet.xlsx",
+      "ext": ".xlsx",
+      "size": 14194,
+      "text_len": 19871,
+      "dates": [],
+      "amounts": [],
+      "keywords": [
+        "love",
+        "sinatra",
+        "all",
+        "way",
+        "like",
+        "feel",
+        "michael",
+        "man"
+      ],
+      "summary": "[sheet: Sheet1]\nPOP / Top 40 | Rock/Alternative | Swing | Motown/ R&B | Dinner Set / First Dance\nHot To Go                     Chappell Roan | Mr. Brightside                          Killers | All The Way-Frank Sinatra | SEPTEMBER            Earth Wind & Fire | Best Part               H.E.R Daniel Caesar\nPink Pony Club        Chappell Roan | Semi-Charmed Life     Third Eye Blind | Day By Day-Frank Sinatra | We Are Family                  Sister Sledge | Perfect             Ed Sheeran & Beyonce\nGood As Hell                                   Lizzo | Don't Stop Believin'            Journey | Fly Me To The Moon-Frank Sinatra | Respect                          Aretha Franklin | Thinking Out Loud ",
+      "events": []
+    },
+    {
+      "file": "Vibrant Productions.pdf",
+      "ext": ".pdf",
+      "size": 7822557,
+      "text_len": 1,
+      "dates": [],
+      "amounts": [],
+      "keywords": [],
+      "summary": "",
+      "events": []
+    },
+    {
+      "file": "Welcome Party Taco Pricing Estimate - Hoptimystic.pdf",
+      "ext": ".pdf",
+      "size": 3291,
+      "text_len": 1014,
+      "dates": [
+        "3/10/26",
+        "June 5, 2026"
+      ],
+      "amounts": [
+        "$12.99",
+        "$20.99",
+        "$32.99",
+        "$6.99"
+      ],
+      "keywords": [
+        "pulled",
+        "welcome",
+        "catering",
+        "chicken",
+        "bbq",
+        "pork",
+        "beef",
+        "barbacoa"
+      ],
+      "summary": "Mistretta/Petran Welcome\nCreated 3/10/26, 1:58 PM\n1 of 1\nAppleseed Restaurant\nCustomer\nHoptimystic Brewing\nDan Thomas \n31 River Road \nSunapee, NH 03782 \ndanielthomas3266@gmail.com \n(603) 540-5001\nDate\nFriday, June 5, 2026 \n6:00 PM\nDeliver To\n31 River Road \nSunapee, NH 03782\nMistretta/Petran \nWelcome\nCatering BEO\nOrder #000632\nDraft \u2022 Unpaid\nGuest count\n80\nOccasion\nWedding Welcome Party\nEvent space\nHoptimistic\nNotes\nPrice based on three proteins. Other pricing options:\nChoice of one protein: pulled chicken, BBQ pulled pork, beef barbacoa = $20.99\nChoice of two proteins: pulled chicken, BBQ pulled pork, beef barbacoa = $32.99\nAdd saut\u00e9ed shrimp or haddock = $6.99 additional per person\nAdd both",
+      "events": [
+        {
+          "date_raw": "3/10/26",
+          "date_iso": "2026-03-10",
+          "snippet": "\u2026Mistretta/Petran Welcome Created 3/10/26, 1:58 PM 1 of 1 Appleseed Restaurant Customer Hoptimystic Brewing Dan Thomas  31 River Road  Sunape\u2026",
+          "source": "Welcome Party Taco Pricing Estimate - Hoptimystic.pdf"
+        },
+        {
+          "date_raw": "June 5, 2026",
+          "date_iso": "2026-06-05",
+          "snippet": "\u2026n Thomas  31 River Road  Sunapee, NH 03782  danielthomas3266@gmail.com  (603) 540-5001 Date Friday, June 5, 2026  6:00 PM Deliver To 31 River Road  Sunapee, NH 03782 Mistretta/Petran  Welcome Catering BEO Order #\u2026",
+          "source": "Welcome Party Taco Pricing Estimate - Hoptimystic.pdf"
+        }
+      ]
+    }
+  ]
+}

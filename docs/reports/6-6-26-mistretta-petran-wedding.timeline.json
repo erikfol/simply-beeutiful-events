@@ -1,0 +1,174 @@
+{
+  "template": "typical_wedding_timeline.png (The Knot - Ultimate Wedding Day Timeline)",
+  "days": [
+    {
+      "date": "2026-06-05",
+      "title": "Welcome Party \u00e2\u20ac\u201d Hoptimystic Brewing, Sunapee",
+      "items": [
+        {
+          "time": "18:00",
+          "title": "Welcome Dinner begins",
+          "detail": "Exclusive use 6:00 PM \u00e2\u20ac\u201c 9:00 PM, 80 guests.",
+          "source": "HOPTIMYSTIC EVENT SPACE RENTAL AGREEMENT",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "18:00",
+          "title": "Welcome catering delivery",
+          "detail": "Taco catering BEO, 3 proteins, delivered to 31 River Road.",
+          "source": "Welcome Party Taco Pricing Estimate - Hoptimystic.pdf",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "21:00",
+          "title": "Welcome Party ends",
+          "detail": "3-hour rental ends 9:00 PM.",
+          "source": "HOPTIMYSTIC EVENT SPACE RENTAL AGREEMENT",
+          "confidence": "confirmed"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-06",
+      "title": "Wedding Day \u00e2\u20ac\u201d The Greatful Dane Lodge, Newport NH",
+      "items": [
+        {
+          "time": "10:00",
+          "title": "Venue access / vendor load-in begins",
+          "detail": "Full use of lodge 10AM\u00e2\u20ac\u201c12AM. Setup in ceremony + reception spaces.",
+          "source": "Greatful Dane Lodge contract",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "11:00",
+          "title": "Hair and makeup team arrives",
+          "detail": "Must be completed by 1pm. Bride + party at lodge/prep location.",
+          "source": "Beauty by Bethany Anne Agreement (1pm deadline)",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "12:30",
+          "title": "Wedding-party shuttle pickup",
+          "detail": "Door to Door pickup: Hideaway Inn + 609 New Aldrich Rd \u00e2\u2020\u2019 Greatful Dane Lodge. Ceremony 4:30 PM.",
+          "source": "Door to Door Driving Contract",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "13:00",
+          "title": "Hair & makeup complete",
+          "detail": "Deadline per artist agreement \u00e2\u20ac\u201d buffer before photos.",
+          "source": "Beauty by Bethany Anne Agreement",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "14:30",
+          "title": "Photographer arrives / pre-ceremony coverage",
+          "detail": "Includes 2 hours before ceremony + ceremony + family + wedding party photos (~7 hrs total).",
+          "source": "Beth Rexford Photography info sheet",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "15:25",
+          "title": "Guest bus pickup 1 \u00e2\u20ac\u201d Hideaway Inn",
+          "detail": "First Student Bus 1+2, FINAL confirmation.",
+          "source": "FINAL First Charter Trip Confirmation",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "15:36",
+          "title": "Guest bus pickup 2 \u00e2\u20ac\u201d Mountain Edge Suites",
+          "detail": "Second pickup per FINAL confirmation.",
+          "source": "FINAL First Charter Trip Confirmation",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "15:55",
+          "title": "Guest buses arrive at venue",
+          "detail": "Guests seated ahead of 4pm prelude.",
+          "source": "FINAL First Charter Trip Confirmation",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "16:00",
+          "title": "Ceremony prelude music begins",
+          "detail": "Solo guitar (1 hr) \u00e2\u2020\u2019 ceremony. Older band contract listed Ceremony 4pm; current plan is Prelude 4pm / Ceremony 4:30pm.",
+          "source": "Vibrant Band Planner Worksheet + Music Requests",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "16:00",
+          "timeEnd": "19:00",
+          "title": "Cocktail catering on site",
+          "detail": "Swell Oyster Co: oysters, shrimp, sauces, shucker 4:00\u00e2\u20ac\u201c7:00pm.",
+          "source": "Swell Oyster Co Estimate #1021",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "16:30",
+          "title": "Ceremony begins",
+          "detail": "Outdoor/lodge ceremony. Time of ceremony 4:30 confirmed across photo, floral, transport, band worksheet.",
+          "source": "Vibrant Worksheet, Beth Rexford, Mica Mine Floral, Door to Door",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "17:00",
+          "timeEnd": "18:00",
+          "title": "Cocktail hour",
+          "detail": "DJ for 1 hr. Family + wedding party portraits during cocktail hour.",
+          "source": "Vibrant Worksheet (5\u00e2\u20ac\u201c6pm) + Music Requests",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "18:00",
+          "timeEnd": "22:00",
+          "title": "Reception",
+          "detail": "8-piece band, 4 hrs continuous. Dinner, dances, speeches.",
+          "source": "Vibrant Worksheet + Music Requests",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "18:10",
+          "title": "Wedding party + couple entrance",
+          "detail": "Introductions / reception start per worksheet.",
+          "source": "Vibrant Worksheet (Introductions/Reception 6:10pm)",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "18:55",
+          "title": "First dance / welcome speech / dinner",
+          "detail": "Template slot \u00e2\u20ac\u201d confirm order with band (worksheet lists 6:13 / 6:20 / 7:15 / 7:45 segments).",
+          "source": "Template estimate \u00e2\u20ac\u201d confirm with Vibrant",
+          "confidence": "estimated"
+        },
+        {
+          "time": "19:35",
+          "title": "Speeches + parent dances",
+          "detail": "Maid of honor / best man, parent dances \u00e2\u20ac\u201d template slot.",
+          "source": "Template estimate",
+          "confidence": "estimated"
+        },
+        {
+          "time": "21:45",
+          "title": "Cake / dessert + open dancing",
+          "detail": "Desserts per budget; dancing to 10pm close.",
+          "source": "Template estimate",
+          "confidence": "estimated"
+        },
+        {
+          "time": "22:00",
+          "title": "Last dance / reception ends",
+          "detail": "Reception 6\u00e2\u20ac\u201c10pm, venue music off 10pm.",
+          "source": "Vibrant Worksheet (End 10pm)",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "22:19",
+          "title": "After-party shuttle \u00e2\u20ac\u201d Salt Hill Shanty",
+          "detail": "Charter to after-party, then returns to Hideaway Inn + Mountain Edge 10:30\u00e2\u20ac\u201c10:50 PM.",
+          "source": "FINAL First Charter Trip Confirmation",
+          "confidence": "confirmed"
+        }
+      ]
+    }
+  ]
+}
