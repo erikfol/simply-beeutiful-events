@@ -1,330 +1,359 @@
-// SBE Doc Reader - local-only prototype
-let docs = [];
-let images = [];
-let budgetData = null;
-let vendorData = null;
+// SBE Event Manager - event dropdown + timeline + status
+let eventList = [];
+let currentMeta = null;
+let currentReport = null;
+let currentCurated = null;
+let curatedFile = null;
+let isDirty = false;
+let editing = null; // {day, item} or {day, isNew:true}
 
 const $ = (id) => document.getElementById(id);
 const statusEl = $('status');
-
-function setStatus(msg) { statusEl.textContent = msg; }
-
-// ---------- File handling ----------
-const dropzone = $('dropzone');
-['dragover','dragenter'].forEach(e => dropzone.addEventListener(e, ev => { ev.preventDefault(); dropzone.classList.add('dragover'); }));
-['dragleave','drop'].forEach(e => dropzone.addEventListener(e, ev => { ev.preventDefault(); dropzone.classList.remove('dragover'); }));
-dropzone.addEventListener('drop', ev => handleFiles(ev.dataTransfer.files));
-$('fileInput').addEventListener('change', ev => handleFiles(ev.target.files));
-$('folderInput').addEventListener('change', ev => handleFiles(ev.target.files));
-$('clearAll').addEventListener('click', () => { docs = []; images = []; budgetData = null; vendorData = null; renderAll(); setStatus('cleared'); });
-$('loadSamples').addEventListener('click', loadSamples);
-if ($('loadReport')) $('loadReport').addEventListener('click', loadReport);
-
-async function handleFiles(fileList) {
-  for (const f of fileList) {
-    try {
-      const ext = (f.name.split('.').pop() || '').toLowerCase();
-      if (['png','jpg','jpeg','heic'].includes(ext)) {
-        addImage(f);
-        continue;
-      }
-      setStatus(`Reading ${f.name}...`);
-      const text = await extractText(f);
-      // webkitRelativePath preserves folder structure when folder picked
-      addDoc(f.webkitRelativePath || f.name, text);
-    } catch (err) {
-      console.error(err);
-      setStatus(`Failed: ${f.name} - ${err.message}`);
-    }
-  }
-  renderAll();
+function setStatus(m) { statusEl.textContent = m; }
+function esc(s) { return (s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function todayISO(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
-
-async function extractText(file) {
-  const ext = file.name.split('.').pop().toLowerCase();
-  if (ext === 'txt' || ext === 'md') return await file.text();
-  if (ext === 'pdf') {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    const buf = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-    let out = '';
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const tc = await page.getTextContent();
-      out += tc.items.map(it => it.str).join(' ') + '\n';
-    }
-    return out;
-  }
-  if (ext === 'docx') {
-    const buf = await file.arrayBuffer();
-    const res = await mammoth.extractRawText({ arrayBuffer: buf });
-    return res.value;
-  }
-  if (ext === 'xlsx') {
-    const buf = await file.arrayBuffer();
-    const wb = XLSX.read(buf, { type: 'array' });
-    let out = [];
-    wb.SheetNames.forEach(sn => {
-      out.push(`[sheet: ${sn}]`);
-      const ws = wb.Sheets[sn];
-      out.push(XLSX.utils.sheet_to_csv(ws).slice(0, 8000));
-    });
-    return out.join('\n');
-  }
-  if (['png','jpg','jpeg','heic'].includes(ext)) throw new Error('image - shown in gallery, not text-parsed');
-  throw new Error('Unsupported type. Use .txt .md .pdf .docx .xlsx + images');
-}
-
-function addImage(file) {
-  const url = ['png','jpg','jpeg'].includes((file.name.split('.').pop()||'').toLowerCase()) ? URL.createObjectURL(file) : null;
-  images = images.filter(i => i.name !== (file.webkitRelativePath || file.name));
-  images.push({ name: file.webkitRelativePath || file.name, url, ext: (file.name.split('.').pop()||'').toLowerCase() });
-  setStatus(`Loaded ${docs.length} doc(s) + ${images.length} image(s)`);
-}
-
-function addDoc(name, text) {
-  const clean = (text || '').trim();
-  if (!clean) { setStatus(`${name} is empty`); return; }
-  docs = docs.filter(d => d.name !== name);
-  docs.push({ name, text: clean, parsed: parseDoc(clean, name) });
-  setStatus(`Loaded ${docs.length} file(s)`);
-}
-
-async function loadSamples() {
-  const files = ['sample_notes.txt', 'sample_meeting.md', 'sample_contract.txt'];
-  setStatus('Loading samples...');
-  for (const fn of files) {
-    try {
-      const r = await fetch(`sample_files/${fn}`);
-      if (!r.ok) throw new Error(r.statusText);
-      const t = await r.text();
-      addDoc(fn, t);
-    } catch (e) { console.warn(fn, e); }
-  }
-  renderAll();
-}
-
-async function loadReport() {
-  setStatus('Loading Mistretta-Petran report...');
+function fmtDate(iso) {
   try {
-    const r = await fetch('reports/6-6-26-mistretta-petran-wedding.json');
-    if (!r.ok) throw new Error(`HTTP ${r.status} - run via http.server, not file://`);
-    const data = await r.json();
-    docs = []; images = [];
-    budgetData = data.budget || null;
-    vendorData = data.vendors || null;
-    data.files.forEach(f => {
-      if (f.text_len > 0 && f.summary && !f.summary.startsWith('[parse error') && !f.summary.startsWith('[skipped')) {
-        const mappedEvents = (f.events || []).map(e => ({
-          dateRaw: e.dateRaw || e.date_raw,
-          dateISO: e.dateISO || e.date_iso,
-          snippet: e.snippet || '',
-          source: e.source || f.file
-        })).filter(e => e.dateISO);
-        docs.push({
-          name: f.file,
-          text: f.summary,
-          parsed: {
-            wordCount: f.text_len,
-            sentenceCount: f.summary.split(/[.!?]+/).length,
-            keywords: f.keywords || [],
-            dates: f.dates || [],
-            amounts: f.amounts || [],
-            summary: f.summary,
-            events: mappedEvents
-          }
-        });
-      } else if (/\.(png|jpg|jpeg|heic)$/i.test(f.file)) {
-        images.push({ name: f.file, url: null, ext: (f.ext || '.?').replace('.','') });
-      }
-    });
-    setStatus(`Loaded report: ${docs.length} docs + ${images.length} images, ${data.timeline.length} events`);
-    if ($('viewMode')) $('viewMode').value = 'everything';
-    renderAll();
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+  } catch { return iso; }
+}
+function fmt$ (n) {
+  return (n == null || isNaN(n)) ? '—' : '$' + Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function fmt12(hhmm) {
+  if (!hhmm) return '';
+  const [h, m] = hhmm.split(':').map(Number);
+  const ap = h >= 12 ? 'p.m.' : 'a.m.';
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}:${String(m).padStart(2, '0')} ${ap}`;
+}
+
+// ---------- Time extraction (fallback for old reports without times) ----------
+function to24(raw) {
+  const m = raw.trim().toLowerCase().replace(/\./g, '').match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);
+  if (!m || !m[3]) return null;
+  let h = parseInt(m[1], 10), mi = parseInt(m[2] || '0', 10);
+  if (m[3] === 'pm' && h !== 12) h += 12;
+  if (m[3] === 'am' && h === 12) h = 0;
+  if (h > 23 || mi > 59) return null;
+  return `${String(h).padStart(2, '0')}:${String(mi).padStart(2, '0')}`;
+}
+function extractTimes(text) {
+  const out = new Set();
+  for (const m of (text.match(/(\d{1,2})\s*[-\u2013\u2014]\s*(\d{1,2})\s*(AM|PM|am|pm)\b/g) || [])) {
+    const r = m.match(/(\d{1,2})\s*[-\u2013\u2014]\s*(\d{1,2})\s*(AM|PM|am|pm)/i);
+    if (r) for (const h of [r[1], r[2]]) { const t = to24(`${h}${r[3]}`); if (t) out.add(t); }
+  }
+  const res = [/\b\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)\b/g, /(?<![\d:])\b\d{1,2}\s*(?:AM|PM|am|pm)\b/g];
+  for (const re of res) {
+    for (const m of (text.match(re) || [])) {
+      const t = to24(m);
+      if (t) out.add(t);
+    }
+  }
+  return [...out].sort();
+}
+function enrichEvent(e) {
+  const times = (e.times && e.times.length ? e.times : extractTimes(`${e.snippet || ''} ${e.source || ''}`));
+  const time = e.time || times[0] || null;
+  return { ...e, times, time };
+}
+
+// ---------- Load events ----------
+async function init() {
+  try {
+    const r = await fetch('reports/index.json');
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    eventList = await r.json();
   } catch (e) {
-    console.error(e);
-    setStatus(`Report load failed: ${e.message}`);
+    // fallback: single known event
+    eventList = [{ id: '6-6-26-mistretta-petran-wedding', name: '6.6.26 Mistretta-Petran Wedding', report: '6-6-26-mistretta-petran-wedding.json', weddingDate: '2026-06-06', venue: 'The Greatful Dane Lodge, Newport, NH' }];
+  }
+  const sel = $('eventSelect');
+  sel.innerHTML = eventList.map(e => `<option value="${esc(e.id)}">${esc(e.name)}</option>`).join('');
+  if (eventList.length) {
+    sel.value = eventList[0].id;
+    await loadEvent(sel.value);
+  }
+  sel.addEventListener('change', () => loadEvent(sel.value));
+  $('btnTimeline').addEventListener('click', showTimeline);
+  $('btnStatus').addEventListener('click', showStatus);
+  $('btnSave').addEventListener('click', saveTimeline);
+  $('btnRevert').addEventListener('click', revertTimeline);
+  $('btnExport').addEventListener('click', exportTimeline);
+  $('btnAddDay').addEventListener('click', addDay);
+  $('curated').addEventListener('click', onCuratedClick);
+  $('curated').addEventListener('submit', onCuratedSubmit);
+}
+
+async function loadEvent(id) {
+  currentMeta = eventList.find(e => e.id === id) || eventList[0];
+  if (!currentMeta) return;
+  setStatus(`Loading ${currentMeta.name}…`);
+  $('eventMeta').textContent = `${currentMeta.venue || ''} · Wedding date: ${currentMeta.weddingDate || 'n/a'}`;
+  try {
+    const r = await fetch(`reports/${currentMeta.report}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status} — run via python -m http.server, not file://`);
+    currentReport = await r.json();
+    // normalize timeline events (support old + new field names)
+    currentReport.timeline = (currentReport.timeline || []).map(e => enrichEvent({
+      date_raw: e.date_raw || e.dateRaw, date_iso: e.date_iso || e.dateISO,
+      snippet: e.snippet || '', source: e.source || '',
+      times: e.times || [], time: e.time || null, label: e.label || ''
+    })).filter(e => e.date_iso);
+    currentReport.timeline.sort((a, b) => (a.date_iso + (a.time || '')).localeCompare(b.date_iso + (b.time || '')));
+    // curated Knot-style timeline (per-event, with actual times) — optional
+    currentCurated = null;
+    curatedFile = currentMeta.timeline || null;
+    isDirty = false; editing = null; updateDirty();
+    if (curatedFile) {
+      try {
+        const rt = await fetch(`reports/${curatedFile}`);
+        if (rt.ok) currentCurated = await rt.json();
+      } catch { /* fallback to auto timeline below */ }
+      // local edits override file
+      const local = loadLocal();
+      if (local) { currentCurated = local; isDirty = true; updateDirty(); }
+    }
+    setStatus(`Loaded ${currentMeta.name}: ${currentReport.timeline.length} dated items${currentCurated ? ' + curated run sheet' : ''}.`);
+    $('timelineSection').hidden = true;
+    $('statusSection').hidden = true;
+  } catch (e) {
+    setStatus(`Load failed: ${e.message}`);
   }
 }
 
-// ---------- Parsing / summarization (local, no AI) ----------
-const STOP = new Set('the,a,an,and,or,of,to,in,on,for,with,at,by,from,as,is,are,was,were,be,been,it,its,this,that,these,those,we,you,they,he,she,our,your,their,will,shall,per,via,etc,into,up,out,about,after,before,between,during'.split(','));
-
-function parseDoc(text, name) {
-  const words = text.split(/\s+/).filter(Boolean);
-  const sentences = text.match(/[^.!?\n]+[.!?]+/g) || [text.slice(0, 300)];
-
-  // keywords: freq minus stopwords
-  const freq = {};
-  words.forEach(w => {
-    const k = w.toLowerCase().replace(/[^a-z0-9'-]/g, '');
-    if (k.length > 2 && !STOP.has(k)) freq[k] = (freq[k] || 0) + 1;
-  });
-  const keywords = Object.entries(freq).sort((a,b) => b[1]-a[1]).slice(0, 8).map(e => e[0]);
-
-  // dates: several common formats (incl. M.D.YY like 6.6.26)
-  const datePatterns = [
-    /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}\b/gi,
-    /\b\d{1,2}\/\d{1,2}\/\d{2,4}\b/g,
-    /\b\d{4}-\d{2}-\d{2}\b/g,
-    /\b\d{1,2}\.\d{1,2}\.\d{2,4}\b/g,
-  ];
-  let dates = [];
-  datePatterns.forEach(re => { const m = text.match(re); if (m) dates.push(...m); });
-  dates = [...new Set(dates)];
-
-  // amounts
-  const amounts = [...new Set(text.match(/\$\s?[\d,]+(\.\d{2})?/g) || [])];
-
-  // summary: first 3 substantive sentences
-  const summary = sentences.filter(s => s.trim().length > 30).slice(0, 3).join(' ').trim().slice(0, 600);
-
-  // events for timeline
-  const events = dates.map(d => ({
-    dateRaw: d,
-    dateISO: toISO(d),
-    snippet: snippetAround(text, d),
-    source: name
-  })).filter(e => e.dateISO).sort((a,b) => a.dateISO.localeCompare(b.dateISO));
-
-  return { wordCount: words.length, sentenceCount: sentences.length, keywords, dates, amounts, summary, events };
-}
-
-function snippetAround(text, needle, radius = 90) {
-  const i = text.indexOf(needle);
-  if (i < 0) return needle;
-  return '…' + text.slice(Math.max(0, i-radius), i + needle.length + radius).replace(/\s+/g,' ').trim() + '…';
-}
-
-function toISO(raw) {
-  try {
-    // MM/DD/YYYY
-    let m = raw.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
-    if (m) { let y = m[3].length===2 ? '20'+m[3] : m[3]; return `${y}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`; }
-    // M.D.YY like 6.6.26 -> 2026-06-06
-    m = raw.match(/(\d{1,2})\.(\d{1,2})\.(\d{2,4})/);
-    if (m) { let y = m[3].length===2 ? '20'+m[3] : m[3]; return `${y}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`; }
-    // YYYY-MM-DD
-    m = raw.match(/(\d{4})-(\d{2})-(\d{2})/);
-    if (m) return raw;
-    // Month DD YYYY
-    const d = new Date(raw);
-    if (!isNaN(d)) return d.toISOString().slice(0,10);
-  } catch {}
-  return null;
-}
-
-// ---------- Rendering ----------
-function renderAll() {
-  renderSummaries();
-  renderBudget();
-  renderVendors();
-  renderTimeline();
-  renderCombined();
-  applyView();
-}
-
-const fmt$ = n => (n == null ? '—' : '$' + Number(n).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-
-function renderBudget() {
-  const el = $('budget');
-  if (!el) return;
-  if (!budgetData || !budgetData.budget_total) { el.innerHTML = '<p style="color:#888">No budget loaded yet — click “Load Mistretta-Petran report”.</p>'; return; }
-  const cats = (budgetData.categories || []).filter(c => c.actual > 0).sort((a,b) => b.actual - a.actual).slice(0, 15);
-  el.innerHTML = `<div class="card"><p><strong>Planned:</strong> ${fmt$(budgetData.budget_total)} ·
-    <strong>Actual:</strong> ${fmt$(budgetData.total_actual)} ·
-    <strong>Paid:</strong> ${fmt$(budgetData.total_paid)} ·
-    <strong>Due:</strong> ${fmt$(budgetData.total_due)} ·
-    <strong>Over budget:</strong> ${fmt$(Math.abs(budgetData.remaining_budget))}</p>
-    <table style="width:100%;border-collapse:collapse;font-size:.9em"><tr><th align="left">Category</th><th align="right">Actual</th><th align="right">Paid</th><th align="right">Due</th></tr>
-    ${cats.map(c => `<tr><td>${escapeHtml(c.category)}</td><td align="right">${fmt$(c.actual)}</td><td align="right">${fmt$(c.paid)}</td><td align="right">${fmt$(c.due)}</td></tr>`).join('')}
-    </table><small>Source: ${escapeHtml(budgetData.file || '')}</small></div>`;
-}
-
-function renderVendors() {
-  const el = $('vendors');
-  if (!el) return;
-  if (!vendorData || !vendorData.booked || !vendorData.booked.length) { el.innerHTML = '<p style="color:#888">No vendors loaded yet.</p>'; return; }
-  el.innerHTML = `<div class="card"><ul>${vendorData.booked.map(v =>
-    `<li><strong>${escapeHtml(v.vendor)}</strong> — ${escapeHtml(v.event || 'n/a')}, ${escapeHtml(v.location || '')}<br><small>${escapeHtml(v.cost || '')} · ${escapeHtml(v.contact || '')} ${escapeHtml(v.email || '')}</small></li>`
-  ).join('')}</ul><small>Contracts in folder: ${(vendorData.contract_files || []).length} files</small></div>`;
-}
-
-function renderSummaries() {
-  const el = $('summaries');
-  if (!docs.length && !images.length) { el.innerHTML = '<p>No files yet. Load samples, load the wedding report, or drop files/folder above.</p>'; return; }
-  const imgHtml = images.length ? `<div class="card"><h3>Images (${images.length})</h3><p>${images.map(i => i.url ? `<a href="${i.url}" target="_blank"><img src="${i.url}" style="width:90px;height:90px;object-fit:cover;border-radius:8px;margin:2px" title="${escapeHtml(i.name)}" /></a>` : `<span class="badge">${escapeHtml(i.name)} (HEIC - no preview)</span>`).join('')}</p><small>HEIC = iPhone photos - listed but browsers can't preview. PNG/JPG preview below.</small></div>` : '';
-  el.innerHTML = imgHtml + docs.map(d => {
-    const p = d.parsed;
-    return `<div class="card">
-      <h3>${escapeHtml(d.name)}</h3>
-      <small>${p.wordCount} words · ${p.sentenceCount} sentences</small>
-      <p><strong>Summary:</strong> ${escapeHtml(p.summary || '(no summary)')}</p>
-      <p><strong>Dates:</strong> ${p.dates.map(x=>`<span class="badge">${escapeHtml(x)}</span>`).join(' ') || '—'}</p>
-      <p><strong>Amounts:</strong> ${p.amounts.map(x=>`<span class="badge">${escapeHtml(x)}</span>`).join(' ') || '—'}</p>
-      <p><strong>Keywords:</strong> ${p.keywords.map(x=>`<span class="badge">${escapeHtml(x)}</span>`).join(' ')}</p>
-    </div>`;
-  }).join('');
-}
-
+// ---------- Create Timeline (Knot-style spine, like typical_wedding_timeline.png) ----------
 let timelineObj = null;
-function renderTimeline() {
-  const allEvents = docs.flatMap(d => (d.parsed.events || [])).filter(e => e && e.dateISO);
-  const listEl = $('timelineList');
-  const tlEl = $('timeline');
+function showTimeline() {
+  if (!currentReport) { setStatus('Pick an event first.'); return; }
+  $('statusSection').hidden = true;
+  $('timelineSection').hidden = false;
+  $('timelineTitle').textContent = currentMeta.name;
 
-  if (!allEvents.length) {
-    tlEl.innerHTML = '<p style="padding:1rem;color:#888">No dates found yet.</p>';
-    listEl.innerHTML = '<li>No dated events</li>';
-    if (timelineObj) { timelineObj.destroy(); timelineObj = null; }
+  // 1) Curated run sheet (preferred) — mirrors the Knot template with actual event times
+  if (currentCurated && currentCurated.days) {
+    renderCurated();
+    renderDocEvidence();
+    setStatus(`Timeline: curated run sheet (${currentCurated.days.reduce((n, d) => n + d.items.length, 0)} stops) + document evidence.`);
     return;
   }
-
-  allEvents.sort((a,b) => (a.dateISO || '').localeCompare(b.dateISO || ''));
-  listEl.innerHTML = allEvents.map(e =>
-    `<li><strong>${escapeHtml(e.dateISO)}</strong> (${escapeHtml(e.dateRaw)}) — ${escapeHtml(e.snippet)} <em>[${escapeHtml(e.source)}]</em></li>`
-  ).join('');
-
-  const items = new vis.DataSet(allEvents.map((e,i) => ({
-    id: i, content: `${e.dateRaw} — ${e.source}`, start: e.dateISO, title: e.snippet
-  })));
-
-  if (timelineObj) timelineObj.destroy();
-  timelineObj = new vis.Timeline(tlEl, items, { height: '260px', showCurrentTime: false });
+  // 2) Fallback: auto-generated from document dates
+  $('curated').innerHTML = '<p>No curated run sheet for this event — showing document dates only.</p>';
+  renderDocEvidence();
 }
 
-function renderCombined() {
-  if (!docs.length && !budgetData) { $('combinedReport').textContent = '(empty)'; return; }
-  let out = `SIMPLY BEEUTIFUL EVENTS - COMBINED REPORT\nGenerated: ${new Date().toLocaleString()}\nFiles: ${docs.length}\n`;
-  if (budgetData && budgetData.budget_total) {
-    out += `Budget planned: $${budgetData.budget_total} | actual: $${budgetData.total_actual} | paid: $${budgetData.total_paid} | due: $${budgetData.total_due}\n`;
-  }
-  if (vendorData && vendorData.booked) {
-    out += `Vendors (${vendorData.booked.length}): ${vendorData.booked.map(v => v.vendor).join('; ')}\n`;
-  }
-  out += '\n';
-  docs.forEach(d => {
-    const p = d.parsed;
-    out += `== ${d.name} ==\nWords: ${p.wordCount}\nSummary: ${p.summary}\nDates: ${p.dates.join(', ')||'—'}\nAmounts: ${p.amounts.join(', ')||'—'}\nKeywords: ${p.keywords.join(', ')}\n\n`;
+// ---------- Editable curated timeline ----------
+function lsKey() { return `sbe-timeline-${currentMeta ? currentMeta.id : 'none'}`; }
+function loadLocal() {
+  try { const raw = localStorage.getItem(lsKey()); return raw ? JSON.parse(raw) : null; } catch { return null; }
+}
+function updateDirty() { $('dirty').textContent = isDirty ? '● unsaved changes' : ''; }
+function sortDay(day) { day.items.sort((a, b) => (a.time || '99').localeCompare(b.time || '99')); }
+
+function renderCurated() {
+  let html = `<p class="legend"><span class="badge okbadge">confirmed</span> = in contract/quote &nbsp; <span class="badge estbadge">estimated</span> = template slot, confirm with vendor</p>`;
+  currentCurated.days.forEach((day, di) => {
+    html += `<h3 class="dayhead">${fmtDate(day.date)} — ${esc(day.title)} <small>${esc(day.date)}</small></h3><div class="spine">`;
+    day.items.forEach((it, i) => {
+      const side = i % 2 === 0 ? 'left' : 'right';
+      if (editing && editing.day === di && editing.item === i && !editing.isNew) {
+        html += `<div class="slot ${side}"><div class="dot"></div><div class="tcard edit">${itemForm(di, i, it)}</div></div>`;
+      } else {
+        const range = it.timeEnd ? ` – ${fmt12(it.timeEnd)}` : '';
+        const conf = it.confidence === 'confirmed' ? '<span class="badge okbadge">confirmed</span>' : '<span class="badge estbadge">estimated</span>';
+        html += `<div class="slot ${side}"><div class="dot"></div><div class="tcard"><div class="ttime">${fmt12(it.time)}${range}</div><div class="ttitle">${esc(it.title)}</div><div class="tdetail">${esc(it.detail || '')}</div><div class="tsrc">${conf} <em>${esc(it.source || '')}</em></div><div class="tact"><button data-act="edit" data-day="${di}" data-item="${i}">Edit</button><button data-act="del" data-day="${di}" data-item="${i}" class="danger">Remove</button></div></div></div>`;
+      }
+    });
+    html += `</div>`;
+    if (editing && editing.day === di && editing.isNew) {
+      html += `<div class="tcard edit newform">${itemForm(di, -1, { time: '', timeEnd: '', title: '', detail: '', source: '', confidence: 'confirmed' }, true)}</div>`;
+    } else {
+      html += `<button data-act="add" data-day="${di}" class="addbtn">+ Add stop on ${esc(day.date)}</button>`;
+    }
   });
-  const ev = docs.flatMap(d => (d.parsed.events || [])).filter(e => e && e.dateISO).sort((a,b)=>(a.dateISO||'').localeCompare(b.dateISO||''));
-  out += `== TIMELINE (${ev.length} events) ==\n`;
-  ev.forEach(e => { out += `${e.dateISO} | ${e.source} | ${e.snippet}\n`; });
-  $('combinedReport').textContent = out;
+  $('curated').innerHTML = html;
 }
 
-function applyView() {
-  const v = ($('viewMode') && $('viewMode').value) || 'everything';
-  const showSumm = (v === 'everything' || v === 'summaries');
-  const showTime = (v === 'everything' || v === 'timeline');
-  $('summaries').style.display = showSumm ? '' : 'none';
-  $('budgetSection').style.display = '';
-  $('vendorsSection').style.display = '';
-  $('timelineSection').style.display = showTime ? '' : 'none';
-  $('combinedSection').style.display = '';
+function itemForm(di, i, it, isNew = false) {
+  return `<form data-day="${di}" data-item="${i}" data-new="${isNew ? 1 : 0}">
+    <label>Start <input name="time" type="time" value="${esc(it.time || '')}" required /></label>
+    <label>End <input name="timeEnd" type="time" value="${esc(it.timeEnd || '')}" /></label>
+    <label>Title <input name="title" value="${esc(it.title || '')}" required /></label>
+    <label>Detail <input name="detail" value="${esc(it.detail || '')}" /></label>
+    <label>Source <input name="source" value="${esc(it.source || '')}" /></label>
+    <label>Confidence <select name="confidence"><option value="confirmed"${it.confidence === 'confirmed' ? ' selected' : ''}>confirmed</option><option value="estimated"${it.confidence !== 'confirmed' ? ' selected' : ''}>estimated</option></select></label>
+    <div class="tact"><button type="submit">${isNew ? 'Add' : 'Done'}</button><button type="button" data-act="cancel">Cancel</button></div>
+  </form>`;
 }
-if ($('viewMode')) $('viewMode').addEventListener('change', applyView);
 
-function escapeHtml(s) { return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function onCuratedClick(ev) {
+  const b = ev.target.closest('button[data-act]');
+  if (!b) return;
+  const act = b.dataset.act, di = +b.dataset.day, ii = +(b.dataset.item ?? -1);
+  if (act === 'edit') { editing = { day: di, item: ii }; renderCurated(); }
+  else if (act === 'cancel') { editing = null; renderCurated(); }
+  else if (act === 'add') { editing = { day: di, item: -1, isNew: true }; renderCurated(); }
+  else if (act === 'del') {
+    const t = currentCurated.days[di].items[ii];
+    if (!confirm(`Remove "${t.time || ''} ${t.title}"?`)) return;
+    currentCurated.days[di].items.splice(ii, 1);
+    editing = null; isDirty = true; persistLocal(); updateDirty(); renderCurated();
+  }
+}
 
-renderAll();
+function onCuratedSubmit(ev) {
+  ev.preventDefault();
+  const f = ev.target;
+  const di = +f.dataset.day, isNew = f.dataset.new === '1', ii = +f.dataset.item;
+  const val = (n) => (new FormData(f).get(n) || '').toString().trim();
+  const obj = { time: val('time'), title: val('title'), detail: val('detail'), source: val('source'), confidence: val('confidence') };
+  const te = val('timeEnd');
+  if (te) obj.timeEnd = te;
+  if (!obj.time || !obj.title) return;
+  if (isNew) currentCurated.days[di].items.push(obj);
+  else currentCurated.days[di].items[ii] = obj;
+  sortDay(currentCurated.days[di]);
+  editing = null; isDirty = true; persistLocal(); updateDirty(); renderCurated();
+}
+
+function persistLocal() { try { localStorage.setItem(lsKey(), JSON.stringify(currentCurated)); } catch { /* ignore */ } }
+
+function addDay() {
+  if (!currentCurated) { currentCurated = { template: 'custom', days: [] }; curatedFile = currentCurated; }
+  const d = prompt('Day date (YYYY-MM-DD):', currentMeta.weddingDate || todayISO());
+  if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
+  currentCurated.days.push({ date: d, title: 'New day', items: [] });
+  currentCurated.days.sort((a, b) => a.date.localeCompare(b.date));
+  editing = { day: currentCurated.days.findIndex((x) => x.date === d), item: -1, isNew: true };
+  isDirty = true; persistLocal(); updateDirty(); renderCurated();
+}
+
+async function saveTimeline() {
+  if (!currentCurated) { setStatus('Nothing to save.'); return; }
+  persistLocal();
+  // try server-side save to reports/*.timeline.json
+  if (curatedFile) {
+    try {
+      const r = await fetch('/api/save-timeline', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ file: curatedFile.split('/').pop(), data: currentCurated }) });
+      const j = await r.json();
+      if (j.ok) { isDirty = false; updateDirty(); setStatus(`Saved to reports/${curatedFile}.`); return; }
+      throw new Error(j.error || r.status);
+    } catch (e) {
+      setStatus(`Server save failed (${e.message}) — kept in browser + downloading file.`);
+      downloadTimeline();
+      return;
+    }
+  }
+  setStatus('Saved in browser (no server file linked).');
+}
+
+async function revertTimeline() {
+  if (!confirm('Discard edits and reload from file?')) return;
+  try { localStorage.removeItem(lsKey()); } catch { /* ignore */ }
+  editing = null; isDirty = false; updateDirty();
+  await loadEvent(currentMeta.id);
+  showTimeline();
+}
+
+function downloadTimeline() {
+  const blob = new Blob([JSON.stringify(currentCurated, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (curatedFile || 'timeline.json').split('/').pop();
+  a.click();
+}
+function exportTimeline() {
+  if (!currentCurated) return;
+  downloadTimeline();
+  setStatus('Exported timeline JSON (put it in doc-reader/reports/ to share).');
+}
+
+function renderDocEvidence() {
+
+  // group by date
+  const byDate = {};
+  for (const e of currentReport.timeline) (byDate[e.date_iso] = byDate[e.date_iso] || []).push(e);
+  const dates = Object.keys(byDate).sort();
+  for (const d of dates) byDate[d].sort((a, b) => (a.time || '99') .localeCompare(b.time || '99'));
+
+  // visual timeline
+  const tlEl = $('timeline');
+  const items = new vis.DataSet(currentReport.timeline.map((e, i) => ({
+    id: i,
+    content: `${e.time ? e.time + ' · ' : ''}${esc(e.date_raw)} — ${esc((e.label || e.source || '').slice(0, 40))}`,
+    start: e.time ? `${e.date_iso}T${e.time}:00` : e.date_iso,
+    title: `${e.date_iso}${e.time ? ' ' + e.time : ''}\n${e.snippet}\n[${e.source}]`
+  })));
+  if (timelineObj) timelineObj.destroy();
+  timelineObj = new vis.Timeline(tlEl, items, { height: '240px', showCurrentTime: true });
+
+  // day-by-day breakdown with times
+  const weddingDay = currentMeta.weddingDate;
+  let html = '';
+  for (const d of dates) {
+    const isWedding = d === weddingDay ? ' <span class="badge gold">WEDDING DAY</span>' : '';
+    html += `<div class="dayblock"><h3>${fmtDate(d)} <small>${d}</small>${isWedding}</h3><ul>`;
+    for (const e of byDate[d]) {
+      const t = e.time ? `<strong class="time">${e.time}</strong> ` : `<span class="notime">— no time listed — </span>`;
+      const lab = e.label ? `<span class="badge">${esc(e.label)}</span> ` : '';
+      html += `<li>${t}${lab}${esc(e.snippet)} <em>[${esc(e.source)}]</em></li>`;
+    }
+    html += `</ul></div>`;
+  }
+  // wedding-day call sheet at top if present
+  const dayOf = weddingDay && byDate[weddingDay] ? byDate[weddingDay].filter(e => e.time) : [];
+  if (dayOf.length) {
+    html = `<div class="dayblock highlight"><h3>Day-of run sheet — ${fmtDate(weddingDay)}</h3><ol>` +
+      dayOf.map(e => `<li><strong>${e.time}</strong> — ${esc(e.snippet)} <em>[${esc(e.source)}]</em></li>`).join('') +
+      `</ol></div>` + html;
+  }
+  $('daySchedule').innerHTML = html || '<p>No dated items.</p>';
+  setStatus(`Timeline: ${dates.length} dates, ${currentReport.timeline.length} items.`);
+}
+
+// ---------- Status Update ----------
+function showStatus() {
+  if (!currentReport) { setStatus('Pick an event first.'); return; }
+  $('timelineSection').hidden = true;
+  $('statusSection').hidden = false;
+  $('statusTitle').textContent = currentMeta.name;
+
+  const now = new Date();
+  const today = todayISO(now);
+  const wDate = currentMeta.weddingDate;
+  const dayDiff = wDate ? Math.round((new Date(wDate + 'T12:00:00') - new Date(today + 'T12:00:00')) / 86400000) : null;
+  let countdown;
+  if (dayDiff == null) countdown = 'Wedding date unknown.';
+  else if (dayDiff > 1) countdown = `⏳ ${dayDiff} days until the wedding (${fmtDate(wDate)}).`;
+  else if (dayDiff === 1) countdown = `⏳ Wedding is TOMORROW (${fmtDate(wDate)}).`;
+  else if (dayDiff === 0) countdown = `🎉 Wedding is TODAY (${fmtDate(wDate)}).`;
+  else countdown = `✅ Wedding was ${Math.abs(dayDiff)} day(s) ago (${fmtDate(wDate)}). Reviewing close-out / balances.`;
+  $('todayLine').textContent = `Today is ${now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}. ${countdown}`;
+
+  const b = currentReport.budget || {};
+  const v = currentReport.vendors || {};
+  const dueCats = (b.categories || []).filter(c => (c.due || 0) > 0.005).sort((x, y) => y.due - x.due);
+  const cards = [];
+  cards.push(`<div class="stat"><h4>Budget</h4><p>Planned <strong>${fmt$(b.budget_total)}</strong><br>Actual <strong>${fmt$(b.total_actual)}</strong><br>Paid <strong>${fmt$(b.total_paid)}</strong><br>Still due <strong class="${(b.total_due || 0) > 0 ? 'due' : 'ok'}">${fmt$(b.total_due)}</strong></p>${dueCats.length ? `<p>Unpaid: ${dueCats.map(c => `${esc(c.category)} (${fmt$(c.due)})`).join('; ')}</p>` : '<p class="ok">Nothing outstanding in budget sheet.</p>'}</div>`);
+  cards.push(`<div class="stat"><h4>Vendors (${(v.booked || []).length})</h4><ul>${(v.booked || []).map(x => `<li><strong>${esc(x.vendor)}</strong> — ${esc(x.cost || 'cost n/a')}</li>`).join('') || '<li>No vendor list</li>'}</ul></div>`);
+  cards.push(`<div class="stat"><h4>Files</h4><p>${currentReport.num_files} files, ${currentReport.num_text_parsed} parsed, ${currentReport.timeline.length} dated items.<br>Contracts on file: ${(v.contract_files || []).length}</p></div>`);
+  $('statusCards').innerHTML = cards.join('');
+
+  const upcoming = currentReport.timeline.filter(e => e.date_iso >= today).slice(0, 15);
+  const past = currentReport.timeline.filter(e => e.date_iso < today).slice(-10).reverse();
+  const li = e => `<li><strong>${e.date_iso}</strong>${e.time ? ` @ ${e.time}` : ''} (${esc(e.date_raw)}) — ${esc(e.snippet)} <em>[${esc(e.source)}]</em></li>`;
+  $('nextUp').innerHTML = upcoming.length ? upcoming.map(li).join('') :
+    `<li>Nothing dated after today. ${dayDiff != null && dayDiff < 0 ? 'Event is past — confirm all balances are $0 due and vendors are paid.' : 'All deadlines appear passed or undated.'}</li>`;
+  $('overdue').innerHTML = past.length ? past.map(li).join('') : '<li>No past items.</li>';
+  // prepend money-due as actionable items
+  if (dueCats.length) {
+    $('nextUp').innerHTML = dueCats.map(c => `<li>💰 <strong>${esc(c.category)}</strong> still due <strong>${fmt$(c.due)}</strong> (paid ${fmt$(c.paid)} of ${fmt$(c.actual)}).</li>`).join('') + $('nextUp').innerHTML;
+  }
+  setStatus(`Status as of ${today}: ${upcoming.length} upcoming, ${(b.total_due || 0) > 0 ? fmt$(b.total_due) + ' still due' : 'no balance due'}.`);
+}
+
+init();

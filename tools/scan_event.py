@@ -15,6 +15,12 @@ DATE_RES = [
     r"\b\d{1,2}\.\d{1,2}\.\d{2,4}\b",
 ]
 AMOUNT_RE = r"\$\s?[\d,]+(?:\.\d{2})?"
+TIME_RES = [
+    r"\b\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)\b",
+    r"(?<![\d:])\b\d{1,2}\s*(?:AM|PM|am|pm)\b",
+]
+RANGE_RE = r"(\d{1,2})\s*[-\u2013\u2014]\s*(\d{1,2})\s*(am|pm)\b"
+DAYPART_RE = r"(ceremony|prelude|cocktail hour|reception|cocktails|dinner|welcome dinner|welcome party|after party|pick\s?up|delivery|setup|set\s?up|bus|shuttle|photos?|first look|hair|makeup|venue access|check[\s-]?in|check[\s-]?out)\b"
 STOP = set("the,a,an,and,or,of,to,in,on,for,with,at,by,from,as,is,are,was,were,be,been,it,its,this,that,these,those,we,you,they,he,she,our,your,their,will,shall,per,via,etc,into,up,out,about,after,before,between,during".split(","))
 
 def extract_text(p: Path) -> str:
@@ -68,6 +74,42 @@ def to_iso(raw: str):
             return d.strftime("%Y-%m-%d")
         except Exception:
             return None
+
+def to_time_24(raw: str):
+    """Normalize '4pm', '4:30pm', '6:00 PM' -> '16:00'. Returns None if no am/pm clue."""
+    s = raw.strip().lower().replace(".", "")
+    m = re.match(r"(\d{1,2})(?::(\d{2}))?\s*(am|pm)?", s)
+    if not m:
+        return None
+    h, mi, ap = int(m.group(1)), int(m.group(2) or 0), m.group(3)
+    if not ap:
+        return None  # bare '10AM to 12AM' style needs context; skip to avoid false positives
+    if ap == "pm" and h != 12:
+        h += 12
+    if ap == "am" and h == 12:
+        h = 0
+    if not (0 <= h <= 23 and 0 <= mi <= 59):
+        return None
+    return f"{h:02d}:{mi:02d}"
+
+def find_times(snippet: str):
+    """Extract time mentions from a snippet, return sorted unique HH:MM list."""
+    found = []
+    for m in re.finditer(RANGE_RE, snippet, flags=re.I):
+        for h in (m.group(1), m.group(2)):
+            t = to_time_24(f"{h}{m.group(3)}")
+            if t:
+                found.append(t)
+    for pat in TIME_RES:
+        for m in re.findall(pat, snippet, flags=re.I):
+            t = to_time_24(m if isinstance(m, str) else m[0])
+            if t:
+                found.append(t)
+    return sorted(set(found))
+
+def daypart(snippet: str):
+    m = re.search(DAYPART_RE, snippet, flags=re.I)
+    return m.group(1).lower() if m else ""
 
 def snippet(text, needle, r=100):
     i = text.find(needle)
@@ -178,8 +220,13 @@ def scan(event_dir: Path):
             for d in dates:
                 iso = to_iso(d)
                 if iso:
-                    evs.append({"date_raw": d, "date_iso": iso, "snippet": snippet(txt, d), "source": rel})
-            evs.sort(key=lambda e: e["date_iso"])
+                    snip = snippet(txt, d)
+                    times = find_times(snip)
+                    evs.append({"date_raw": d, "date_iso": iso, "snippet": snip,
+                                "source": rel, "times": times,
+                                "time": times[0] if times else None,
+                                "label": daypart(snip)})
+            evs.sort(key=lambda e: (e["date_iso"], e.get("time") or ""))
             entry.update({"dates": dates[:30], "amounts": amounts[:30], "keywords": keywords(txt), "summary": summ, "events": evs})
         elif ext in (".png", ".jpg", ".jpeg", ".heic"):
             entry["summary"] = "[image - visual inspo/photo, not text-parsed]"
@@ -191,7 +238,7 @@ def scan(event_dir: Path):
 def main():
     base = Path(sys.argv[1] if len(sys.argv) > 1 else "events/6.6.26 Mistretta-Petran Wedding")
     docs = scan(base)
-    all_events = sorted([e for d in docs for e in d["events"]], key=lambda e: e["date_iso"])
+    all_events = sorted([e for d in docs for e in d["events"]], key=lambda e: (e["date_iso"], e.get("time") or ""))
     total_amounts = sorted(set(a for d in docs for a in d["amounts"]))
     budget = parse_budget(base)
     vendors = parse_vendors(base)
