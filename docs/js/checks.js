@@ -13,6 +13,33 @@ const CONFLICT_KEYS = [
   { key: /reception/i, label: 'Reception' },
 ];
 
+// Which curated stop titles correspond to each key time (prelude/rehearsal aren't the ceremony itself).
+const STOP_TITLES = {
+  'Ceremony start': /^ceremony\b(?!.*(prelude|rehearsal))/i,
+  'Cocktail hour': /^cocktail/i,
+  'Reception': /^reception\b/i,
+};
+
+/**
+ * Curated wedding-day stops whose time matches none of the times the documents give for the same thing.
+ * @returns {Array<{level: 'warn', msg: string}>}
+ */
+export function timelineConflicts({ timeline, curated, weddingDate }) {
+  const day = curated && curated.days && curated.days.find(d => d.date === weddingDate);
+  if (!day) return [];
+  const issues = [];
+  for (const c of CONFLICT_KEYS) {
+    const docs = timeline.filter(e => e.date_iso === weddingDate && e.time && c.key.test(`${e.snippet || ''} ${e.label || ''}`));
+    if (!docs.length) continue;
+    for (const it of day.items.filter(it => it.time && STOP_TITLES[c.label].test(it.title || ''))) {
+      if (docs.some(e => e.time === it.time)) continue;
+      const says = docs.map(e => `${esc(e.source)} says ${e.time}`).join('; ');
+      issues.push({ level: 'warn', msg: `Timeline has <strong>${esc(it.title)}</strong> at <strong>${it.time}</strong>, but ${says}.` });
+    }
+  }
+  return issues;
+}
+
 const PLANNING_CHECKLIST = [
   { key: /venue|load-in|load in|setup|set up/i, label: 'venue access / setup time' },
   { key: /ceremony/i, label: 'ceremony time' },
@@ -60,6 +87,8 @@ export function findIssues({ timeline, curated, vendors, budget, weddingDate, to
       }
     }
   }
+  // 2b) the timeline disagrees with every document time
+  issues.push(...timelineConflicts({ timeline, curated, weddingDate }));
   // 3) missing common planning items
   for (const m of PLANNING_CHECKLIST.filter(c => !c.key.test(allText))) {
     issues.push({ level: 'info', msg: `No <strong>${m.label}</strong> found in documents — confirm it is planned.` });

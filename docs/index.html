@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SBE Event Manager</title>
-  <link rel="stylesheet" href="styles.css?v=20260927g" />
+  <link rel="stylesheet" href="styles.css?v=20260927p1" />
   <link href="https://unpkg.com/vis-timeline@8.5.4/styles/vis-timeline-graph2d.min.css" rel="stylesheet" />
   <script src="https://unpkg.com/vis-timeline@8.5.4/standalone/umd/vis-timeline-graph2d.min.js"></script>
 </head>
 <body>
   <header>
-    <span class="version">v0.3</span>
+    <span class="version">v0.4</span>
     <div class="brand-row">
       <img src="sbe-logo.png" alt="Simply Beeutiful Events logo" class="brand-logo" />
       <div>
@@ -41,11 +41,16 @@
         <button id="btnSave" class="primary">Save timeline</button>
         <button id="btnRevert">Revert</button>
         <button id="btnExport">Export JSON</button>
-        <button id="btnGenerate">Generate draft</button>
-        <button id="btnShift">Shift times</button>
-        <button id="btnAddDay">Add day</button>
         <span id="dirty"></span>
       </div>
+      <div class="row toolbar">
+        <button id="btnGenerate">Generate draft</button>
+        <button id="btnAddDay">Add day</button>
+        <button id="btnShift">Shift times</button>
+        <label for="viewRole" class="viewpick">View as <select id="viewRole"></select></label>
+        <button id="btnPrint">Print / PDF</button>
+      </div>
+      <div id="panel" class="panel" hidden></div>
       <div id="curated"></div>
       <h3 class="dayhead">Document evidence (auto-extracted dates)</h3>
       <div id="timeline"></div>
@@ -73,12 +78,13 @@
       <h3>Recently passed / overdue</h3>
       <ul id="overdue"></ul>
     </section>
+    <div id="printSheet" aria-hidden="true"></div>
   </main>
 
   <footer>
     <small>Edits save in this browser · Export JSON to share changes · Data from <code>reports/*.json</code></small>
   </footer>
 
-  <script type="module" src="js/main.js?v=20260927k"></script>
+  <script type="module" src="js/main.js?v=20260927p1"></script>
 </body>
 </html>

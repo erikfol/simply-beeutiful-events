@@ -22,3 +22,8 @@ export const clearLocal = () => clear(timelineKey());
 export const loadStatusLocal = () => load(statusKey());
 export const persistStatusLocal = () => save(statusKey(), state.currentStatus);
 export const clearStatusLocal = () => clear(statusKey());
+
+// Saved day templates are shared by all events in this browser.
+const TEMPLATES_KEY = 'sbe-templates';
+export const loadTemplates = () => load(TEMPLATES_KEY) || [];
+export const saveTemplates = (list) => save(TEMPLATES_KEY, list);

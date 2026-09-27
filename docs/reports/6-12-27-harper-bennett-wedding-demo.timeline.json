@@ -11,14 +11,27 @@
           "title": "Tent & rentals delivered and set up",
           "detail": "40x60 frame tent, tables, chairs, linens.",
           "source": "Ridgeline Tent & Rental - Quote",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "venue",
+            "rentals"
+          ]
         },
         {
           "time": "15:00",
           "title": "Ceremony rehearsal",
           "detail": "Meadow Lawn, Willow Brook Barn.",
           "source": "Willow Brook Barn - Venue Agreement",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "couple",
+            "party",
+            "venue",
+            "officiant",
+            "family"
+          ]
         },
         {
           "time": "18:00",
@@ -26,7 +39,12 @@
           "detail": "Tap Room, 60 guests, taco bar + two drink tickets.",
           "source": "Copper Kettle Brewing - Welcome Party Agreement",
           "confidence": "confirmed",
-          "timeEnd": "21:00"
+          "timeEnd": "21:00",
+          "roles": [
+            "planner",
+            "guests",
+            "catering"
+          ]
         }
       ]
     },
@@ -39,63 +57,117 @@
           "title": "Hair and makeup team arrives",
           "detail": "Birchwood Inn, Suite 4. Bride + 5 attendants.",
           "source": "Glow Studio - Hair & Makeup Agreement",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "couple",
+            "party",
+            "hmua"
+          ]
         },
         {
           "time": "10:00",
           "title": "Venue access / vendor load-in begins",
           "detail": "Both event spaces open to vendors.",
           "source": "Willow Brook Barn - Venue Agreement",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "venue"
+          ]
         },
         {
           "time": "13:00",
           "title": "Florals delivered and set",
           "detail": "Bouquets, boutonnieres, arbor garland, 14 centerpieces.",
           "source": "Bluebell Blooms - Floral Quote",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "florist",
+            "venue"
+          ]
         },
         {
           "time": "13:30",
           "title": "Hair & makeup complete",
           "detail": "Buffer before photos.",
           "source": "Glow Studio - Hair & Makeup Agreement",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "couple",
+            "party",
+            "photo",
+            "hmua"
+          ]
         },
         {
           "time": "14:00",
           "title": "Photographer arrives",
           "detail": "Getting-ready photos and details; second shooter.",
           "source": "Juniper Lane Photography - Contract",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "photo"
+          ]
         },
         {
           "time": "14:45",
           "title": "First look + couple portraits",
           "detail": "Confirm location with photographer.",
           "source": "Template slot",
-          "confidence": "estimated"
+          "confidence": "estimated",
+          "roles": [
+            "planner",
+            "couple",
+            "photo"
+          ]
         },
         {
           "time": "15:15",
           "title": "Guest shuttle pickup at Birchwood Inn",
           "detail": "Two 28-passenger shuttles to the barn.",
           "source": "Summit Coach Lines - Shuttle Quote",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "guests",
+            "venue",
+            "transport"
+          ]
         },
         {
           "time": "15:30",
           "title": "Ceremony prelude music begins",
           "detail": "Acoustic duo. Band agreement lists a 4:30 PM ceremony start - confirm.",
           "source": "The Midnight Owls Band - Performance Agreement",
-          "confidence": "estimated"
+          "confidence": "estimated",
+          "roles": [
+            "planner",
+            "couple",
+            "guests",
+            "music",
+            "officiant"
+          ]
         },
         {
           "time": "16:00",
           "title": "Ceremony begins",
           "detail": "Meadow Lawn. Venue says 4:00 PM, band says 4:30 PM - confirm with band.",
           "source": "Willow Brook Barn - Venue Agreement",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "couple",
+            "venue",
+            "music",
+            "officiant",
+            "party",
+            "family",
+            "photo"
+          ]
         },
         {
           "time": "16:30",
@@ -103,7 +175,16 @@
           "detail": "Passed appetizers on the patio; family + wedding party portraits.",
           "source": "Hearth & Table Catering - Proposal",
           "confidence": "confirmed",
-          "timeEnd": "17:30"
+          "timeEnd": "17:30",
+          "roles": [
+            "planner",
+            "couple",
+            "party",
+            "family",
+            "guests",
+            "photo",
+            "catering"
+          ]
         },
         {
           "time": "17:30",
@@ -111,56 +192,105 @@
           "detail": "Band plays four 45-minute sets.",
           "source": "The Midnight Owls Band - Performance Agreement",
           "confidence": "confirmed",
-          "timeEnd": "21:30"
+          "timeEnd": "21:30",
+          "roles": [
+            "planner",
+            "guests",
+            "catering",
+            "music"
+          ]
         },
         {
           "time": "17:45",
           "title": "Grand entrance + first dance",
           "detail": "",
           "source": "Template slot",
-          "confidence": "estimated"
+          "confidence": "estimated",
+          "roles": [
+            "planner",
+            "couple",
+            "party",
+            "music",
+            "photo"
+          ]
         },
         {
           "time": "18:00",
           "title": "Dinner service",
           "detail": "Family-style dinner in the barn, 120 guests.",
           "source": "Hearth & Table Catering - Proposal",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "family",
+            "guests",
+            "venue",
+            "catering"
+          ]
         },
         {
           "time": "19:30",
           "title": "Toasts + parent dances",
           "detail": "",
           "source": "Template slot",
-          "confidence": "estimated"
+          "confidence": "estimated",
+          "roles": [
+            "planner",
+            "couple",
+            "family",
+            "music",
+            "photo"
+          ]
         },
         {
           "time": "20:00",
           "title": "Cake cutting",
           "detail": "",
           "source": "Template slot",
-          "confidence": "estimated"
+          "confidence": "estimated",
+          "roles": [
+            "planner",
+            "couple",
+            "catering",
+            "photo"
+          ]
         },
         {
           "time": "21:30",
           "title": "Last dance",
           "detail": "",
           "source": "Template slot",
-          "confidence": "estimated"
+          "confidence": "estimated",
+          "roles": [
+            "planner",
+            "couple",
+            "music"
+          ]
         },
         {
           "time": "22:00",
           "title": "Music ends / first return shuttle",
           "detail": "Town ordinance: amplified music ends 10:00 PM.",
           "source": "Summit Coach Lines - Shuttle Quote",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "guests",
+            "music",
+            "transport"
+          ]
         },
         {
           "time": "22:45",
           "title": "Final return shuttle departs",
           "detail": "",
           "source": "Summit Coach Lines - Shuttle Quote",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "guests",
+            "transport"
+          ]
         }
       ]
     },
@@ -173,7 +303,13 @@
           "title": "Farewell brunch",
           "detail": "Birchwood Inn, hosted by the Bennett family.",
           "source": "Planner Notes - Harper-Bennett",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "family",
+            "guests",
+            "catering"
+          ]
         }
       ]
     },
@@ -186,7 +322,13 @@
           "title": "Tent & rental pickup",
           "detail": "Rentals cleared and stacked by the venue.",
           "source": "Ridgeline Tent & Rental - Quote",
-          "confidence": "confirmed"
+          "confidence": "confirmed",
+          "roles": [
+            "planner",
+            "venue",
+            "transport",
+            "rentals"
+          ]
         }
       ]
     }

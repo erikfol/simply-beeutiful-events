@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { dueCategories, findIssues } from '../../docs/js/checks.js';
+import { dueCategories, findIssues, timelineConflicts } from '../../docs/js/checks.js';
 
 const load = (f) => JSON.parse(readFileSync(new URL(`../../docs/reports/${f}`, import.meta.url), 'utf8'));
 const report = load('6-12-27-harper-bennett-wedding-demo.json');
@@ -49,4 +49,18 @@ test('dueCategories lists owed categories, largest first', () => {
   const cats = dueCategories(report.budget);
   assert.equal(cats[0].category, 'Catering');
   assert.ok(cats.every((c, i) => i === 0 || cats[i - 1].due >= c.due));
+});
+
+test('timeline stops that disagree with every document time are flagged', () => {
+  assert.deepEqual(timelineConflicts({ timeline: report.timeline, curated, weddingDate: '2027-06-12' }), [], 'demo run sheet matches the venue');
+  const moved = structuredClone(curated);
+  const day = moved.days.find(d => d.date === '2027-06-12');
+  day.items.find(i => i.title === 'Ceremony begins').time = '17:00';
+  day.items.find(i => i.title === 'Cocktail hour').time = '16:30';
+  const issues = timelineConflicts({ timeline: report.timeline, curated: moved, weddingDate: '2027-06-12' });
+  assert.equal(issues.length, 1, 'only the ceremony moved away from the documents');
+  assert.match(issues[0].msg, /Ceremony begins.*17:00.*Venue Agreement.*16:00/);
+  assert.ok(!issues.some(i => /prelude/i.test(i.msg)), 'the prelude stop is not the ceremony');
+  assert.ok(findIssues({ timeline: report.timeline, curated: moved, vendors: [], budget: {}, weddingDate: '2027-06-12', today: '2026-09-27' })
+    .some(i => /Timeline has/.test(i.msg)), 'status page shows it too');
 });

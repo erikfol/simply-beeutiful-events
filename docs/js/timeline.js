@@ -3,7 +3,12 @@ import { state } from './state.js';
 import { $, setStatus, updateDirty, downloadJSON } from './dom.js';
 import { persistLocal, clearLocal } from './storage.js';
 import { loadEvent } from './events.js';
-import { esc, fmtDate, fmt12, sortDay, todayISO } from './util.js';
+import { openShift, openSaveTemplate, closePanel } from './panel.js'; // circular with panel.js; only used inside handlers
+import { ROLES, rolesOf, itemInView, roleLabel } from './roles.js';
+import { docSuggestions } from './suggestions.js';
+import { timelineConflicts } from './checks.js';
+import { applyEdit } from './draft.js';
+import { esc, fmtDate, fmt12, sortDay } from './util.js';
 
 let timelineObj = null;
 
@@ -20,14 +25,15 @@ export function showTimeline() {
     setStatus(`Timeline: curated run sheet (${state.currentCurated.days.reduce((n, d) => n + d.items.length, 0)} stops) + document evidence.`);
     return;
   }
-  // 2) Fallback: auto-generated from document dates
-  $('curated').innerHTML = '<p>No curated run sheet for this event — showing document dates only.</p>';
+  // 2) No run sheet yet: point at the generator; document dates still show below
+  $('curated').innerHTML = '<p class="empty">No run sheet for this event yet. Use <strong>Generate draft</strong> to start one from a few questions, or <strong>Add day</strong> to build it by hand.</p>';
   renderDocEvidence();
 }
 
 // Record an edit: mark unsaved, keep a browser copy, refresh the view.
-export function commitEdit() {
-  state.editing = null; state.isDirty = true; persistLocal(); updateDirty(); renderCurated();
+export function commitEdit(keepEditing = false) {
+  if (!keepEditing) state.editing = null;
+  state.isDirty = true; persistLocal(); updateDirty(); renderCurated();
 }
 
 // A timeline with no file yet still needs a filename for Export.
@@ -36,26 +42,46 @@ export function ensureCurated(template) {
   if (!state.curatedFile) state.curatedFile = `${state.currentMeta.id}.timeline.json`;
 }
 
+// Suggestions shown under each day, kept so an "Add" click can find the one it belongs to.
+let shownSuggestions = [];
+
+const roleChips = (it) => rolesOf(it).filter(r => r !== 'planner')
+  .map(r => `<span class="rchip">${esc(roleLabel(r))}</span>`).join('');
+
 export function renderCurated() {
-  const { editing } = state;
-  let html = `<p class="legend"><span class="badge okbadge">confirmed</span> = in contract/quote &nbsp; <span class="badge estbadge">estimated</span> = template slot, confirm with vendor</p>`;
-  state.currentCurated.days.forEach((day, di) => {
-    html += `<h3 class="dayhead">${fmtDate(day.date)} — ${esc(day.title)} <small>${esc(day.date)}</small></h3><div class="spine">`;
+  const { editing, viewRole, currentCurated: curated, currentReport: report } = state;
+  const conflicts = timelineConflicts({ timeline: report.timeline, curated, weddingDate: state.currentMeta.weddingDate });
+  let html = conflicts.map(i => `<div class="alert warn">🟡 ${i.msg}</div>`).join('');
+  html += `<p class="legend"><span class="badge okbadge">confirmed</span> = in contract/quote &nbsp; <span class="badge estbadge">estimated</span> = template slot, confirm with vendor${viewRole ? ` &nbsp;·&nbsp; Showing the <strong>${esc(roleLabel(viewRole))}</strong> view` : ''}</p>`;
+  shownSuggestions = [];
+  curated.days.forEach((day, di) => {
+    html += `<div class="dayhead-row"><h3 class="dayhead">${fmtDate(day.date)} — ${esc(day.title)} <small>${esc(day.date)}</small></h3>
+      <div class="day-actions"><button class="mini" data-act="savetpl" data-day="${di}">Save as template</button><button class="mini" data-act="delday" data-day="${di}">Delete day</button></div></div><div class="spine">`;
+    let shown = 0;
     day.items.forEach((it, i) => {
-      const side = i % 2 === 0 ? 'left' : 'right';
+      if (!itemInView(it, viewRole)) return;
+      const side = shown++ % 2 === 0 ? 'left' : 'right';
       if (editing && editing.day === di && editing.item === i && !editing.isNew) {
         html += `<div class="slot ${side}"><div class="dot"></div><div class="tcard edit">${itemForm(di, i, it)}</div></div>`;
       } else {
         const range = it.timeEnd ? ` – ${fmt12(it.timeEnd)}` : '';
         const conf = it.confidence === 'confirmed' ? '<span class="badge okbadge">confirmed</span>' : '<span class="badge estbadge">estimated</span>';
-        html += `<div class="slot ${side}"><div class="dot"></div><div class="tcard"><div class="ttime">${fmt12(it.time)}${range}</div><div class="ttitle">${esc(it.title)}</div><div class="tdetail">${esc(it.detail || '')}</div><div class="tsrc">${conf} <em>${esc(it.source || '')}</em></div><div class="tact"><button data-act="edit" data-day="${di}" data-item="${i}">Edit</button><button data-act="del" data-day="${di}" data-item="${i}" class="danger">Remove</button></div></div></div>`;
+        html += `<div class="slot ${side}"><div class="dot"></div><div class="tcard"><div class="ttime">${fmt12(it.time)}${range}</div><div class="ttitle">${esc(it.title)}</div><div class="tdetail">${esc(it.detail || '')}</div><div class="troles">${roleChips(it)}</div><div class="tsrc">${conf} <em>${esc(it.source || '')}</em></div><div class="tact"><button data-act="edit" data-day="${di}" data-item="${i}">Edit</button><button data-act="shiftfrom" data-day="${di}" data-item="${i}">Shift from here</button><button data-act="del" data-day="${di}" data-item="${i}" class="danger">Remove</button></div></div></div>`;
       }
     });
+    if (!shown) html += `<p class="empty">${day.items.length ? 'No stops for this view.' : 'No stops yet.'}</p>`;
     html += `</div>`;
     if (editing && editing.day === di && editing.isNew) {
-      html += `<div class="tcard edit newform">${itemForm(di, -1, { time: '', timeEnd: '', title: '', detail: '', source: '', confidence: 'confirmed' }, true)}</div>`;
+      html += `<div class="tcard edit newform">${itemForm(di, -1, { time: '', timeEnd: '', title: '', detail: '', source: '', confidence: 'confirmed', roles: viewRole ? ['planner', viewRole] : ['planner'] }, true)}</div>`;
     } else {
       html += `<button data-act="add" data-day="${di}" class="addbtn">+ Add stop on ${esc(day.date)}</button>`;
+    }
+    const sugg = docSuggestions(report.timeline, day).filter(x => itemInView(x, viewRole));
+    shownSuggestions[di] = sugg;
+    if (sugg.length) {
+      html += `<details class="suggest"><summary>From the documents: ${sugg.length} time${sugg.length === 1 ? '' : 's'} not on this day yet</summary><ul>` +
+        sugg.map((x, k) => `<li><span><strong>${fmt12(x.time)}</strong> ${esc(x.title)}<small>${esc(x.detail)}</small></span><button class="mini" data-act="suggest" data-day="${di}" data-item="${k}">Add</button></li>`).join('') +
+        `</ul></details>`;
     }
   });
   $('curated').innerHTML = html;
@@ -69,6 +95,8 @@ function itemForm(di, i, it, isNew = false) {
     <label>Detail <input name="detail" value="${esc(it.detail || '')}" /></label>
     <label>Source <input name="source" value="${esc(it.source || '')}" /></label>
     <label>Confidence <select name="confidence"><option value="confirmed"${it.confidence === 'confirmed' ? ' selected' : ''}>confirmed</option><option value="estimated"${it.confidence !== 'confirmed' ? ' selected' : ''}>estimated</option></select></label>
+    <fieldset class="rolepick"><legend>Who's involved</legend>${ROLES.filter(([k]) => k !== 'planner').map(([k, l]) => `<label><input type="checkbox" name="roles" value="${k}"${rolesOf(it).includes(k) ? ' checked' : ''} /> ${esc(l)}</label>`).join('')}</fieldset>
+    ${isNew ? '' : `<label class="inline"><input type="checkbox" name="ripple" /> Move later stops by the same amount</label>`}
     <div class="tact"><button type="submit">${isNew ? 'Add' : 'Done'}</button><button type="button" data-act="cancel">Cancel</button></div>
   </form>`;
 }
@@ -77,15 +105,31 @@ export function onCuratedClick(ev) {
   const b = ev.target.closest('button[data-act]');
   if (!b) return;
   const act = b.dataset.act, di = +b.dataset.day, ii = +(b.dataset.item ?? -1);
+  const days = state.currentCurated.days;
   if (act === 'edit') { state.editing = { day: di, item: ii }; renderCurated(); }
   else if (act === 'cancel') { state.editing = null; renderCurated(); }
   else if (act === 'add') { state.editing = { day: di, item: -1, isNew: true }; renderCurated(); }
+  else if (act === 'shiftfrom') openShift(di, ii);
+  else if (act === 'savetpl') openSaveTemplate(di);
   else if (act === 'del') {
-    const items = state.currentCurated.days[di].items;
+    const items = days[di].items;
     const t = items[ii];
     if (!confirm(`Remove "${t.time || ''} ${t.title}"?`)) return;
     items.splice(ii, 1);
     commitEdit();
+  } else if (act === 'delday') {
+    const day = days[di];
+    if (!confirm(`Delete ${day.date} (${day.title}) and its ${day.items.length} stops?`)) return;
+    days.splice(di, 1);
+    closePanel();
+    commitEdit();
+  } else if (act === 'suggest') {
+    const x = shownSuggestions[di] && shownSuggestions[di][ii];
+    if (!x) return;
+    days[di].items.push({ ...x });
+    sortDay(days[di]);
+    commitEdit();
+    setStatus(`Added ${fmt12(x.time)} ${x.title} from ${x.source}.`);
   }
 }
 
@@ -94,26 +138,21 @@ export function onCuratedSubmit(ev) {
   const f = ev.target;
   const di = +f.dataset.day, isNew = f.dataset.new === '1', ii = +f.dataset.item;
   const val = (n) => (new FormData(f).get(n) || '').toString().trim();
-  const obj = { time: val('time'), title: val('title'), detail: val('detail'), source: val('source'), confidence: val('confidence') };
+  const fd = new FormData(f);
+  const obj = { time: val('time'), title: val('title'), detail: val('detail'), source: val('source'), confidence: val('confidence'), roles: ['planner', ...fd.getAll('roles')] };
   const te = val('timeEnd');
   if (te) obj.timeEnd = te;
   if (!obj.time || !obj.title) return;
   const day = state.currentCurated.days[di];
-  if (isNew) day.items.push(obj);
-  else day.items[ii] = obj;
-  sortDay(day);
+  let moved = 0;
+  if (isNew) {
+    day.items.push(obj);
+    sortDay(day);
+  } else {
+    moved = applyEdit(day, ii, obj, fd.has('ripple'));
+  }
   commitEdit();
-}
-
-export function addDay() {
-  ensureCurated('custom');
-  const days = state.currentCurated.days;
-  const d = prompt('Day date (YYYY-MM-DD):', state.currentMeta.weddingDate || todayISO());
-  if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
-  days.push({ date: d, title: 'New day', items: [] });
-  days.sort((a, b) => a.date.localeCompare(b.date));
-  state.editing = { day: days.findIndex((x) => x.date === d), item: -1, isNew: true };
-  state.isDirty = true; persistLocal(); updateDirty(); renderCurated();
+  if (moved) setStatus(`Moved ${moved} later stop${moved === 1 ? '' : 's'} by the same amount. Save to keep.`);
 }
 
 export function saveTimeline() {

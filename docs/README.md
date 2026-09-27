@@ -18,8 +18,14 @@ Real client events never get published: `.gitignore` excludes everything in `rep
 - Scanner extracts dates, times (4pm, 6:00 PM – 9:00 PM, 6-10pm), budget totals, vendors.
 
 ## Views
-- **Create Timeline**: Knot-style run sheet (editable: edit/add/remove stops, generate a draft, shift times) + document evidence below.
-- **Status Update**: alert banner (over-budget, balances due, unsigned contracts), per-category budget table, editable vendor/contract/payment table, upcoming/overdue items.
+- **Create Timeline**: Knot-style run sheet plus document evidence below.
+  - **Generate draft**: a short questionnaire (ceremony time, traditional / first look / elopement, hair & makeup headcount, cocktail and reception length, shuttles, sunset, which moments to include) builds a full wedding day. Generated stops are marked *estimated*.
+  - **Add day**: blank, a built-in template (rehearsal + dinner, welcome party, farewell brunch), or one of your saved templates. **Save as template** on any day reuses it for other events.
+  - **Shift times**: move a whole day, or use **Shift from here** on a stop to move it and everything after it. When editing a stop, tick *Move later stops by the same amount*; changing only the start keeps the stop's length.
+  - **From the documents**: times found in the contracts that aren't on a day yet are listed under it; **Add** puts them on the timeline as *confirmed*, citing the document.
+  - **Conflicts**: a warning appears when a timeline stop (ceremony, cocktail hour, reception) disagrees with every document time.
+  - **Who's involved**: each stop is tagged with roles (photographer, florist, couple, …). **View as** filters to one role; **Print / PDF** prints a branded sheet of the current view (choose *Save as PDF* in the print dialog).
+- **Status Update**: alert banner (over-budget, balances due, unsigned contracts, timeline conflicts), per-category budget table, editable vendor/contract/payment table, upcoming/overdue items.
 
 ## Saving
 Edits save in the viewer's browser only. Use **Export JSON** to download the file and drop it into `reports/` to keep it. For the demo event, commit + push to publish; real event files stay local.
@@ -36,15 +42,18 @@ Plain ES modules, no build step. `index.html` loads `js/main.js`.
 | File | Job |
 |---|---|
 | `js/main.js` | Entry point: loads the event list, wires up buttons |
-| `js/state.js` | Shared app state (current event, report, timeline, statuses) |
+| `js/state.js` | Shared app state (current event, report, timeline, statuses, view) |
 | `js/events.js` | Loads `reports/index.json`, `local-index.json`, and one event's files |
-| `js/timeline.js` | Create Timeline view: editable run sheet + document evidence |
-| `js/generator.js` | Toolbar actions: Generate draft, Shift times |
-| `js/draft.js` | Pure timeline logic: draft template, time shifting (tested) |
+| `js/timeline.js` | Create Timeline view: editable run sheet, suggestions, conflicts, document evidence |
+| `js/panel.js` | Inline forms: generate draft, add day, shift times, save template |
+| `js/print.js` | Branded print / PDF sheet for the current view |
 | `js/status.js` | Status Update view: alerts, budget and vendor tables |
+| `js/draft.js` | Pure timeline logic: questionnaire rules, day templates, shifting, edits (tested) |
+| `js/roles.js` | Pure: role list, role guesses for untagged stops, view filtering (tested) |
+| `js/suggestions.js` | Pure: document times turned into suggested stops (tested) |
 | `js/checks.js` | Pure validation rules: conflicts, missing items, due dates (tested) |
 | `js/util.js` | Pure helpers: formatting, time parsing (tested) |
-| `js/dom.js`, `js/storage.js` | DOM helpers and browser-saved edits |
+| `js/dom.js`, `js/storage.js` | DOM helpers; browser-saved edits and saved templates |
 
 Keep anything without DOM access in the pure files so `npm test` can cover it.
 

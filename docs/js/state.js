@@ -7,6 +7,7 @@ export const state = {
   curatedFile: null,
   isDirty: false,
   editing: null,         // {day, item} or {day, isNew: true}
+  viewRole: '',          // '' = full timeline, else a role key from roles.js
   currentStatus: null,   // vendor contract/payment overlay {updated, vendors}
   statusFile: null,
   statusDirty: false,
