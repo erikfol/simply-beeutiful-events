@@ -1,6 +1,6 @@
 """Scan an SBE event folder -> summary + timeline.
 Usage: python tools/scan_event.py "events/6.6.26 Mistretta-Petran Wedding"
-Outputs JSON + Markdown into doc-reader/reports/
+Outputs JSON + Markdown into docs/reports/ (the published app)
 Local-only, no AI calls.
 """
 import re, json, sys
@@ -247,7 +247,7 @@ def main():
            "num_timeline_events": len(all_events), "all_amounts": total_amounts[:50],
            "budget": budget, "vendors": vendors,
            "timeline": all_events[:200], "files": docs}
-    repdir = Path("doc-reader/reports"); repdir.mkdir(parents=True, exist_ok=True)
+    repdir = Path("docs/reports"); repdir.mkdir(parents=True, exist_ok=True)
     slug = re.sub(r"[^a-z0-9]+", "-", base.name.lower()).strip("-")
     (repdir / f"{slug}.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
     md = [f"# {base.name} — auto report", f"_Generated {out['generated']}, local-only parse_",

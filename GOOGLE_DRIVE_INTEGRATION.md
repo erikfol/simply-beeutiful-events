@@ -843,7 +843,7 @@ REACT_APP_API_URL=http://localhost:8000
 
 ### Updated Doc Reader
 
-Modify `doc-reader/app.js` to fetch from the backend:
+Modify `docs/app.js` to fetch from the backend:
 
 ```javascript
 // Get event from backend API instead of loading report

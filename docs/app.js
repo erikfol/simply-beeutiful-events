@@ -125,7 +125,7 @@ async function loadEvent(id) {
       } catch { /* fallback to auto timeline below */ }
       // local edits override file
       const local = loadLocal();
-      if (local) { currentCurated = local; isDirty = true; updateDirty(); }
+      if (local) currentCurated = local;
     }
     // contract + payment status overlay
     currentStatus = null;
@@ -137,7 +137,7 @@ async function loadEvent(id) {
         if (rs.ok) currentStatus = await rs.json();
       } catch { /* overlay optional */ }
       const slocal = loadStatusLocal();
-      if (slocal) { currentStatus = slocal; statusDirty = true; updateStatusDirty(); }
+      if (slocal) currentStatus = slocal;
     }
     setStatus(`Loaded ${currentMeta.name}: ${currentReport.timeline.length} dated items${currentCurated ? ' + curated run sheet' : ''}.`);
     $('timelineSection').hidden = true;
@@ -241,10 +241,11 @@ function onCuratedSubmit(ev) {
   editing = null; isDirty = true; persistLocal(); updateDirty(); renderCurated();
 }
 
-function persistLocal() { try { localStorage.setItem(lsKey(), JSON.stringify(currentCurated)); } catch { /* ignore */ } }
+function persistLocal() { try { localStorage.setItem(lsKey(), JSON.stringify(currentCurated)); return true; } catch { return false; } }
 
 function addDay() {
-  if (!currentCurated) { currentCurated = { template: 'custom', days: [] }; curatedFile = currentCurated; }
+  if (!currentCurated) currentCurated = { template: 'custom', days: [] };
+  if (!curatedFile) curatedFile = `${currentMeta.id}.timeline.json`;
   const d = prompt('Day date (YYYY-MM-DD):', currentMeta.weddingDate || todayISO());
   if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
   currentCurated.days.push({ date: d, title: 'New day', items: [] });
@@ -253,23 +254,11 @@ function addDay() {
   isDirty = true; persistLocal(); updateDirty(); renderCurated();
 }
 
-async function saveTimeline() {
+function saveTimeline() {
   if (!currentCurated) { setStatus('Nothing to save.'); return; }
-  persistLocal();
-  // try server-side save to reports/*.timeline.json
-  if (curatedFile) {
-    try {
-      const r = await fetch('/api/save-timeline', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ file: curatedFile.split('/').pop(), data: currentCurated }) });
-      const j = await r.json();
-      if (j.ok) { isDirty = false; updateDirty(); setStatus(`Saved to reports/${curatedFile}.`); return; }
-      throw new Error(j.error || r.status);
-    } catch (e) {
-      setStatus(`Server save failed (${e.message}) — kept in browser + downloading file.`);
-      downloadTimeline();
-      return;
-    }
-  }
-  setStatus('Saved in browser (no server file linked).');
+  if (!persistLocal()) { setStatus('Could not save in this browser (storage blocked) — use Export JSON.'); return; }
+  isDirty = false; updateDirty();
+  setStatus('Saved in this browser. Use Export JSON to share with others.');
 }
 
 async function revertTimeline() {
@@ -290,7 +279,7 @@ function downloadTimeline() {
 function exportTimeline() {
   if (!currentCurated) return;
   downloadTimeline();
-  setStatus('Exported timeline JSON (put it in doc-reader/reports/ to share).');
+  setStatus('Exported timeline JSON (put it in docs/reports/ to share).');
 }
 
 // ---------- Draft generator (Genius-style): ceremony time -> starter run sheet ----------
@@ -333,6 +322,7 @@ function generateDraft() {
     return o;
   });
   if (!currentCurated) currentCurated = { template: 'generated draft', days: [] };
+  if (!curatedFile) curatedFile = `${currentMeta.id}.timeline.json`;
   const ix = currentCurated.days.findIndex(d => d.date === day);
   if (ix >= 0 && !confirm(`${day} already has ${currentCurated.days[ix].items.length} stops. Replace with generated draft?`)) return;
   const entry = { date: day, title: `Wedding Day — ${currentMeta.name}`, items };
@@ -454,7 +444,7 @@ function stKey() { return `sbe-status-${currentMeta ? currentMeta.id : 'none'}`;
 function loadStatusLocal() {
   try { const raw = localStorage.getItem(stKey()); return raw ? JSON.parse(raw) : null; } catch { return null; }
 }
-function persistStatusLocal() { try { localStorage.setItem(stKey(), JSON.stringify(currentStatus)); } catch { /* ignore */ } }
+function persistStatusLocal() { try { localStorage.setItem(stKey(), JSON.stringify(currentStatus)); return true; } catch { return false; } }
 function updateStatusDirty() { const el = $('dirtyStatus'); if (el) el.textContent = statusDirty ? '● unsaved changes' : ''; }
 function statusFor(key, name) {
   const found = (currentStatus && currentStatus.vendors || []).find(x => (x.name || '').toLowerCase() === (name || '').toLowerCase());
@@ -615,22 +605,11 @@ function onStatusChange(ev) {
   statusDirty = true; persistStatusLocal(); updateStatusDirty();
 }
 
-async function saveStatus() {
+function saveStatus() {
   if (!currentStatus) { setStatus('Nothing to save.'); return; }
-  persistStatusLocal();
-  if (statusFile) {
-    try {
-      const r = await fetch('/api/save-status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ file: statusFile.split('/').pop(), data: currentStatus }) });
-      const j = await r.json();
-      if (j.ok) { statusDirty = false; updateStatusDirty(); setStatus(`Saved statuses to reports/${statusFile}.`); return; }
-      throw new Error(j.error || r.status);
-    } catch (e) {
-      setStatus(`Server save failed (${e.message}) — kept in browser + downloading file.`);
-      downloadStatus();
-      return;
-    }
-  }
-  setStatus('Saved in browser (no server file linked).');
+  if (!persistStatusLocal()) { setStatus('Could not save in this browser (storage blocked) — use Export JSON.'); return; }
+  statusDirty = false; updateStatusDirty();
+  setStatus('Statuses saved in this browser. Use Export JSON to share with others.');
 }
 
 async function revertStatus() {
@@ -651,7 +630,7 @@ function downloadStatus() {
 function exportStatus() {
   if (!currentStatus) return;
   downloadStatus();
-  setStatus('Exported statuses JSON (put it in doc-reader/reports/ to share).');
+  setStatus('Exported statuses JSON (put it in docs/reports/ to share).');
 }
 
 init();

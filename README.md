@@ -9,7 +9,7 @@ This repository contains the event management tooling and document processing wo
 
 ## View the GUI
 
-The static event manager can be published with GitHub Pages by selecting the `main` branch and `/docs` folder in **Settings → Pages**. The `docs/index.html` entry point forwards to the current app in `doc-reader/`.
+The static event manager can be published with GitHub Pages by selecting the `main` branch and `/docs` folder in **Settings → Pages**. The app lives directly in `docs/` — there is no separate copy to keep in sync.
 
 For local development, run:
 
@@ -17,7 +17,7 @@ For local development, run:
 python -m http.server
 ```
 
-Then open the repository root in a browser, or follow the instructions in [`doc-reader/README.md`](doc-reader/README.md).
+Then open http://localhost:8000/docs/ (the repository root redirects there). See [`docs/README.md`](docs/README.md) for details.
 
 ## Quick start
 
@@ -28,4 +28,4 @@ Then open the repository root in a browser, or follow the instructions in [`doc-
 3. Serve the repository locally with `python -m http.server`.
 4. Open the event manager and select an event.
 
-Actual client event data should live in Google Drive rather than in Git. The tracked `events/` directory is retained only as legacy/test data until it is removed from Git history.
+Actual client event data should live in Google Drive rather than in Git. The `events/` directory is git-ignored: keep event folders there locally to scan them, but never commit them.
