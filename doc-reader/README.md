@@ -1,10 +1,8 @@
 # SBE Event Manager (v0.2)
 
-Pick an event, then Create Timeline or Status Update. All local, no upload.
+Live app: https://erikfol.github.io/simply-beeutiful-events/
 
-## Run
-- Double-click `../run-gui.bat`, or:
-- `python -m http.server` inside `doc-reader/`, then open http://localhost:8000
+Pick an event, then Create Timeline or Status Update. All in the browser, no upload.
 
 ## How it works
 - Event dropdown loads from `reports/index.json`.
@@ -13,10 +11,15 @@ Pick an event, then Create Timeline or Status Update. All local, no upload.
 - Scanner extracts dates, times (4pm, 6:00 PM – 9:00 PM, 6-10pm), budget totals, vendors.
 
 ## Views
-- **Create Timeline**: vis-timeline visual + day-by-day breakdown grouped by date, sorted by time. Wedding day gets a run-sheet block on top.
-- **Status Update**: uses today's date to show days until/since wedding, unpaid budget categories still due, next 15 upcoming items, last 10 past items.
+- **Create Timeline**: Knot-style run sheet (editable: edit/add/remove stops, Save keeps changes in this browser, Export JSON to share) + document evidence below.
+- **Status Update**: alert banner (over-budget, balances due, unsigned contracts), per-category budget table, editable vendor/contract/payment table, upcoming/overdue items.
 
 ## Add a new event
 1. Add folder under `events/`.
 2. Run scanner to generate `reports/<slug>.json`.
-3. Add entry to `reports/index.json` with `id, name, report, weddingDate, venue`.
+3. Add entry to `reports/index.json` with `id, name, report, timeline, status, weddingDate, venue`.
+4. Copy the changed app files into `../docs/` (the published copy), commit, push.
+
+## Local development (optional)
+- `python -m http.server` inside `doc-reader/`, then open http://localhost:8000
+- `python ../tools/serve_gui.py --port 8000` from the repo root enables disk Save for timelines/statuses.
