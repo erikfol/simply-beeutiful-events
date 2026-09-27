@@ -1,7 +1,56 @@
-body { font-family: system-ui, Arial, sans-serif; margin:0; background:#faf7f2; color:#333; }
-header { background:#2d2a26; color:#f9e8c9; padding:1.5rem; text-align:center; }
-header h1 { margin:0 0 .3rem; }
-main { max-width:1000px; margin:0 auto; padding:1rem; display:grid; gap:1rem; }
+body {
+  font-family: system-ui, Arial, sans-serif;
+  margin: 0;
+  background: #faf7f2;
+  color: #333;
+}
+
+header {
+  background: #2d2a26;
+  color: #f9e8c9;
+  padding: 1.5rem 1rem 1rem;
+  text-align: center;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.brand-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  padding: 0.3rem;
+}
+
+header h1 {
+  margin: 0 0 0.2rem;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+
+header p {
+  margin: 0;
+}
+
+.tagline {
+  color: #f2d9a4;
+  font-size: 0.95rem;
+}
+
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
 .row { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; margin-top:.5rem; }
 #eventSelect { font-size:1rem; padding:.5rem; border-radius:8px; min-width:280px; }
 button { background:#b89b5e; color:#fff; border:none; border-radius:8px; padding:.6rem 1.2rem; cursor:pointer; margin:.25rem; font-size:1rem; }
@@ -11,7 +60,6 @@ button:hover { opacity:.9; }
 #dropzone.dragover { background:#fff8e6; }
 .btn, button { background:#b89b5e; color:#fff; border:none; border-radius:8px; padding:.5rem 1rem; cursor:pointer; margin:.25rem; }
 .btn { display:inline-block; }
-button:hover { opacity:.9; }
 #clearAll { background:#999; }
 .controls { margin:1rem 0; display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
 #summaries { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
