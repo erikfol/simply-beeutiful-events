@@ -394,7 +394,92 @@ function budgetPill(c) {
   return pill('st-na', '—');
 }
 
+// ---------- Timeline validation: conflicts, missing items, deadline alerts ----------
+function renderValidation(b, v, today, dayDiff) {
+  const issues = []; // {level: 'high'|'warn'|'info', msg}
+  const wDate = currentMeta.weddingDate;
+  const allText = [
+    ...currentReport.timeline.map(e => `${e.snippet || ''} ${e.source || ''} ${e.label || ''}`),
+    ...(currentCurated && currentCurated.days ? currentCurated.days.flatMap(d => d.items.map(it => `${it.title || ''} ${it.detail || ''} ${it.source || ''}`)) : [])
+  ].join('\n');
+  const has = (re) => re.test(allText);
+
+  // 1) balances still due after the event
+  if ((b.total_due || 0) > 0.005 && dayDiff != null && dayDiff < 0) {
+    issues.push({ level: 'high', msg: `Event is over but <strong>${fmt$(b.total_due)}</strong> is still due — chase ${dueCatsFiltered(b).map(c => esc(c.category)).join(', ') || 'open balances'}.` });
+  }
+  // 2) conflicting key times across documents (wedding day)
+  const conflicts = [
+    { key: /ceremony/i, label: 'Ceremony start' },
+    { key: /cocktail/i, label: 'Cocktail hour' },
+    { key: /reception/i, label: 'Reception' },
+  ];
+  if (wDate) {
+    for (const c of conflicts) {
+      const seen = new Map(); // time -> source
+      for (const e of currentReport.timeline.filter(e => e.date_iso === wDate && e.time)) {
+        if (c.key.test(`${e.snippet || ''} ${e.label || ''}`)) {
+          if (!seen.has(e.time)) seen.set(e.time, e.source);
+        }
+      }
+      if (seen.size > 1) {
+        issues.push({ level: 'warn', msg: `${c.label} has <strong>conflicting times</strong>: ${[...seen.entries()].map(([t, s]) => `${t} [${esc(s)}]`).join(' vs ')} — confirm which is current.` });
+      }
+    }
+  }
+  // 3) missing common planning items
+  const checklist = [
+    { key: /venue|load-in|load in|setup|set up/i, label: 'venue access / setup time' },
+    { key: /ceremony/i, label: 'ceremony time' },
+    { key: /cocktail/i, label: 'cocktail hour' },
+    { key: /reception|dinner|first dance/i, label: 'reception / dinner plan' },
+    { key: /photo/i, label: 'photography coverage' },
+    { key: /band|dj|music|guitar/i, label: 'music / band / DJ' },
+    { key: /cater|food|bar|beverage/i, label: 'catering / bar' },
+    { key: /shuttle|bus|transport|pickup|pick up/i, label: 'transportation / shuttles' },
+    { key: /floral|flower/i, label: 'floral delivery' },
+    { key: /hair|makeup/i, label: 'hair & makeup' },
+  ];
+  const missing = checklist.filter(c => !c.key.test(allText));
+  for (const m of missing) {
+    issues.push({ level: 'info', msg: `No <strong>${m.label}</strong> found in documents — confirm it is planned.` });
+  }
+  // 4) vendor due dates vs today
+  const sts = (currentStatus && currentStatus.vendors) || [];
+  const soon = [];
+  for (const s of sts) {
+    if (s.payment === 'Paid') continue;
+    if (s.dueDate && s.dueDate < today) {
+      issues.push({ level: 'high', msg: `<strong>${esc(s.name)}</strong> payment was due <strong>${s.dueDate}</strong> and is marked "${esc(s.payment)}".` });
+    } else if (s.dueDate && s.payment !== 'Paid') {
+      const days = Math.round((new Date(s.dueDate + 'T12:00:00') - new Date(today + 'T12:00:00')) / 86400000);
+      if (days >= 0 && days <= 14) soon.push(`${esc(s.name)} (${s.dueDate})`);
+    }
+  }
+  if (soon.length) {
+    issues.push({ level: 'warn', msg: `Due within 14 days: <strong>${soon.join('; ')}</strong>.` });
+  }
+  // 5) document dates after the wedding that are not load-out/returns
+  if (wDate) {
+    const odd = currentReport.timeline.filter(e => e.date_iso > wDate && !/pickup|return|load-out|load out|checkout|check.out/i.test(`${e.snippet || ''} ${e.label || ''}`));
+    if (odd.length) {
+      issues.push({ level: 'info', msg: `${odd.length} dated item${odd.length === 1 ? '' : 's'} after the wedding — verify close-out tasks.` });
+    }
+  }
+
+  const el = $('validation');
+  if (!issues.length) { el.innerHTML = '<div class="alert ok">✅ Timeline looks consistent — no conflicts or missing items detected.</div>'; return; }
+  const icon = { high: '🔴', warn: '🟡', info: '🔵' };
+  el.innerHTML = `<h3>Needs attention (${issues.length})</h3>` +
+    issues.map(i => `<div class="alert ${i.level === 'high' ? 'due' : i.level === 'warn' ? 'warn' : 'info'}">${icon[i.level]} ${i.msg}</div>`).join('');
+}
+
+function dueCatsFiltered(b) {
+  return (b.categories || []).filter(c => (c.due || 0) > 0.005).sort((x, y) => y.due - x.due);
+}
+
 function renderStatusDashboard(b, v, dueCats, today, dayDiff) {
+  renderValidation(b, v, today, dayDiff);
   // --- alerts ---
   const alerts = [];
   if ((b.budget_total || 0) > 0 && (b.total_actual || 0) > (b.budget_total || 0)) {

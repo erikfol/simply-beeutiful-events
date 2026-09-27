@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SBE Event Manager</title>
-  <link rel="stylesheet" href="styles.css?v=20260927f" />
+  <link rel="stylesheet" href="styles.css?v=20260927g" />
   <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet" />
   <script src="https://unpkg.com/vis-timeline@latest/standalone/umd/vis-timeline-graph2d.min.js"></script>
 </head>
 <body>
   <header>
-    <span class="version">v0.2</span>
+    <span class="version">v0.3</span>
     <div class="brand-row">
       <img src="sbe-logo.png" alt="Simply Beeutiful Events logo" class="brand-logo" />
       <div>
@@ -53,6 +53,7 @@
     <section id="statusSection" class="card" hidden>
       <h2>Status Update — <span id="statusTitle"></span></h2>
       <p id="todayLine"></p>
+      <div id="validation"></div>
       <div class="row toolbar">
         <button id="btnSaveStatus" class="primary">Save statuses</button>
         <button id="btnRevertStatus">Revert</button>
@@ -76,6 +77,6 @@
     <small>Edits save in this browser · Export JSON to share changes · Data from <code>reports/*.json</code></small>
   </footer>
 
-  <script src="app.js?v=20260927f"></script>
+  <script src="app.js?v=20260927g"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# SBE Event Manager (v0.2)
+# SBE Event Manager (v0.3)
 
 Live app: https://erikfol.github.io/simply-beeutiful-events/
 
