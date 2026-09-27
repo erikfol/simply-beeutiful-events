@@ -47,6 +47,7 @@ The four jobs:
 | 3 | Reading the documents: facts with source links, "needs a look" list, planner corrections, event hub page | Planned | 2–3 weeks |
 | 4 | Action center: overdue / this week / next 30 days / changed in Drive, date-based checklist, done / snooze / assign | Planned | 2–3 weeks |
 | 5 | Ask SBE: search first; optional private AI chat later | Planned | 1–2 weeks |
+| $ | Billing and invoicing (client invoices, payment schedules, proposals, contracts), using HoneyBook as the reference; see below | Not scheduled | — |
 | + | Later, if wanted: daily email digest, client/vendor share links, wedding-day texts, time tracking, calendar (.ics) export | Not scheduled | — |
 
 Estimates assume part-time work with Claude doing most of the coding. Expected running cost: $0–25/month without AI (Supabase free tier, then $25/mo Pro for backups).
@@ -77,6 +78,22 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 1. Try the timeline builder on the demo event and note what a planner would change.
 2. Decide the Phase 2 items: the Google account that owns the events folder, the allowed sign-in emails, and Supabase.
 3. Start Phase 2.
+
+### Billing and invoicing reference: HoneyBook
+
+SBE will use **HoneyBook** (https://www.honeybook.com/) as the reference for billing, invoicing, and related features, the way Timeline Genius is the reference for timelines. Noted September 27, 2026 from HoneyBook's home page:
+
+- **Invoicing and payments**: online invoices, card/bank payment processing, payment schedules, and HoneyBook Finance for money management.
+- **Proposals and contracts**: proposal templates, online contracts with e-signature, customizable templates.
+- **Clients**: CRM with pipeline and tasks, lead-capture forms and questionnaires, and a client portal.
+- **Scheduling and automation**: meeting scheduler, calendar sync, email automations, and phone/SMS messaging.
+- **AI**: email drafting, project summaries, and meeting notes.
+- **Integrations**: QuickBooks Online, Google Calendar and Gmail, Zoom, Calendly, Mailchimp, Zapier, Outlook.
+- **Pricing**: Starter $36/mo ($29 yearly), Essentials $59/mo ($49 yearly), Premium $129/mo ($109 yearly).
+
+Fits with the existing app: budget tracking, per-vendor contract and payment status, and payment due-date alerts (Status Update view) are the starting point.
+
+**Open question for later:** build billing features into the SBE app, or have SBE subscribe to HoneyBook and connect it to the app (it integrates with QuickBooks, Google, and Zapier). Either way, actual card and bank payments should go through an established payment provider, never be handled by the app itself.
 
 ### Chatbot privacy options (for Phase 5)
 
