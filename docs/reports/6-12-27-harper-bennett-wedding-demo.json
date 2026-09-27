@@ -1,0 +1,1300 @@
+{
+  "event": "tests/demo_event/6.12.27 Harper-Bennett Wedding (Demo)",
+  "generated": "2026-09-27T17:11:04",
+  "num_files": 12,
+  "num_text_parsed": 12,
+  "num_timeline_events": 36,
+  "all_amounts": [
+    "$1,000.00",
+    "$1,150",
+    "$1,150.00",
+    "$1,400",
+    "$1,400.00",
+    "$1,600.00",
+    "$1,650",
+    "$1,650.00",
+    "$1,800",
+    "$1,800.00",
+    "$2,200",
+    "$2,200.00",
+    "$2,500.00",
+    "$200.00",
+    "$3,200",
+    "$3,200.00",
+    "$3,400.00",
+    "$3,600",
+    "$3,600.00",
+    "$4,100",
+    "$4,100.00",
+    "$4,750.00",
+    "$400.00",
+    "$45,000.00",
+    "$500.00",
+    "$6,800",
+    "$6,800.00",
+    "$62",
+    "$62.00",
+    "$650.00",
+    "$7,440.00",
+    "$9,500",
+    "$9,500.00",
+    "$900.00"
+  ],
+  "budget": {
+    "file": "Harper_Bennett Wedding - Budget.xlsx",
+    "budget_total": 45000.0,
+    "total_actual": 51860.0,
+    "total_paid": 19520.0,
+    "total_due": 32340.0,
+    "remaining_budget": -6860.0,
+    "categories": [
+      {
+        "category": "Venue",
+        "actual": 9500.0,
+        "paid": 4750.0,
+        "due": 4750.0
+      },
+      {
+        "category": "Welcome Party",
+        "actual": 1800.0,
+        "paid": 900.0,
+        "due": 900.0
+      },
+      {
+        "category": "Catering",
+        "actual": 7440.0,
+        "paid": 2500.0,
+        "due": 4940.0
+      },
+      {
+        "category": "Bar & Beverages",
+        "actual": 3600.0,
+        "paid": 0.0,
+        "due": 3600.0
+      },
+      {
+        "category": "Wedding Cake",
+        "actual": 650.0,
+        "paid": 200.0,
+        "due": 450.0
+      },
+      {
+        "category": "Photographer",
+        "actual": 3200.0,
+        "paid": 1600.0,
+        "due": 1600.0
+      },
+      {
+        "category": "Florist",
+        "actual": 4100.0,
+        "paid": 0.0,
+        "due": 4100.0
+      },
+      {
+        "category": "Hair & Makeup",
+        "actual": 1650.0,
+        "paid": 500.0,
+        "due": 1150.0
+      },
+      {
+        "category": "Music / Band",
+        "actual": 6800.0,
+        "paid": 3400.0,
+        "due": 3400.0
+      },
+      {
+        "category": "Transportation",
+        "actual": 1400.0,
+        "paid": 0.0,
+        "due": 1400.0
+      },
+      {
+        "category": "Tent & Rentals",
+        "actual": 3350.0,
+        "paid": 0.0,
+        "due": 3350.0
+      },
+      {
+        "category": "Attire",
+        "actual": 2800.0,
+        "paid": 2800.0,
+        "due": 0.0
+      },
+      {
+        "category": "Stationery",
+        "actual": 620.0,
+        "paid": 620.0,
+        "due": 0.0
+      },
+      {
+        "category": "Favors & Gifts",
+        "actual": 450.0,
+        "paid": 0.0,
+        "due": 450.0
+      },
+      {
+        "category": "Planner Fee",
+        "actual": 4500.0,
+        "paid": 2250.0,
+        "due": 2250.0
+      }
+    ]
+  },
+  "vendors": {
+    "booked": [
+      {
+        "vendor": "Willow Brook Barn",
+        "location": "Maple Hollow, NH",
+        "event": "Ceremony & Reception",
+        "contact": "Dana Whitfield, Events Manager",
+        "email": "events@willowbrookbarn.example.com",
+        "cost": "$9,500 venue fee, Friday-Sunday"
+      },
+      {
+        "vendor": "Copper Kettle Brewing",
+        "location": "Pinebrook, NH",
+        "event": "Welcome Party",
+        "contact": "Marcus Lee, Owner",
+        "email": "hello@copperkettle.example.com",
+        "cost": "$1,800 room rental + taco bar"
+      },
+      {
+        "vendor": "Juniper Lane Photography",
+        "location": "Clearwater, NH",
+        "event": "Wedding Day",
+        "contact": "Priya Nair",
+        "email": "priya@juniperlane.example.com",
+        "cost": "$3,200 for 8 hours + second shooter"
+      },
+      {
+        "vendor": "Hearth & Table Catering",
+        "location": "Maple Hollow, NH",
+        "event": "Wedding Day",
+        "contact": "Tom Alvarez",
+        "email": "orders@hearthandtable.example.com",
+        "cost": "$62 per guest x 120 + $3,600 bar package"
+      },
+      {
+        "vendor": "Bluebell Blooms",
+        "location": "Birchwood, NH",
+        "event": "Wedding Day",
+        "contact": "Sadie Morgan",
+        "email": "sadie@bluebellblooms.example.com",
+        "cost": "$4,100 ceremony + reception florals"
+      },
+      {
+        "vendor": "Glow Studio",
+        "location": "Clearwater, NH",
+        "event": "Getting Ready",
+        "contact": "Alina Park",
+        "email": "book@glowstudio.example.com",
+        "cost": "$1,650 bride + 5 attendants, trial included"
+      },
+      {
+        "vendor": "The Midnight Owls Band",
+        "location": "Riverton, MA",
+        "event": "Reception",
+        "contact": "Ben Carter",
+        "email": "bookings@midnightowls.example.com",
+        "cost": "$6,800 for 4 hours + ceremony duo"
+      },
+      {
+        "vendor": "Summit Coach Lines",
+        "location": "Pinebrook, NH",
+        "event": "Wedding Day",
+        "contact": "Jess Romano",
+        "email": "dispatch@summitcoach.example.com",
+        "cost": "$1,400 for 2 shuttles"
+      },
+      {
+        "vendor": "Ridgeline Tent & Rental",
+        "location": "Birchwood, NH",
+        "event": "Rentals",
+        "contact": "Luis Ortega",
+        "email": "rentals@ridgelinetent.example.com",
+        "cost": "40x60 tent $2,200; tables/chairs $1,150"
+      }
+    ],
+    "contract_files": [
+      "Bluebell Blooms - Floral Quote.txt",
+      "Copper Kettle Brewing - Welcome Party Agreement.txt",
+      "Glow Studio - Hair & Makeup Agreement.txt",
+      "Juniper Lane Photography - Contract.txt",
+      "Ridgeline Tent & Rental - Quote.txt",
+      "Summit Coach Lines - Shuttle Quote.txt",
+      "The Midnight Owls Band - Performance Agreement.txt",
+      "Willow Brook Barn - Venue Agreement.txt"
+    ]
+  },
+  "timeline": [
+    {
+      "date_raw": "January 20, 2026",
+      "date_iso": "2026-01-20",
+      "snippet": "\u2026UMENT - all people, businesses, and amounts are fictional.  - Kick-off meeting with the couple held January 20, 2026. Budget set at $45,000.00. - Terms and conditions follow the standard agreement on file; changes mu\u2026",
+      "source": "Planner Notes - Harper-Bennett.md",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "February 14, 2026",
+      "date_iso": "2026-02-14",
+      "snippet": "\u2026ENT SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  This agreement is made on February 14, 2026 between Willow Brook Barn LLC and Olivia Harper & James Bennett. A deposit of $4,750.00 was receive\u2026",
+      "source": "Willow Brook Barn - Venue Agreement.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "March 2, 2026",
+      "date_iso": "2026-03-02",
+      "snippet": "\u2026le, businesses, and amounts are fictional.  Clients: Olivia Harper & James Bennett. Contract signed March 2, 2026 with a retainer of $1,600.00.  Terms and conditions follow the standard agreement on file; changes\u2026",
+      "source": "Juniper Lane Photography - Contract.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "April 10, 2026",
+      "date_iso": "2026-04-10",
+      "snippet": "\u2026NCE AGREEMENT SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Agreement dated April 10, 2026. Deposit of $3,400.00 (50%) received with this agreement.  Terms and conditions follow the standard\u2026",
+      "source": "The Midnight Owls Band - Performance Agreement.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "May 1, 2026",
+      "date_iso": "2026-05-01",
+      "snippet": "\u2026NT AGREEMENT SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Agreement signed May 1, 2026. Deposit of $900.00 received.  Terms and conditions follow the standard agreement on file; changes\u2026",
+      "source": "Copper Kettle Brewing - Welcome Party Agreement.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "May 20, 2026",
+      "date_iso": "2026-05-20",
+      "snippet": "\u2026NT PROPOSAL SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Proposal accepted May 20, 2026. Deposit of $2,500.00 received.  Terms and conditions follow the standard agreement on file; change\u2026",
+      "source": "Hearth & Table Catering - Proposal.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "June 3, 2026",
+      "date_iso": "2026-06-03",
+      "snippet": "\u2026UP AGREEMENT SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Agreement signed June 3, 2026. Deposit of $500.00 received.  Terms and conditions follow the standard agreement on file; changes\u2026",
+      "source": "Glow Studio - Hair & Makeup Agreement.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "August 15, 2026",
+      "date_iso": "2026-08-15",
+      "snippet": "\u2026- FLORAL QUOTE SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Quote prepared August 15, 2026 for Olivia Harper & James Bennett.  Terms and conditions follow the standard agreement on file; cha\u2026",
+      "source": "Bluebell Blooms - Floral Quote.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "August 20, 2026",
+      "date_iso": "2026-08-20",
+      "snippet": "\u2026AL - RENTAL QUOTE SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Quote dated August 20, 2026. 40x60 frame tent $2,200.00; tables, chairs and linens $1,150.00.  Terms and conditions follow the\u2026",
+      "source": "Ridgeline Tent & Rental - Quote.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "September 1, 2026",
+      "date_iso": "2026-09-01",
+      "snippet": "\u2026- SHUTTLE QUOTE SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Quote issued September 1, 2026 for two 28-passenger shuttles.  Terms and conditions follow the standard agreement on file; changes\u2026",
+      "source": "Summit Coach Lines - Shuttle Quote.txt",
+      "times": [],
+      "time": null,
+      "label": "shuttle"
+    },
+    {
+      "date_raw": "September 15, 2026",
+      "date_iso": "2026-09-15",
+      "snippet": "\u2026on file; changes must be made in writing and approved by both parties.  A deposit of $400.00 is due September 15, 2026 to confirm the booking.  Terms and conditions follow the standard agreement on file; changes must b\u2026",
+      "source": "Summit Coach Lines - Shuttle Quote.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "October 1, 2026",
+      "date_iso": "2026-10-01",
+      "snippet": "\u2026file; changes must be made in writing and approved by both parties.  A deposit of $1,000.00 is due October 1, 2026.  Terms and conditions follow the standard agreement on file; changes must be made in writing and a\u2026",
+      "source": "Ridgeline Tent & Rental - Quote.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "October 9, 2026",
+      "date_iso": "2026-10-09",
+      "snippet": "\u2026le; changes must be made in writing and approved by both parties.  A deposit of $1,000.00 is due by October 9, 2026 to hold the date.  Terms and conditions follow the standard agreement on file; changes must be made\u2026",
+      "source": "Bluebell Blooms - Floral Quote.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "January 16, 2027",
+      "date_iso": "2027-01-16",
+      "snippet": "\u2026d agreement on file; changes must be made in writing and approved by both parties.  Bridal trial on January 16, 2027 at 10:00 AM at the Glow Studio salon.  Terms and conditions follow the standard agreement on file;\u2026",
+      "source": "Glow Studio - Hair & Makeup Agreement.txt",
+      "times": [
+        "10:00"
+      ],
+      "time": "10:00",
+      "label": ""
+    },
+    {
+      "date_raw": "March 6, 2027",
+      "date_iso": "2027-03-06",
+      "snippet": "\u2026d agreement on file; changes must be made in writing and approved by both parties.  Menu tasting on March 6, 2027 at 11:00 AM at the Hearth & Table kitchen.  Terms and conditions follow the standard agreement on f\u2026",
+      "source": "Hearth & Table Catering - Proposal.txt",
+      "times": [
+        "11:00"
+      ],
+      "time": "11:00",
+      "label": ""
+    },
+    {
+      "date_raw": "March 12, 2027",
+      "date_iso": "2027-03-12",
+      "snippet": "\u2026changes must be made in writing and approved by both parties. - Invitations must go in the mail by March 12, 2027. - Terms and conditions follow the standard agreement on file; changes must be made in writing and\u2026",
+      "source": "Planner Notes - Harper-Bennett.md",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "April 13, 2027",
+      "date_iso": "2027-04-13",
+      "snippet": "\u2026ering Friday through Sunday. The remaining balance of $4,750.00 is due 60 days before the event, on April 13, 2027.  Terms and conditions follow the standard agreement on file; changes must be made in writing and a\u2026",
+      "source": "Willow Brook Barn - Venue Agreement.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "May 11, 2027",
+      "date_iso": "2027-05-11",
+      "snippet": "\u2026e in writing and approved by both parties.  Room rental and food: $1,800.00. Balance of $900.00 due May 11, 2027.  Contact: Marcus Lee, hello@copperkettle.example.com, (603) 555-0109.\u2026",
+      "source": "Copper Kettle Brewing - Welcome Party Agreement.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "May 12, 2027",
+      "date_iso": "2027-05-12",
+      "snippet": "\u2026es must be made in writing and approved by both parties.  Final guest count and menu selections due May 12, 2027.  Terms and conditions follow the standard agreement on file; changes must be made in writing and a\u2026",
+      "source": "Hearth & Table Catering - Proposal.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "May 28, 2027",
+      "date_iso": "2027-05-28",
+      "snippet": "\u2026file; changes must be made in writing and approved by both parties.  Final balance of $1,600.00 due May 28, 2027. Online gallery of 600+ edited images delivered within 8 weeks.  Contact: Priya Nair, priya@juniper\u2026",
+      "source": "Juniper Lane Photography - Contract.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "6/1/2027",
+      "date_iso": "2027-06-01",
+      "snippet": "\u2026be made in writing and approved by both parties.  Total fee: $6,800.00. Balance of $3,400.00 due on 6/1/2027.  Contact: Ben Carter, bookings@midnightowls.example.com, (617) 555-0103.\u2026",
+      "source": "The Midnight Owls Band - Performance Agreement.txt",
+      "times": [],
+      "time": null,
+      "label": ""
+    },
+    {
+      "date_raw": "6/11/2027",
+      "date_iso": "2027-06-11",
+      "snippet": "\u2026ement on file; changes must be made in writing and approved by both parties.  Delivery and setup on 6/11/2027 at 9:00 AM.  Terms and conditions follow the standard agreement on file; changes must be made in wr\u2026",
+      "source": "Ridgeline Tent & Rental - Quote.txt",
+      "times": [
+        "09:00"
+      ],
+      "time": "09:00",
+      "label": "delivery"
+    },
+    {
+      "date_raw": "6/11/2027",
+      "date_iso": "2027-06-11",
+      "snippet": "\u2026on file; changes must be made in writing and approved by both parties.  Rehearsal is scheduled for 6/11/2027 at 3:00 PM on the Meadow Lawn.  Terms and conditions follow the standard agreement on file; changes\u2026",
+      "source": "Willow Brook Barn - Venue Agreement.txt",
+      "times": [
+        "15:00"
+      ],
+      "time": "15:00",
+      "label": ""
+    },
+    {
+      "date_raw": "June 11, 2027",
+      "date_iso": "2027-06-11",
+      "snippet": "\u2026agreement on file; changes must be made in writing and approved by both parties.  Welcome party on June 11, 2027 from 6:00 PM - 9:00 PM in the Tap Room: 60 guests, taco bar and two drink tickets per guest.  Terms\u2026",
+      "source": "Copper Kettle Brewing - Welcome Party Agreement.txt",
+      "times": [
+        "18:00",
+        "21:00"
+      ],
+      "time": "18:00",
+      "label": "welcome party"
+    },
+    {
+      "date_raw": "6/12/2027",
+      "date_iso": "2027-06-12",
+      "snippet": "\u2026ndard agreement on file; changes must be made in writing and approved by both parties.  Wedding day 6/12/2027: hair and makeup team arrives at 9:30 AM at Birchwood Inn, Suite 4. Services for the bride plus 5 a\u2026",
+      "source": "Glow Studio - Hair & Makeup Agreement.txt",
+      "times": [
+        "09:30"
+      ],
+      "time": "09:30",
+      "label": "hair"
+    },
+    {
+      "date_raw": "6/12/2027",
+      "date_iso": "2027-06-12",
+      "snippet": "\u2026agreement on file; changes must be made in writing and approved by both parties.  Vendor load-in on 6/12/2027 begins at 10:00 AM in both event spaces.  Terms and conditions follow the standard agreement on fil\u2026",
+      "source": "Willow Brook Barn - Venue Agreement.txt",
+      "times": [
+        "10:00"
+      ],
+      "time": "10:00",
+      "label": ""
+    },
+    {
+      "date_raw": "June 12, 2027",
+      "date_iso": "2027-06-12",
+      "snippet": "\u2026be made in writing and approved by both parties.  Floral delivery and setup at Willow Brook Barn on June 12, 2027 at 1:00 PM: bridal bouquet, 5 bridesmaid bouquets, 8 boutonnieres, arbor garland, 14 centerpieces.\u2026",
+      "source": "Bluebell Blooms - Floral Quote.txt",
+      "times": [
+        "13:00"
+      ],
+      "time": "13:00",
+      "label": "delivery"
+    },
+    {
+      "date_raw": "June 12, 2027",
+      "date_iso": "2027-06-12",
+      "snippet": "\u2026rd agreement on file; changes must be made in writing and approved by both parties.  Coverage date: June 12, 2027. Photographer arrives at 2:00 PM for getting-ready photos and details; 8 hours of coverage with a s\u2026",
+      "source": "Juniper Lane Photography - Contract.txt",
+      "times": [
+        "14:00"
+      ],
+      "time": "14:00",
+      "label": "photos"
+    },
+    {
+      "date_raw": "June 12, 2027",
+      "date_iso": "2027-06-12",
+      "snippet": "\u2026dard agreement on file; changes must be made in writing and approved by both parties.  Service date June 12, 2027: guest pickup at Birchwood Inn at 3:15 PM, drop-off at Willow Brook Barn.  Terms and conditions fol\u2026",
+      "source": "Summit Coach Lines - Shuttle Quote.txt",
+      "times": [
+        "15:15"
+      ],
+      "time": "15:15",
+      "label": "pickup"
+    },
+    {
+      "date_raw": "June 12, 2027",
+      "date_iso": "2027-06-12",
+      "snippet": "\u2026ndard agreement on file; changes must be made in writing and approved by both parties.  Event Date: June 12, 2027. Ceremony at 4:00 PM on the Meadow Lawn, weather permitting.  Rental fee: $9,500.00 covering Friday\u2026",
+      "source": "Willow Brook Barn - Venue Agreement.txt",
+      "times": [
+        "16:00"
+      ],
+      "time": "16:00",
+      "label": "ceremony"
+    },
+    {
+      "date_raw": "June 12, 2027",
+      "date_iso": "2027-06-12",
+      "snippet": "\u2026e standard agreement on file; changes must be made in writing and approved by both parties.  Event: June 12, 2027. Cocktail hour 4:30 PM - 5:30 PM with passed appetizers on the patio.  Terms and conditions follow\u2026",
+      "source": "Hearth & Table Catering - Proposal.txt",
+      "times": [
+        "16:30",
+        "17:30"
+      ],
+      "time": "16:30",
+      "label": "cocktail hour"
+    },
+    {
+      "date_raw": "June 12, 2027",
+      "date_iso": "2027-06-12",
+      "snippet": "\u2026by both parties. The band provides sound, lighting, and an MC for announcements.  Performance date: June 12, 2027 at Willow Brook Barn. Ceremony start 4:30 PM, with an acoustic duo playing prelude music beforehand\u2026",
+      "source": "The Midnight Owls Band - Performance Agreement.txt",
+      "times": [
+        "16:30"
+      ],
+      "time": "16:30",
+      "label": "ceremony"
+    },
+    {
+      "date_raw": "6.12.27",
+      "date_iso": "2027-06-12",
+      "snippet": "\u2026ed by both parties. Song requests and the planner worksheet are due one month out.  Evening sets on 6.12.27 run 5:30 PM to 9:30 PM, four 45-minute sets. Terms and conditions follow the standard agreement on\u2026",
+      "source": "The Midnight Owls Band - Performance Agreement.txt",
+      "times": [
+        "17:30",
+        "21:30"
+      ],
+      "time": "17:30",
+      "label": ""
+    },
+    {
+      "date_raw": "6/12/27",
+      "date_iso": "2027-06-12",
+      "snippet": "\u2026file; changes must be made in writing and approved by both parties.  Return trips from the barn on 6/12/27 depart at 10:00 PM and 10:45 PM. Quote total: $1,400.00.  Contact: Jess Romano, dispatch@summitcoac\u2026",
+      "source": "Summit Coach Lines - Shuttle Quote.txt",
+      "times": [
+        "22:00",
+        "22:45"
+      ],
+      "time": "22:00",
+      "label": ""
+    },
+    {
+      "date_raw": "June 13, 2027",
+      "date_iso": "2027-06-13",
+      "snippet": "\u2026reement on file; changes must be made in writing and approved by both parties. - Farewell brunch on June 13, 2027 at 10:00 AM at Birchwood Inn, hosted by the Bennett family.\u2026",
+      "source": "Planner Notes - Harper-Bennett.md",
+      "times": [
+        "10:00"
+      ],
+      "time": "10:00",
+      "label": ""
+    },
+    {
+      "date_raw": "6/14/2027",
+      "date_iso": "2027-06-14",
+      "snippet": "\u2026tandard agreement on file; changes must be made in writing and approved by both parties.  Pickup on 6/14/2027 at 8:00 AM; all rentals must be cleared and stacked by the venue.  Contact: Luis Ortega, rentals@ri\u2026",
+      "source": "Ridgeline Tent & Rental - Quote.txt",
+      "times": [
+        "08:00"
+      ],
+      "time": "08:00",
+      "label": "pickup"
+    }
+  ],
+  "files": [
+    {
+      "file": "Bluebell Blooms - Floral Quote.txt",
+      "ext": ".txt",
+      "size": 757,
+      "text_len": 743,
+      "dates": [
+        "August 15, 2026",
+        "June 12, 2027",
+        "October 9, 2026"
+      ],
+      "amounts": [
+        "$1,000.00",
+        "$4,100.00"
+      ],
+      "keywords": [
+        "quote",
+        "floral",
+        "terms",
+        "conditions",
+        "follow",
+        "standard",
+        "agreement",
+        "file"
+      ],
+      "summary": "BLUEBELL BLOOMS - FLORAL QUOTE\nSAMPLE DOCUMENT - all people, businesses, and amounts are fictional. Quote prepared August 15, 2026 for Olivia Harper & James Bennett. Terms and conditions follow the standard agreement on file; changes must be made in writing and approved by both parties.",
+      "events": [
+        {
+          "date_raw": "August 15, 2026",
+          "date_iso": "2026-08-15",
+          "snippet": "\u2026- FLORAL QUOTE SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Quote prepared August 15, 2026 for Olivia Harper & James Bennett.  Terms and conditions follow the standard agreement on file; cha\u2026",
+          "source": "Bluebell Blooms - Floral Quote.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "October 9, 2026",
+          "date_iso": "2026-10-09",
+          "snippet": "\u2026le; changes must be made in writing and approved by both parties.  A deposit of $1,000.00 is due by October 9, 2026 to hold the date.  Terms and conditions follow the standard agreement on file; changes must be made\u2026",
+          "source": "Bluebell Blooms - Floral Quote.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "June 12, 2027",
+          "date_iso": "2027-06-12",
+          "snippet": "\u2026be made in writing and approved by both parties.  Floral delivery and setup at Willow Brook Barn on June 12, 2027 at 1:00 PM: bridal bouquet, 5 bridesmaid bouquets, 8 boutonnieres, arbor garland, 14 centerpieces.\u2026",
+          "source": "Bluebell Blooms - Floral Quote.txt",
+          "times": [
+            "13:00"
+          ],
+          "time": "13:00",
+          "label": "delivery"
+        }
+      ]
+    },
+    {
+      "file": "Copper Kettle Brewing - Welcome Party Agreement.txt",
+      "ext": ".txt",
+      "size": 703,
+      "text_len": 689,
+      "dates": [
+        "June 11, 2027",
+        "May 1, 2026",
+        "May 11, 2027"
+      ],
+      "amounts": [
+        "$1,800.00",
+        "$900.00"
+      ],
+      "keywords": [
+        "agreement",
+        "may",
+        "terms",
+        "conditions",
+        "follow",
+        "standard",
+        "file",
+        "changes"
+      ],
+      "summary": "COPPER KETTLE BREWING - PRIVATE EVENT AGREEMENT\nSAMPLE DOCUMENT - all people, businesses, and amounts are fictional. Terms and conditions follow the standard agreement on file; changes must be made in writing and approved by both parties. Welcome party on June 11, 2027 from 6:00 PM - 9:00 PM in the Tap Room: 60 guests, taco bar and two drink tickets per guest.",
+      "events": [
+        {
+          "date_raw": "May 1, 2026",
+          "date_iso": "2026-05-01",
+          "snippet": "\u2026NT AGREEMENT SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Agreement signed May 1, 2026. Deposit of $900.00 received.  Terms and conditions follow the standard agreement on file; changes\u2026",
+          "source": "Copper Kettle Brewing - Welcome Party Agreement.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "May 11, 2027",
+          "date_iso": "2027-05-11",
+          "snippet": "\u2026e in writing and approved by both parties.  Room rental and food: $1,800.00. Balance of $900.00 due May 11, 2027.  Contact: Marcus Lee, hello@copperkettle.example.com, (603) 555-0109.\u2026",
+          "source": "Copper Kettle Brewing - Welcome Party Agreement.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "June 11, 2027",
+          "date_iso": "2027-06-11",
+          "snippet": "\u2026agreement on file; changes must be made in writing and approved by both parties.  Welcome party on June 11, 2027 from 6:00 PM - 9:00 PM in the Tap Room: 60 guests, taco bar and two drink tickets per guest.  Terms\u2026",
+          "source": "Copper Kettle Brewing - Welcome Party Agreement.txt",
+          "times": [
+            "18:00",
+            "21:00"
+          ],
+          "time": "18:00",
+          "label": "welcome party"
+        }
+      ]
+    },
+    {
+      "file": "Glow Studio - Hair & Makeup Agreement.txt",
+      "ext": ".txt",
+      "size": 928,
+      "text_len": 910,
+      "dates": [
+        "6/12/2027",
+        "January 16, 2027",
+        "June 3, 2026"
+      ],
+      "amounts": [
+        "$1,150.00",
+        "$1,650.00",
+        "$500.00"
+      ],
+      "keywords": [
+        "agreement",
+        "terms",
+        "conditions",
+        "follow",
+        "standard",
+        "file",
+        "changes",
+        "must"
+      ],
+      "summary": "GLOW STUDIO - HAIR & MAKEUP AGREEMENT\nSAMPLE DOCUMENT - all people, businesses, and amounts are fictional. Terms and conditions follow the standard agreement on file; changes must be made in writing and approved by both parties. Bridal trial on January 16, 2027 at 10:00 AM at the Glow Studio salon.",
+      "events": [
+        {
+          "date_raw": "June 3, 2026",
+          "date_iso": "2026-06-03",
+          "snippet": "\u2026UP AGREEMENT SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Agreement signed June 3, 2026. Deposit of $500.00 received.  Terms and conditions follow the standard agreement on file; changes\u2026",
+          "source": "Glow Studio - Hair & Makeup Agreement.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "January 16, 2027",
+          "date_iso": "2027-01-16",
+          "snippet": "\u2026d agreement on file; changes must be made in writing and approved by both parties.  Bridal trial on January 16, 2027 at 10:00 AM at the Glow Studio salon.  Terms and conditions follow the standard agreement on file;\u2026",
+          "source": "Glow Studio - Hair & Makeup Agreement.txt",
+          "times": [
+            "10:00"
+          ],
+          "time": "10:00",
+          "label": ""
+        },
+        {
+          "date_raw": "6/12/2027",
+          "date_iso": "2027-06-12",
+          "snippet": "\u2026ndard agreement on file; changes must be made in writing and approved by both parties.  Wedding day 6/12/2027: hair and makeup team arrives at 9:30 AM at Birchwood Inn, Suite 4. Services for the bride plus 5 a\u2026",
+          "source": "Glow Studio - Hair & Makeup Agreement.txt",
+          "times": [
+            "09:30"
+          ],
+          "time": "09:30",
+          "label": "hair"
+        }
+      ]
+    },
+    {
+      "file": "Harper_Bennett Wedding - Budget.xlsx",
+      "ext": ".xlsx",
+      "size": 5436,
+      "text_len": 619,
+      "dates": [],
+      "amounts": [],
+      "keywords": [
+        "budget",
+        "total",
+        "wedding",
+        "cost",
+        "sheet",
+        "calculator",
+        "category",
+        "actual"
+      ],
+      "summary": "[sheet: Budget Calculator]\nTotal Wedding Budget: | 45000\nCategory | Actual Cost | Paid | Due\nVenue | 9500 | 4750 | 4750\nWelcome Party | 1800 | 900 | 900\nCatering | 7440 | 2500 | 4940\nBar & Beverages | 3600 | 0 | 3600\nWedding Cake | 650 | 200 | 450\nPhotographer | 3200 | 1600 | 1600\nFlorist | 4100 | 0 | 4100\nHair & Makeup | 1650 | 500 | 1150\nMusic / Band | 6800 | 3400 | 3400\nTransportation | 1400 | 0 | 1400\nTent & Rentals | 3350 | 0 | 3350\nAttire | 2800 | 2800 | 0\nStationery | 620 | 620 | 0\nFavors & Gifts | 450 | 0 | 450\nPlanner Fee | 4500 | 2250 | 2250\nTotal Cost: | 51860 | 19520 | 32340\nRemaining Budget: | -6860",
+      "events": []
+    },
+    {
+      "file": "Hearth & Table Catering - Proposal.txt",
+      "ext": ".txt",
+      "size": 1316,
+      "text_len": 1292,
+      "dates": [
+        "June 12, 2027",
+        "March 6, 2027",
+        "May 12, 2027",
+        "May 20, 2026"
+      ],
+      "amounts": [
+        "$2,500.00",
+        "$3,600.00",
+        "$62.00",
+        "$7,440.00"
+      ],
+      "keywords": [
+        "terms",
+        "conditions",
+        "follow",
+        "standard",
+        "agreement",
+        "file",
+        "changes",
+        "must"
+      ],
+      "summary": "HEARTH & TABLE CATERING - EVENT PROPOSAL\nSAMPLE DOCUMENT - all people, businesses, and amounts are fictional. Terms and conditions follow the standard agreement on file; changes must be made in writing and approved by both parties. Menu tasting on March 6, 2027 at 11:00 AM at the Hearth & Table kitchen.",
+      "events": [
+        {
+          "date_raw": "May 20, 2026",
+          "date_iso": "2026-05-20",
+          "snippet": "\u2026NT PROPOSAL SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Proposal accepted May 20, 2026. Deposit of $2,500.00 received.  Terms and conditions follow the standard agreement on file; change\u2026",
+          "source": "Hearth & Table Catering - Proposal.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "March 6, 2027",
+          "date_iso": "2027-03-06",
+          "snippet": "\u2026d agreement on file; changes must be made in writing and approved by both parties.  Menu tasting on March 6, 2027 at 11:00 AM at the Hearth & Table kitchen.  Terms and conditions follow the standard agreement on f\u2026",
+          "source": "Hearth & Table Catering - Proposal.txt",
+          "times": [
+            "11:00"
+          ],
+          "time": "11:00",
+          "label": ""
+        },
+        {
+          "date_raw": "May 12, 2027",
+          "date_iso": "2027-05-12",
+          "snippet": "\u2026es must be made in writing and approved by both parties.  Final guest count and menu selections due May 12, 2027.  Terms and conditions follow the standard agreement on file; changes must be made in writing and a\u2026",
+          "source": "Hearth & Table Catering - Proposal.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "June 12, 2027",
+          "date_iso": "2027-06-12",
+          "snippet": "\u2026e standard agreement on file; changes must be made in writing and approved by both parties.  Event: June 12, 2027. Cocktail hour 4:30 PM - 5:30 PM with passed appetizers on the patio.  Terms and conditions follow\u2026",
+          "source": "Hearth & Table Catering - Proposal.txt",
+          "times": [
+            "16:30",
+            "17:30"
+          ],
+          "time": "16:30",
+          "label": "cocktail hour"
+        }
+      ]
+    },
+    {
+      "file": "Juniper Lane Photography - Contract.txt",
+      "ext": ".txt",
+      "size": 834,
+      "text_len": 820,
+      "dates": [
+        "June 12, 2027",
+        "March 2, 2026",
+        "May 28, 2027"
+      ],
+      "amounts": [
+        "$1,600.00",
+        "$3,200.00"
+      ],
+      "keywords": [
+        "photography",
+        "contract",
+        "terms",
+        "conditions",
+        "follow",
+        "standard",
+        "agreement",
+        "file"
+      ],
+      "summary": "JUNIPER LANE PHOTOGRAPHY - WEDDING PHOTOGRAPHY CONTRACT\nSAMPLE DOCUMENT - all people, businesses, and amounts are fictional. Contract signed March 2, 2026 with a retainer of $1,600.00. Terms and conditions follow the standard agreement on file; changes must be made in writing and approved by both parties.",
+      "events": [
+        {
+          "date_raw": "March 2, 2026",
+          "date_iso": "2026-03-02",
+          "snippet": "\u2026le, businesses, and amounts are fictional.  Clients: Olivia Harper & James Bennett. Contract signed March 2, 2026 with a retainer of $1,600.00.  Terms and conditions follow the standard agreement on file; changes\u2026",
+          "source": "Juniper Lane Photography - Contract.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "May 28, 2027",
+          "date_iso": "2027-05-28",
+          "snippet": "\u2026file; changes must be made in writing and approved by both parties.  Final balance of $1,600.00 due May 28, 2027. Online gallery of 600+ edited images delivered within 8 weeks.  Contact: Priya Nair, priya@juniper\u2026",
+          "source": "Juniper Lane Photography - Contract.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "June 12, 2027",
+          "date_iso": "2027-06-12",
+          "snippet": "\u2026rd agreement on file; changes must be made in writing and approved by both parties.  Coverage date: June 12, 2027. Photographer arrives at 2:00 PM for getting-ready photos and details; 8 hours of coverage with a s\u2026",
+          "source": "Juniper Lane Photography - Contract.txt",
+          "times": [
+            "14:00"
+          ],
+          "time": "14:00",
+          "label": "photos"
+        }
+      ]
+    },
+    {
+      "file": "Olivia & James Vendor Options.xlsx",
+      "ext": ".xlsx",
+      "size": 5818,
+      "text_len": 1426,
+      "dates": [],
+      "amounts": [
+        "$1,150",
+        "$1,400",
+        "$1,650",
+        "$1,800",
+        "$2,200",
+        "$3,200",
+        "$3,600",
+        "$4,100",
+        "$6,800",
+        "$62",
+        "$9,500"
+      ],
+      "keywords": [
+        "example",
+        "com",
+        "wedding",
+        "day",
+        "ceremony",
+        "reception",
+        "venue",
+        "rentals"
+      ],
+      "summary": "[sheet: Booked]\nVendor | Location | Event | Category | Contact | Email | Cost\nWillow Brook Barn | Maple Hollow, NH | Ceremony & Reception | Venue | Dana Whitfield, Events Manager | events@willowbrookbarn.example.com | $9,500 venue fee, Friday-Sunday\nCopper Kettle Brewing | Pinebrook, NH | Welcome Party | Venue | Marcus Lee, Owner | hello@copperkettle.example.com | $1,800 room rental + taco bar\nJuniper Lane Photography | Clearwater, NH | Wedding Day | Photo | Priya Nair | priya@juniperlane.example.com | $3,200 for 8 hours + second shooter\nHearth & Table Catering | Maple Hollow, NH | Wedding Day | Catering | Tom Alvarez | orders@hearthandtable.example.com | $62 per guest x 120 + $3,600 bar pac",
+      "events": []
+    },
+    {
+      "file": "Planner Notes - Harper-Bennett.md",
+      "ext": ".md",
+      "size": 794,
+      "text_len": 784,
+      "dates": [
+        "January 20, 2026",
+        "June 13, 2027",
+        "March 12, 2027"
+      ],
+      "amounts": [
+        "$200.00",
+        "$45,000.00",
+        "$650.00"
+      ],
+      "keywords": [
+        "must",
+        "terms",
+        "conditions",
+        "follow",
+        "standard",
+        "agreement",
+        "file",
+        "changes"
+      ],
+      "summary": "# Planner notes - Harper-Bennett wedding\nSAMPLE DOCUMENT - all people, businesses, and amounts are fictional. - Kick-off meeting with the couple held January 20, 2026. - Terms and conditions follow the standard agreement on file; changes must be made in writing and approved by both parties.",
+      "events": [
+        {
+          "date_raw": "January 20, 2026",
+          "date_iso": "2026-01-20",
+          "snippet": "\u2026UMENT - all people, businesses, and amounts are fictional.  - Kick-off meeting with the couple held January 20, 2026. Budget set at $45,000.00. - Terms and conditions follow the standard agreement on file; changes mu\u2026",
+          "source": "Planner Notes - Harper-Bennett.md",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "March 12, 2027",
+          "date_iso": "2027-03-12",
+          "snippet": "\u2026changes must be made in writing and approved by both parties. - Invitations must go in the mail by March 12, 2027. - Terms and conditions follow the standard agreement on file; changes must be made in writing and\u2026",
+          "source": "Planner Notes - Harper-Bennett.md",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "June 13, 2027",
+          "date_iso": "2027-06-13",
+          "snippet": "\u2026reement on file; changes must be made in writing and approved by both parties. - Farewell brunch on June 13, 2027 at 10:00 AM at Birchwood Inn, hosted by the Bennett family.\u2026",
+          "source": "Planner Notes - Harper-Bennett.md",
+          "times": [
+            "10:00"
+          ],
+          "time": "10:00",
+          "label": ""
+        }
+      ]
+    },
+    {
+      "file": "Ridgeline Tent & Rental - Quote.txt",
+      "ext": ".txt",
+      "size": 844,
+      "text_len": 826,
+      "dates": [
+        "6/11/2027",
+        "6/14/2027",
+        "August 20, 2026",
+        "October 1, 2026"
+      ],
+      "amounts": [
+        "$1,000.00",
+        "$1,150.00",
+        "$2,200.00"
+      ],
+      "keywords": [
+        "must",
+        "terms",
+        "conditions",
+        "follow",
+        "standard",
+        "agreement",
+        "file",
+        "changes"
+      ],
+      "summary": "RIDGELINE TENT & RENTAL - RENTAL QUOTE\nSAMPLE DOCUMENT - all people, businesses, and amounts are fictional. 40x60 frame tent $2,200.00; tables, chairs and linens $1,150.00. Terms and conditions follow the standard agreement on file; changes must be made in writing and approved by both parties.",
+      "events": [
+        {
+          "date_raw": "August 20, 2026",
+          "date_iso": "2026-08-20",
+          "snippet": "\u2026AL - RENTAL QUOTE SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Quote dated August 20, 2026. 40x60 frame tent $2,200.00; tables, chairs and linens $1,150.00.  Terms and conditions follow the\u2026",
+          "source": "Ridgeline Tent & Rental - Quote.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "October 1, 2026",
+          "date_iso": "2026-10-01",
+          "snippet": "\u2026file; changes must be made in writing and approved by both parties.  A deposit of $1,000.00 is due October 1, 2026.  Terms and conditions follow the standard agreement on file; changes must be made in writing and a\u2026",
+          "source": "Ridgeline Tent & Rental - Quote.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "6/11/2027",
+          "date_iso": "2027-06-11",
+          "snippet": "\u2026ement on file; changes must be made in writing and approved by both parties.  Delivery and setup on 6/11/2027 at 9:00 AM.  Terms and conditions follow the standard agreement on file; changes must be made in wr\u2026",
+          "source": "Ridgeline Tent & Rental - Quote.txt",
+          "times": [
+            "09:00"
+          ],
+          "time": "09:00",
+          "label": "delivery"
+        },
+        {
+          "date_raw": "6/14/2027",
+          "date_iso": "2027-06-14",
+          "snippet": "\u2026tandard agreement on file; changes must be made in writing and approved by both parties.  Pickup on 6/14/2027 at 8:00 AM; all rentals must be cleared and stacked by the venue.  Contact: Luis Ortega, rentals@ri\u2026",
+          "source": "Ridgeline Tent & Rental - Quote.txt",
+          "times": [
+            "08:00"
+          ],
+          "time": "08:00",
+          "label": "pickup"
+        }
+      ]
+    },
+    {
+      "file": "Summit Coach Lines - Shuttle Quote.txt",
+      "ext": ".txt",
+      "size": 897,
+      "text_len": 879,
+      "dates": [
+        "6/12/27",
+        "June 12, 2027",
+        "September 1, 2026",
+        "September 15, 2026"
+      ],
+      "amounts": [
+        "$1,400.00",
+        "$400.00"
+      ],
+      "keywords": [
+        "quote",
+        "terms",
+        "conditions",
+        "follow",
+        "standard",
+        "agreement",
+        "file",
+        "changes"
+      ],
+      "summary": "SUMMIT COACH LINES - SHUTTLE QUOTE\nSAMPLE DOCUMENT - all people, businesses, and amounts are fictional. Quote issued September 1, 2026 for two 28-passenger shuttles. Terms and conditions follow the standard agreement on file; changes must be made in writing and approved by both parties.",
+      "events": [
+        {
+          "date_raw": "September 1, 2026",
+          "date_iso": "2026-09-01",
+          "snippet": "\u2026- SHUTTLE QUOTE SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Quote issued September 1, 2026 for two 28-passenger shuttles.  Terms and conditions follow the standard agreement on file; changes\u2026",
+          "source": "Summit Coach Lines - Shuttle Quote.txt",
+          "times": [],
+          "time": null,
+          "label": "shuttle"
+        },
+        {
+          "date_raw": "September 15, 2026",
+          "date_iso": "2026-09-15",
+          "snippet": "\u2026on file; changes must be made in writing and approved by both parties.  A deposit of $400.00 is due September 15, 2026 to confirm the booking.  Terms and conditions follow the standard agreement on file; changes must b\u2026",
+          "source": "Summit Coach Lines - Shuttle Quote.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "June 12, 2027",
+          "date_iso": "2027-06-12",
+          "snippet": "\u2026dard agreement on file; changes must be made in writing and approved by both parties.  Service date June 12, 2027: guest pickup at Birchwood Inn at 3:15 PM, drop-off at Willow Brook Barn.  Terms and conditions fol\u2026",
+          "source": "Summit Coach Lines - Shuttle Quote.txt",
+          "times": [
+            "15:15"
+          ],
+          "time": "15:15",
+          "label": "pickup"
+        },
+        {
+          "date_raw": "6/12/27",
+          "date_iso": "2027-06-12",
+          "snippet": "\u2026file; changes must be made in writing and approved by both parties.  Return trips from the barn on 6/12/27 depart at 10:00 PM and 10:45 PM. Quote total: $1,400.00.  Contact: Jess Romano, dispatch@summitcoac\u2026",
+          "source": "Summit Coach Lines - Shuttle Quote.txt",
+          "times": [
+            "22:00",
+            "22:45"
+          ],
+          "time": "22:00",
+          "label": ""
+        }
+      ]
+    },
+    {
+      "file": "The Midnight Owls Band - Performance Agreement.txt",
+      "ext": ".txt",
+      "size": 1050,
+      "text_len": 1034,
+      "dates": [
+        "6.12.27",
+        "6/1/2027",
+        "April 10, 2026",
+        "June 12, 2027"
+      ],
+      "amounts": [
+        "$3,400.00",
+        "$6,800.00"
+      ],
+      "keywords": [
+        "agreement",
+        "terms",
+        "conditions",
+        "follow",
+        "standard",
+        "file",
+        "changes",
+        "must"
+      ],
+      "summary": "THE MIDNIGHT OWLS - PERFORMANCE AGREEMENT\nSAMPLE DOCUMENT - all people, businesses, and amounts are fictional. Deposit of $3,400.00 (50%) received with this agreement. Terms and conditions follow the standard agreement on file; changes must be made in writing and approved by both parties.",
+      "events": [
+        {
+          "date_raw": "April 10, 2026",
+          "date_iso": "2026-04-10",
+          "snippet": "\u2026NCE AGREEMENT SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  Agreement dated April 10, 2026. Deposit of $3,400.00 (50%) received with this agreement.  Terms and conditions follow the standard\u2026",
+          "source": "The Midnight Owls Band - Performance Agreement.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "6/1/2027",
+          "date_iso": "2027-06-01",
+          "snippet": "\u2026be made in writing and approved by both parties.  Total fee: $6,800.00. Balance of $3,400.00 due on 6/1/2027.  Contact: Ben Carter, bookings@midnightowls.example.com, (617) 555-0103.\u2026",
+          "source": "The Midnight Owls Band - Performance Agreement.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "June 12, 2027",
+          "date_iso": "2027-06-12",
+          "snippet": "\u2026by both parties. The band provides sound, lighting, and an MC for announcements.  Performance date: June 12, 2027 at Willow Brook Barn. Ceremony start 4:30 PM, with an acoustic duo playing prelude music beforehand\u2026",
+          "source": "The Midnight Owls Band - Performance Agreement.txt",
+          "times": [
+            "16:30"
+          ],
+          "time": "16:30",
+          "label": "ceremony"
+        },
+        {
+          "date_raw": "6.12.27",
+          "date_iso": "2027-06-12",
+          "snippet": "\u2026ed by both parties. Song requests and the planner worksheet are due one month out.  Evening sets on 6.12.27 run 5:30 PM to 9:30 PM, four 45-minute sets. Terms and conditions follow the standard agreement on\u2026",
+          "source": "The Midnight Owls Band - Performance Agreement.txt",
+          "times": [
+            "17:30",
+            "21:30"
+          ],
+          "time": "17:30",
+          "label": ""
+        }
+      ]
+    },
+    {
+      "file": "Willow Brook Barn - Venue Agreement.txt",
+      "ext": ".txt",
+      "size": 1358,
+      "text_len": 1336,
+      "dates": [
+        "6/11/2027",
+        "6/12/2027",
+        "April 13, 2027",
+        "February 14, 2026",
+        "June 12, 2027"
+      ],
+      "amounts": [
+        "$4,750.00",
+        "$9,500.00"
+      ],
+      "keywords": [
+        "agreement",
+        "made",
+        "must",
+        "both",
+        "terms",
+        "conditions",
+        "follow",
+        "standard"
+      ],
+      "summary": "WILLOW BROOK BARN - VENUE RENTAL AGREEMENT\nSAMPLE DOCUMENT - all people, businesses, and amounts are fictional. This agreement is made on February 14, 2026 between Willow Brook Barn LLC and Olivia Harper & James Bennett. A deposit of $4,750.00 was received with the signed agreement.",
+      "events": [
+        {
+          "date_raw": "February 14, 2026",
+          "date_iso": "2026-02-14",
+          "snippet": "\u2026ENT SAMPLE DOCUMENT - all people, businesses, and amounts are fictional.  This agreement is made on February 14, 2026 between Willow Brook Barn LLC and Olivia Harper & James Bennett. A deposit of $4,750.00 was receive\u2026",
+          "source": "Willow Brook Barn - Venue Agreement.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "April 13, 2027",
+          "date_iso": "2027-04-13",
+          "snippet": "\u2026ering Friday through Sunday. The remaining balance of $4,750.00 is due 60 days before the event, on April 13, 2027.  Terms and conditions follow the standard agreement on file; changes must be made in writing and a\u2026",
+          "source": "Willow Brook Barn - Venue Agreement.txt",
+          "times": [],
+          "time": null,
+          "label": ""
+        },
+        {
+          "date_raw": "6/11/2027",
+          "date_iso": "2027-06-11",
+          "snippet": "\u2026on file; changes must be made in writing and approved by both parties.  Rehearsal is scheduled for 6/11/2027 at 3:00 PM on the Meadow Lawn.  Terms and conditions follow the standard agreement on file; changes\u2026",
+          "source": "Willow Brook Barn - Venue Agreement.txt",
+          "times": [
+            "15:00"
+          ],
+          "time": "15:00",
+          "label": ""
+        },
+        {
+          "date_raw": "6/12/2027",
+          "date_iso": "2027-06-12",
+          "snippet": "\u2026agreement on file; changes must be made in writing and approved by both parties.  Vendor load-in on 6/12/2027 begins at 10:00 AM in both event spaces.  Terms and conditions follow the standard agreement on fil\u2026",
+          "source": "Willow Brook Barn - Venue Agreement.txt",
+          "times": [
+            "10:00"
+          ],
+          "time": "10:00",
+          "label": ""
+        },
+        {
+          "date_raw": "June 12, 2027",
+          "date_iso": "2027-06-12",
+          "snippet": "\u2026ndard agreement on file; changes must be made in writing and approved by both parties.  Event Date: June 12, 2027. Ceremony at 4:00 PM on the Meadow Lawn, weather permitting.  Rental fee: $9,500.00 covering Friday\u2026",
+          "source": "Willow Brook Barn - Venue Agreement.txt",
+          "times": [
+            "16:00"
+          ],
+          "time": "16:00",
+          "label": "ceremony"
+        }
+      ]
+    }
+  ]
+}

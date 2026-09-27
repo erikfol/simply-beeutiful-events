@@ -12,11 +12,11 @@ Instead of storing event files in the Git repository (`events/` folder), we'll u
 ┌─────────────────────────────────────────────────────────────┐
 │  Google Drive (Source of Truth)                             │
 │  ├─ Simply Beeutiful Events/                                │
-│  │  ├─ Event 1: Mistretta-Petran Wedding (6.6.26)/         │
+│  │  ├─ Event 1: Harper-Bennett Wedding (6.12.27)/          │
 │  │  │  ├─ Budget & Payments/                                │
-│  │  │  │  └─ Mistretta_Petran Wedding - Budget.xlsx         │
+│  │  │  │  └─ Harper_Bennett Wedding - Budget.xlsx           │
 │  │  │  ├─ Contracts & Agreements/                           │
-│  │  │  │  ├─ Katie_Mike 6.6.26 Agreement.pdf               │
+│  │  │  │  ├─ Olivia_James 6.12.27 Agreement.pdf            │
 │  │  │  │  └─ [vendor contracts]                             │
 │  │  │  ├─ Inspiration/                                      │
 │  │  │  │  └─ [photos, Pinterest pins]                       │
@@ -85,16 +85,16 @@ Create a shared Google Drive folder with this structure:
 ```
 Simply Beeutiful Events/
 ├─ Events/
-│  ├─ 2026-06-06 Mistretta-Petran Wedding/
+│  ├─ 2027-06-12 Harper-Bennett Wedding/
 │  │  ├─ 📊 Budget & Payments/
-│  │  │  ├─ Mistretta_Petran Wedding - Budget.xlsx
+│  │  │  ├─ Harper_Bennett Wedding - Budget.xlsx
 │  │  │  ├─ Payment Tracker.xlsx
 │  │  │  └─ Invoice Register.xlsx
 │  │  ├─ 📋 Contracts & Agreements/
-│  │  │  ├─ Katie_Mike 6.6.26 Agreement.pdf
-│  │  │  ├─ Venue Contract - Grateful Dane Lodge.pdf
-│  │  │  ├─ Catering Contract - Grumpa's Lunchbox.pdf
-│  │  │  ├─ Photography - Beth Rexford.pdf
+│  │  │  ├─ Olivia_James 6.12.27 Agreement.pdf
+│  │  │  ├─ Venue Contract - Willow Brook Barn.pdf
+│  │  │  ├─ Catering Contract - Hearth & Table.pdf
+│  │  │  ├─ Photography - Juniper Lane.pdf
 │  │  │  └─ [vendor contracts and quotes]
 │  │  ├─ 👥 Vendors/
 │  │  │  └─ Vendor List & Booked (Google Sheet)
@@ -308,7 +308,7 @@ class GoogleDriveSync:
         Sync all files from an event folder in Google Drive.
         
         Args:
-            event_name: Name of the event (e.g., "2026-06-06 Mistretta-Petran Wedding")
+            event_name: Name of the event (e.g., "2027-06-12 Harper-Bennett Wedding")
             folder_id: Google Drive folder ID for the event
             temp_dir: Temporary directory to store downloaded files
         
@@ -458,7 +458,7 @@ class Event(Base):
     __tablename__ = 'events'
     
     id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, nullable=False)  # e.g., "2026-06-06 Mistretta-Petran Wedding"
+    name = Column(String, unique=True, nullable=False)  # e.g., "2027-06-12 Harper-Bennett Wedding"
     drive_folder_id = Column(String, unique=True)  # Google Drive folder ID
     event_date = Column(DateTime)  # When the event happens
     client_name = Column(String)
@@ -998,7 +998,7 @@ Create `Dockerfile` and `docker-compose.yml` for containerized deployment.
 3. Create database models
 4. Build FastAPI backend with sync routes
 5. Update frontend to call backend API
-6. Test with your existing Mistretta-Petran wedding data
+6. Test with the demo event in `tests/demo_event/`
 7. Add tests for sync, parsing, and API routes
 8. Deploy to production (Heroku, AWS, DigitalOcean, etc.)
 

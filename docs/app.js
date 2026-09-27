@@ -72,9 +72,14 @@ async function init() {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     eventList = await r.json();
   } catch (e) {
-    // fallback: single known event
-    eventList = [{ id: '6-6-26-mistretta-petran-wedding', name: '6.6.26 Mistretta-Petran Wedding', report: '6-6-26-mistretta-petran-wedding.json', weddingDate: '2026-06-06', venue: 'The Greatful Dane Lodge, Newport, NH' }];
+    // fallback: the published demo event
+    eventList = [{ id: '6-12-27-harper-bennett-wedding-demo', name: '6.12.27 Harper-Bennett Wedding (Demo)', report: '6-12-27-harper-bennett-wedding-demo.json', timeline: '6-12-27-harper-bennett-wedding-demo.timeline.json', status: '6-12-27-harper-bennett-wedding-demo.status.json', weddingDate: '2027-06-12', venue: 'Willow Brook Barn, Maple Hollow, NH' }];
   }
+  // real client events: listed in the git-ignored local-index.json, only present on the planner's machine
+  try {
+    const r = await fetch('reports/local-index.json');
+    if (r.ok) eventList = [...(await r.json()), ...eventList];
+  } catch { /* not present on the published site */ }
   const sel = $('eventSelect');
   sel.innerHTML = eventList.map(e => `<option value="${esc(e.id)}">${esc(e.name)}</option>`).join('');
   if (eventList.length) {

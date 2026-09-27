@@ -1,5 +1,5 @@
 """Scan an SBE event folder -> summary + timeline.
-Usage: python tools/scan_event.py "events/6.6.26 Mistretta-Petran Wedding"
+Usage: python tools/scan_event.py "tests/demo_event/6.12.27 Harper-Bennett Wedding (Demo)"
 Outputs JSON + Markdown into docs/reports/ (the published app)
 Local-only, no AI calls.
 """
@@ -236,7 +236,7 @@ def scan(event_dir: Path):
     return docs
 
 def main():
-    base = Path(sys.argv[1] if len(sys.argv) > 1 else "events/6.6.26 Mistretta-Petran Wedding")
+    base = Path(sys.argv[1] if len(sys.argv) > 1 else "tests/demo_event/6.12.27 Harper-Bennett Wedding (Demo)")
     docs = scan(base)
     all_events = sorted([e for d in docs for e in d["events"]], key=lambda e: (e["date_iso"], e.get("time") or ""))
     total_amounts = sorted(set(a for d in docs for a in d["amounts"]))

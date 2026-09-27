@@ -1,0 +1,69 @@
+{
+  "updated": "2026-09-27",
+  "note": "Fictional demo event. Planner-maintained contract + payment statuses. Edit in the Status Update view.",
+  "vendors": [
+    {
+      "name": "Willow Brook Barn",
+      "contract": "Signed",
+      "payment": "Partially Paid",
+      "dueDate": "2027-04-13",
+      "notes": "Balance $4,750 due 60 days out"
+    },
+    {
+      "name": "Copper Kettle Brewing",
+      "contract": "Signed",
+      "payment": "Partially Paid",
+      "dueDate": "2027-05-11",
+      "notes": "Welcome Party"
+    },
+    {
+      "name": "Juniper Lane Photography",
+      "contract": "Signed",
+      "payment": "Partially Paid",
+      "dueDate": "2027-05-28",
+      "notes": ""
+    },
+    {
+      "name": "Hearth & Table Catering",
+      "contract": "Signed",
+      "payment": "Partially Paid",
+      "dueDate": "2027-05-12",
+      "notes": "Final guest count due same day"
+    },
+    {
+      "name": "Bluebell Blooms",
+      "contract": "Sent",
+      "payment": "Due",
+      "dueDate": "2026-10-09",
+      "notes": "Deposit holds the date"
+    },
+    {
+      "name": "Glow Studio",
+      "contract": "Signed",
+      "payment": "Partially Paid",
+      "dueDate": "2027-06-12",
+      "notes": "Balance due day of service"
+    },
+    {
+      "name": "The Midnight Owls Band",
+      "contract": "Signed",
+      "payment": "Partially Paid",
+      "dueDate": "2027-06-01",
+      "notes": ""
+    },
+    {
+      "name": "Summit Coach Lines",
+      "contract": "Signed",
+      "payment": "Due",
+      "dueDate": "2026-09-15",
+      "notes": "Deposit not received yet"
+    },
+    {
+      "name": "Ridgeline Tent & Rental",
+      "contract": "Needs Review",
+      "payment": "Due",
+      "dueDate": "2026-10-01",
+      "notes": "Confirm tent size vs guest count"
+    }
+  ]
+}

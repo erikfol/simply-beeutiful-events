@@ -1,0 +1,194 @@
+{
+  "template": "typical_wedding_timeline.png (The Knot - Ultimate Wedding Day Timeline)",
+  "note": "Fictional demo event - all people, businesses, and amounts are made up.",
+  "days": [
+    {
+      "date": "2027-06-11",
+      "title": "Rehearsal & Welcome Party",
+      "items": [
+        {
+          "time": "09:00",
+          "title": "Tent & rentals delivered and set up",
+          "detail": "40x60 frame tent, tables, chairs, linens.",
+          "source": "Ridgeline Tent & Rental - Quote",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "15:00",
+          "title": "Ceremony rehearsal",
+          "detail": "Meadow Lawn, Willow Brook Barn.",
+          "source": "Willow Brook Barn - Venue Agreement",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "18:00",
+          "title": "Welcome Party - Copper Kettle Brewing",
+          "detail": "Tap Room, 60 guests, taco bar + two drink tickets.",
+          "source": "Copper Kettle Brewing - Welcome Party Agreement",
+          "confidence": "confirmed",
+          "timeEnd": "21:00"
+        }
+      ]
+    },
+    {
+      "date": "2027-06-12",
+      "title": "Wedding Day - Willow Brook Barn, Maple Hollow NH",
+      "items": [
+        {
+          "time": "09:30",
+          "title": "Hair and makeup team arrives",
+          "detail": "Birchwood Inn, Suite 4. Bride + 5 attendants.",
+          "source": "Glow Studio - Hair & Makeup Agreement",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "10:00",
+          "title": "Venue access / vendor load-in begins",
+          "detail": "Both event spaces open to vendors.",
+          "source": "Willow Brook Barn - Venue Agreement",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "13:00",
+          "title": "Florals delivered and set",
+          "detail": "Bouquets, boutonnieres, arbor garland, 14 centerpieces.",
+          "source": "Bluebell Blooms - Floral Quote",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "13:30",
+          "title": "Hair & makeup complete",
+          "detail": "Buffer before photos.",
+          "source": "Glow Studio - Hair & Makeup Agreement",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "14:00",
+          "title": "Photographer arrives",
+          "detail": "Getting-ready photos and details; second shooter.",
+          "source": "Juniper Lane Photography - Contract",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "14:45",
+          "title": "First look + couple portraits",
+          "detail": "Confirm location with photographer.",
+          "source": "Template slot",
+          "confidence": "estimated"
+        },
+        {
+          "time": "15:15",
+          "title": "Guest shuttle pickup at Birchwood Inn",
+          "detail": "Two 28-passenger shuttles to the barn.",
+          "source": "Summit Coach Lines - Shuttle Quote",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "15:30",
+          "title": "Ceremony prelude music begins",
+          "detail": "Acoustic duo. Band agreement lists a 4:30 PM ceremony start - confirm.",
+          "source": "The Midnight Owls Band - Performance Agreement",
+          "confidence": "estimated"
+        },
+        {
+          "time": "16:00",
+          "title": "Ceremony begins",
+          "detail": "Meadow Lawn. Venue says 4:00 PM, band says 4:30 PM - confirm with band.",
+          "source": "Willow Brook Barn - Venue Agreement",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "16:30",
+          "title": "Cocktail hour",
+          "detail": "Passed appetizers on the patio; family + wedding party portraits.",
+          "source": "Hearth & Table Catering - Proposal",
+          "confidence": "confirmed",
+          "timeEnd": "17:30"
+        },
+        {
+          "time": "17:30",
+          "title": "Reception",
+          "detail": "Band plays four 45-minute sets.",
+          "source": "The Midnight Owls Band - Performance Agreement",
+          "confidence": "confirmed",
+          "timeEnd": "21:30"
+        },
+        {
+          "time": "17:45",
+          "title": "Grand entrance + first dance",
+          "detail": "",
+          "source": "Template slot",
+          "confidence": "estimated"
+        },
+        {
+          "time": "18:00",
+          "title": "Dinner service",
+          "detail": "Family-style dinner in the barn, 120 guests.",
+          "source": "Hearth & Table Catering - Proposal",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "19:30",
+          "title": "Toasts + parent dances",
+          "detail": "",
+          "source": "Template slot",
+          "confidence": "estimated"
+        },
+        {
+          "time": "20:00",
+          "title": "Cake cutting",
+          "detail": "",
+          "source": "Template slot",
+          "confidence": "estimated"
+        },
+        {
+          "time": "21:30",
+          "title": "Last dance",
+          "detail": "",
+          "source": "Template slot",
+          "confidence": "estimated"
+        },
+        {
+          "time": "22:00",
+          "title": "Music ends / first return shuttle",
+          "detail": "Town ordinance: amplified music ends 10:00 PM.",
+          "source": "Summit Coach Lines - Shuttle Quote",
+          "confidence": "confirmed"
+        },
+        {
+          "time": "22:45",
+          "title": "Final return shuttle departs",
+          "detail": "",
+          "source": "Summit Coach Lines - Shuttle Quote",
+          "confidence": "confirmed"
+        }
+      ]
+    },
+    {
+      "date": "2027-06-13",
+      "title": "Farewell Brunch",
+      "items": [
+        {
+          "time": "10:00",
+          "title": "Farewell brunch",
+          "detail": "Birchwood Inn, hosted by the Bennett family.",
+          "source": "Planner Notes - Harper-Bennett",
+          "confidence": "confirmed"
+        }
+      ]
+    },
+    {
+      "date": "2027-06-14",
+      "title": "Close-out",
+      "items": [
+        {
+          "time": "08:00",
+          "title": "Tent & rental pickup",
+          "detail": "Rentals cleared and stacked by the venue.",
+          "source": "Ridgeline Tent & Rental - Quote",
+          "confidence": "confirmed"
+        }
+      ]
+    }
+  ]
+}

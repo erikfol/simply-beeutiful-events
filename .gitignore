@@ -23,3 +23,8 @@ venv/
 # Generated reports and temporary files
 *.tmp
 *.log
+
+# Real client reports stay local; only the fictional demo event is published
+docs/reports/*
+!docs/reports/index.json
+!docs/reports/*-demo.*
