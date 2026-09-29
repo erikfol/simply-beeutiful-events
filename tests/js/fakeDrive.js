@@ -10,10 +10,10 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize } = {}) {
   const calls = [];
 
   const now = () => new Date().toISOString();
-  function add({ name, mimeType = 'application/pdf', parent = 'root', owner = 'owner@example.com', content = null, modifiedTime = now() }) {
+  function add({ name, mimeType = 'application/pdf', parent = 'root', owner = 'owner@example.com', content = null, modifiedTime = now(), sharedWithMe = false }) {
     const id = `f${String(++seq).padStart(4, '0')}xxxxxxxx`;
     const link = mimeType === FOLDER ? `https://drive.google.com/drive/folders/${id}` : `https://drive.google.com/file/d/${id}/view`;
-    files.set(id, { id, name, mimeType, parents: [parent], owners: [owner], trashed: false, content, modifiedTime, webViewLink: link, size: content ? String(content.length) : '12345' });
+    files.set(id, { id, name, mimeType, parents: [parent], owners: [owner], trashed: false, sharedWithMe, content, modifiedTime, webViewLink: link, size: content ? String(content.length) : '12345' });
     return id;
   }
 
@@ -24,14 +24,14 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize } = {}) {
   const unq = (s) => s.slice(1, -1).replace(/\\(.)/g, '$1');
   function matcher(q) {
     const tests = [];
-    const re = /('(?:[^'\\]|\\.)*')\s+in\s+(parents|owners)|(mimeType|name)\s*(=|contains)\s*('(?:[^'\\]|\\.)*')|trashed\s*=\s*(true|false)/g;
+    const re = /('(?:[^'\\]|\\.)*')\s+in\s+(parents|owners)|(mimeType|name)\s*(=|contains)\s*('(?:[^'\\]|\\.)*')|(trashed|sharedWithMe)\s*=\s*(true|false)/g;
     for (const m of q.matchAll(re)) {
       if (m[2] === 'parents') { const v = unq(m[1]); tests.push(f => f.parents.includes(v)); }
       else if (m[2] === 'owners') { const v = unq(m[1]); tests.push(f => f.owners.includes(v === 'me' ? me : v)); }
       else if (m[3]) {
         const field = m[3], op = m[4], v = unq(m[5]);
         tests.push(op === 'contains' ? (f => f[field].toLowerCase().includes(v.toLowerCase())) : (f => f[field] === v));
-      } else if (m[6]) { const v = m[6] === 'true'; tests.push(f => f.trashed === v); }
+      } else if (m[6]) { const field = m[6], v = m[7] === 'true'; tests.push(f => f[field] === v); }
     }
     return (f) => tests.every(t => t(f));
   }
@@ -90,7 +90,8 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize } = {}) {
 
 // A fictional SBE Drive: an events folder owned by the business owner, shared with the planner.
 export function seedSbeDrive(drive) {
-  const root = drive.add({ name: 'SBE Events', mimeType: FOLDER });
+  // only the events folder itself is shared with the planner; its contents are reachable through it
+  const root = drive.add({ name: 'SBE Events', mimeType: FOLDER, sharedWithMe: true });
   const harper = drive.add({ name: '6.12.27 Harper-Bennett Wedding (Demo)', mimeType: FOLDER, parent: root });
   for (const [name, mimeType] of [
     ['Harper_Bennett Wedding - Budget', 'application/vnd.google-apps.spreadsheet'],

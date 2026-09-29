@@ -1,7 +1,7 @@
 // Google bar above the event picker: sign in, choose the SBE events folder, refresh, sign out.
 import { $, setStatus } from './dom.js';
-import { isConfigured, isReady, prepare, signIn, signOut } from './google.js';
-import { listChildren, searchFolders, getFile, whoAmI } from './drive.js';
+import { isConfigured, isReady, prepare, signIn, signOut, canReadDrive } from './google.js';
+import { listChildren, listSharedFolders, searchFolders, getFile, whoAmI } from './drive.js';
 import { readData, writeData, forgetAppData } from './appdata.js';
 import { FOLDER_MIME, folderToEvent, sortEvents, parseFolderId } from './driveEvents.js';
 import { loadTemplates, saveTemplates } from './storage.js';
@@ -16,6 +16,7 @@ let folder = null;      // {id, name, link}
 let expired = false;
 let busy = '';
 let results = null;     // folder search results
+let shared = null;      // folders shared with the signed-in person
 let skipped = [];       // subfolders without a date in their name
 let eventCount = 0;
 let onEvents = () => {};
@@ -40,12 +41,23 @@ function render() {
   } else if (!user) {
     html = `<button type="button" class="primary" data-act="signin"${isReady() ? '' : ' disabled'}>Sign in with Google</button>
       <span class="db-note">SBE staff: open your events straight from Google Drive.</span>`;
+  } else if (!canReadDrive()) {
+    html = `<span>Signed in as <strong>${esc(user.emailAddress || '')}</strong>, but Google didn't give the app permission to <strong>see your Google Drive files</strong>, so it can't see the SBE events folder.</span>
+      <button type="button" class="primary" data-act="askagain">Ask for permission again</button>
+      <p class="db-note">On Google's screen, tick <em>See and download all your Google Drive files</em> (the app only reads them), then click Continue.</p>
+      <button type="button" class="mini" data-act="signout">Sign out</button>`;
   } else if (expired) {
     html = `<span>Your Google sign-in expired. Unsaved changes are kept in this browser.</span>
       <button type="button" class="primary" data-act="signin">Sign in again</button>`;
   } else if (!folder) {
+    const pickShared = shared && shared.length
+      ? `<span class="db-pick"><label for="sharedPick">Choose the SBE events folder</label>
+          <select id="sharedPick">${shared.map(f => `<option value="${esc(f.id)}">${esc(f.name)}</option>`).join('')}</select>
+          <button type="button" class="primary" data-act="useshared">Use this folder</button></span>`
+      : `<p class="db-note">No folders have been shared with ${esc(user.emailAddress || 'this account')} yet. Ask the owner to share the SBE events folder with you (Viewer), then click <strong>Check again</strong>. <button type="button" class="mini" data-act="checkshared">Check again</button></p>`;
     html = `<span>Signed in as <strong>${esc(user.emailAddress || '')}</strong>.</span>
-      <form class="db-find"><label for="folderQuery">Choose the SBE events folder</label>
+      ${pickShared}
+      <form class="db-find"><label for="folderQuery">${shared && shared.length ? 'Not listed? Search' : 'Or search'}</label>
         <input id="folderQuery" name="q" placeholder="Folder name or Google Drive link" required />
         <button type="submit">Find</button></form>
       ${results ? (results.length
@@ -78,15 +90,24 @@ function onClick(ev) {
     // signIn() must start inside the click for the Google popup to be allowed
     const pending = signIn();
     run('Signing in…', async () => { await pending; await afterSignIn(); });
+  } else if (act === 'askagain') {
+    const pending = signIn({ askAgain: true });
+    run('Waiting for Google…', async () => { await pending; user = null; await afterSignIn(); });
   } else if (act === 'choose') {
     run('Opening folder…', () => chooseFolder({ id: b.dataset.id, name: b.dataset.name, link: b.dataset.link }));
   } else if (act === 'refresh') {
     run('Refreshing events…', () => loadEvents(false));
+  } else if (act === 'useshared') {
+    const f = shared.find(x => x.id === $('sharedPick').value);
+    if (f) run('Opening folder…', () => chooseFolder({ id: f.id, name: f.name, link: f.webViewLink || '' }));
+  } else if (act === 'checkshared') {
+    run('Looking for shared folders…', loadShared);
   } else if (act === 'change') {
-    folder = null; results = null; render();
+    folder = null; results = null;
+    run('Looking for shared folders…', loadShared);
   } else if (act === 'signout') {
     signOut(); forgetAppData();
-    user = null; folder = null; results = null; expired = false; skipped = []; eventCount = 0;
+    user = null; folder = null; results = null; shared = null; expired = false; skipped = []; eventCount = 0;
     onEvents([]);
     render();
     setStatus('Signed out of Google. Drive events are hidden until you sign in again.');
@@ -114,14 +135,20 @@ async function afterSignIn() {
   expired = false;
   if (wasExpired && user) { setStatus('Signed in again. You can save now.'); return; }
   user = await whoAmI();
+  if (!canReadDrive()) { setStatus('Google sign-in worked, but the permission to see Drive files was not given.'); return; }
   const settings = await readData(SETTINGS);
   await syncTemplates();
   if (settings && settings.eventsFolderId) {
     folder = { id: settings.eventsFolderId, name: settings.eventsFolderName || 'SBE events', link: settings.eventsFolderLink || '' };
     await loadEvents(true);
   } else {
+    await loadShared();
     setStatus('Signed in. Choose the SBE events folder to see its events.');
   }
+}
+
+async function loadShared() {
+  shared = (await listSharedFolders()).filter(f => f.name !== APP_DATA_FOLDER);
 }
 
 async function chooseFolder(f) {

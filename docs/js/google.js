@@ -3,7 +3,8 @@
 import { GOOGLE_CLIENT_ID } from './config.js';
 
 // Read everything the person can already see in Drive; write only files this app creates.
-export const SCOPES = 'https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/drive.file';
+export const READ_SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
+export const SCOPES = `${READ_SCOPE} https://www.googleapis.com/auth/drive.file`;
 
 export class NeedsSignIn extends Error {
   constructor(msg = 'Sign in with Google to continue.') { super(msg); this.name = 'NeedsSignIn'; }
@@ -13,12 +14,16 @@ let token = null;
 let expiresAt = 0;
 let tokenClient = null;
 let fake = false;
+let granted = ''; // scopes the person actually allowed (Google lets them untick some)
 
 // Tests and the offline smoke test use a pretend sign-in (paired with drive.useTransport).
 export function useFakeAuth() { fake = true; }
 
 export const isConfigured = () => fake || !!GOOGLE_CLIENT_ID;
 export const isSignedIn = () => !!token && Date.now() < expiresAt;
+
+// Without the read permission the app can sign in but can't see the shared event folders.
+export const canReadDrive = () => fake || granted.split(' ').includes(READ_SCOPE);
 
 export function accessToken() {
   if (!isSignedIn()) throw new NeedsSignIn(token ? 'Your Google sign-in expired. Sign in again to continue.' : undefined);
@@ -45,7 +50,8 @@ export async function prepare() {
 export const isReady = () => fake || !!tokenClient;
 
 // Call directly from a click handler (browsers only allow the popup after a click).
-export function signIn() {
+// askAgain: show Google's permission checkboxes again (after one was left unticked).
+export function signIn({ askAgain = false } = {}) {
   if (fake) {
     token = 'fake-token'; expiresAt = Date.now() + 3600 * 1000;
     return Promise.resolve();
@@ -55,15 +61,16 @@ export function signIn() {
     tokenClient.callback = (resp) => {
       if (resp.error) { reject(new Error(resp.error_description || resp.error)); return; }
       token = resp.access_token;
+      granted = resp.scope || '';
       expiresAt = Date.now() + (Number(resp.expires_in) - 60) * 1000;
       resolve();
     };
     tokenClient.error_callback = (err) => reject(new Error(err.type === 'popup_closed' ? 'Sign-in window was closed.' : (err.message || 'Sign-in failed.')));
-    tokenClient.requestAccessToken({ prompt: '' });
+    tokenClient.requestAccessToken({ prompt: askAgain ? 'consent' : '' });
   });
 }
 
 export function signOut() {
   if (token && !fake && window.google) window.google.accounts.oauth2.revoke(token, () => {});
-  token = null; expiresAt = 0;
+  token = null; expiresAt = 0; granted = '';
 }

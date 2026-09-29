@@ -45,6 +45,10 @@ export async function listFiles(q, { orderBy = 'name', pageSize = 1000 } = {}) {
 
 export const listChildren = (folderId) => listFiles(`${quote(folderId)} in parents and trashed = false`);
 
+// Folders someone shared with the signed-in person (e.g. the owner's SBE events folder).
+export const listSharedFolders = () =>
+  listFiles(`sharedWithMe = true and mimeType = ${quote(FOLDER_MIME)} and trashed = false`);
+
 export const searchFolders = (text) =>
   listFiles(`mimeType = ${quote(FOLDER_MIME)} and name contains ${quote(text)} and trashed = false`);
 

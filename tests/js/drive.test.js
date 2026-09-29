@@ -2,7 +2,7 @@ import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { createFakeDrive, seedSbeDrive } from './fakeDrive.js';
 import { useFakeAuth, signIn, NeedsSignIn } from '../../docs/js/google.js';
-import { useTransport, listChildren, listTree, searchFolders, whoAmI, quote } from '../../docs/js/drive.js';
+import { useTransport, listChildren, listTree, searchFolders, listSharedFolders, whoAmI, quote } from '../../docs/js/drive.js';
 import { readEventData, writeEventData, readData, forgetAppData } from '../../docs/js/appdata.js';
 import {
   parseEventFolderName, folderToEvent, sortEvents, parseFolderId, classifyFile, appDataName,
@@ -61,6 +61,10 @@ test('Drive listing follows every page and walks subfolders', async () => {
   const nested = tree.find(f => f.name.startsWith('Summit Coach'));
   assert.equal(nested.path, 'Vendor Agreements/');
   assert.ok(tree.every(f => f.mimeType !== 'application/vnd.google-apps.folder'));
+});
+
+test('folders shared with the planner are listed without searching', async () => {
+  assert.deepEqual((await listSharedFolders()).map(f => f.name), ['SBE Events']);
 });
 
 test('folder search finds the events folder and escapes quotes safely', async () => {
