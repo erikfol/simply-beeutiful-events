@@ -23,7 +23,7 @@ The four jobs:
 - **The app owns its own work**: timelines, task status, payment statuses, notes.
 - **Every extracted fact links to the document it came from**, and planners can correct it.
 - **No AI by default.** Client documents are not sent to any AI service. The chatbot is optional and decided later (see privacy options below).
-- **Hosting stays on GitHub Pages.** The public site shows only the fictional demo event; real events stay private.
+- **Hosting stays on GitHub Pages.** The site shows no events until someone signs in; event data comes only from SBE's Google Drive and stays private.
 
 ### Decisions
 
@@ -57,7 +57,7 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 **Cleanup and privacy (September 2026)**
 - Consolidated the app into `docs/` (the GitHub Pages folder); removed the duplicate `doc-reader/` copy and the unused save server.
 - Real client files (`events/`) and real reports are untracked and git-ignored. The public site shows a **fictional demo event** (Harper-Bennett wedding, 6.12.27) generated from made-up source documents in `tests/demo_event/`.
-- Real events still work locally through the git-ignored `docs/reports/local-index.json`.
+- Since September 29, 2026 the site shows **no events until someone signs in**; the demo event is used only by the automated tests (`tests/demo_event/`).
 
 **Phase 0: groundwork**
 - `docs/js/` ES modules (no build step); pure logic separated from DOM code.

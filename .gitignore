@@ -24,7 +24,5 @@ venv/
 *.tmp
 *.log
 
-# Real client reports stay local; only the fictional demo event is published
-docs/reports/*
-!docs/reports/index.json
-!docs/reports/*-demo.*
+# Reports made by tools/scan_event.py stay local; events come from Google Drive after sign-in
+docs/reports/

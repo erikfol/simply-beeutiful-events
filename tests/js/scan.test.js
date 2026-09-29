@@ -9,7 +9,7 @@ import {
 } from '../../docs/js/scan.js';
 
 const DEMO = new URL('../demo_event/6.12.27 Harper-Bennett Wedding (Demo)/', import.meta.url);
-const python = JSON.parse(readFileSync(new URL('../../docs/reports/6-12-27-harper-bennett-wedding-demo.json', import.meta.url), 'utf8'));
+const python = JSON.parse(readFileSync(new URL('../demo_event/reports/6-12-27-harper-bennett-wedding-demo.json', import.meta.url), 'utf8'));
 
 // The same SheetJS build the site uses, run the way a browser runs it.
 const ctx = {};

@@ -4,7 +4,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { detailsFromText, scanText, buildReport } from '../../docs/js/scan.js';
 import { eventDetails, coupleFromEventName } from '../../docs/js/details.js';
 
-const load = (f) => JSON.parse(readFileSync(new URL(`../../docs/reports/${f}`, import.meta.url), 'utf8'));
+const load = (f) => JSON.parse(readFileSync(new URL(`../demo_event/reports/${f}`, import.meta.url), 'utf8'));
 const DEMO = new URL('../demo_event/6.12.27 Harper-Bennett Wedding (Demo)/', import.meta.url);
 const meta = { name: '6.12.27 Harper-Bennett Wedding (Demo)', weddingDate: '2027-06-12', venue: '' };
 const curated = load('6-12-27-harper-bennett-wedding-demo.timeline.json');

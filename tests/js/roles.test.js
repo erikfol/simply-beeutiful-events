@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { inferRoles, rolesOf, itemInView, roleLabel } from '../../docs/js/roles.js';
 import { docSuggestions, docEventToStop, vendorOf } from '../../docs/js/suggestions.js';
 
-const load = (f) => JSON.parse(readFileSync(new URL(`../../docs/reports/${f}`, import.meta.url), 'utf8'));
+const load = (f) => JSON.parse(readFileSync(new URL(`../demo_event/reports/${f}`, import.meta.url), 'utf8'));
 
 test('inferRoles guesses who a stop involves, planner always included', () => {
   assert.deepEqual(inferRoles({ title: 'Photographer arrives' }), ['planner', 'photo']);

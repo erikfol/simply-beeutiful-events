@@ -6,10 +6,7 @@ import { listTree } from './drive.js';
 import { readEventData } from './appdata.js';
 import { cachedReading, reportFrom, readChanged } from './reader.js';
 import { loadCorrections, loadDetails } from './corrections.js';
-import { applyCorrections } from './scan.js';
-import { enrichEvent, esc, fmtDate } from './util.js';
-
-const DEMO_EVENT = { id: '6-12-27-harper-bennett-wedding-demo', name: '6.12.27 Harper-Bennett Wedding (Demo)', report: '6-12-27-harper-bennett-wedding-demo.json', timeline: '6-12-27-harper-bennett-wedding-demo.timeline.json', status: '6-12-27-harper-bennett-wedding-demo.status.json', weddingDate: '2027-06-12', venue: 'Willow Brook Barn, Maple Hollow, NH' };
+import { esc, fmtDate } from './util.js';
 
 export const isDriveEvent = (meta = state.currentMeta) => !!meta && meta.source === 'drive';
 
@@ -17,32 +14,27 @@ export const isDriveEvent = (meta = state.currentMeta) => !!meta && meta.source 
 const reportUpdated = () => window.dispatchEvent(new CustomEvent('sbe:report-updated'));
 const readingProgress = () => window.dispatchEvent(new CustomEvent('sbe:reading'));
 
-export async function loadEventList() {
-  try {
-    const r = await fetch('reports/index.json');
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    state.eventList = await r.json();
-  } catch (e) {
-    // fallback: the published demo event
-    state.eventList = [DEMO_EVENT];
-  }
-  // real client events: listed in the git-ignored local-index.json, only present on the planner's machine
-  try {
-    const r = await fetch('reports/local-index.json');
-    if (r.ok) state.eventList = [...(await r.json()), ...state.eventList];
-  } catch { /* not present on the published site */ }
+// Events come only from Google Drive, after sign-in; the list is empty until then.
+export function setDriveEvents(events) {
+  state.eventList = [...events];
 }
 
-// Replace the Drive events in the list (after sign-in, refresh, or sign-out).
-export function setDriveEvents(events) {
-  state.eventList = [...events, ...state.eventList.filter(e => !isDriveEvent(e))];
+// No event open (before sign-in, or after signing out): nothing from the last event stays on screen.
+export function clearEvent() {
+  loadSeq++;
+  state.currentMeta = null; state.currentReport = null; state.currentCurated = null; state.currentStatus = null;
+  state.driveFiles = []; state.readingCache = null; state.reading = null; state.corrections = {}; state.details = {};
+  state.isDirty = false; state.statusDirty = false; state.editing = null;
+  updateDirty(); updateStatusDirty();
+  showSection(null);
+  $('eventMeta').textContent = '';
 }
 
 function showMeta(meta) {
   const parts = [];
   if (meta.venue) parts.push(esc(meta.venue));
   parts.push(`Wedding date: ${meta.weddingDate ? esc(fmtDate(meta.weddingDate)) : 'n/a'}`);
-  if (isDriveEvent(meta) && /^https:\/\//.test(meta.webViewLink)) parts.push(`<a href="${esc(meta.webViewLink)}" target="_blank" rel="noopener">Open folder in Google Drive</a>`);
+  if (/^https:\/\//.test(meta.webViewLink || '')) parts.push(`<a href="${esc(meta.webViewLink)}" target="_blank" rel="noopener">Open folder in Google Drive</a>`);
   $('eventMeta').innerHTML = parts.join(' · ');
 }
 
@@ -59,12 +51,10 @@ export async function loadEvent(id) {
   showMeta(meta);
   setStatus(`Loading ${meta.name}…`);
   try {
-    const loaded = isDriveEvent(meta) ? await loadFromDrive(meta, ticket) : await loadFromReports(meta, ticket);
-    if (!loaded) return false;
+    if (!await loadFromDrive(meta, ticket)) return false;
     updateDirty(); updateStatusDirty();
-    const where = isDriveEvent(meta) ? `from Google Drive: ${state.currentReport.num_files} documents` : `${state.currentReport.timeline.length} dated items`;
-    setStatus(`Loaded ${meta.name} ${where}${state.currentCurated ? ' + run sheet' : ''}${state.isDirty ? ' (with unsaved changes from this browser)' : ''}.`);
-    if (isDriveEvent(meta)) readInBackground(meta, ticket);
+    setStatus(`Loaded ${meta.name} from Google Drive: ${state.currentReport.num_files} documents${state.currentCurated ? ' + run sheet' : ''}${state.isDirty ? ' (with unsaved changes from this browser)' : ''}.`);
+    readInBackground(meta, ticket);
     return true;
   } catch (e) {
     if (ticket !== loadSeq) return false;
@@ -73,42 +63,6 @@ export async function loadEvent(id) {
     if (e.name === 'NeedsSignIn') needSignIn();
     return false;
   }
-}
-
-async function loadFromReports(meta, ticket) {
-  const r = await fetch(`reports/${meta.report}`);
-  if (!r.ok) throw new Error(`HTTP ${r.status} — run via python -m http.server, not file://`);
-  const report = await r.json();
-  // normalize timeline events (support old + new field names)
-  const timeline = (report.timeline || []).map(e => enrichEvent({
-    date_raw: e.date_raw || e.dateRaw, date_iso: e.date_iso || e.dateISO,
-    snippet: e.snippet || '', source: e.source || '',
-    times: e.times || [], time: e.time || null, label: e.label || ''
-  })).filter(e => e.date_iso);
-  timeline.sort((a, b) => (a.date_iso + (a.time || '')).localeCompare(b.date_iso + (b.time || '')));
-
-  // curated Knot-style timeline (per-event, with actual times) — optional; browser edits override the file
-  let curated = null;
-  if (meta.timeline) {
-    try { const rt = await fetch(`reports/${meta.timeline}`); if (rt.ok) curated = await rt.json(); } catch { /* optional */ }
-  }
-  // contract + payment status overlay
-  let status = null;
-  if (meta.status) {
-    try { const rs = await fetch(`reports/${meta.status}`); if (rs.ok) status = await rs.json(); } catch { /* optional */ }
-  }
-  const [corrections, details] = await Promise.all([loadCorrections(meta), loadDetails(meta)]);
-  if (ticket !== loadSeq) return false;
-  state.corrections = corrections;
-  state.details = details;
-  state.rawTimeline = timeline;
-  report.timeline = applyCorrections(timeline, corrections);
-  state.currentReport = report;
-  state.curatedFile = meta.timeline || null;
-  state.statusFile = meta.status || null;
-  state.currentCurated = (meta.timeline && loadLocal()) || curated;
-  state.currentStatus = (meta.status && loadStatusLocal()) || status;
-  return true;
 }
 
 // Drive events: files from the event folder; run sheet, statuses, corrections and earlier reading results
@@ -168,7 +122,6 @@ async function readInBackground(meta, ticket) {
 // Re-apply corrections (after one is saved) or cached results (after reading) and refresh the views.
 export function rebuildReport() {
   if (!state.currentMeta) return;
-  if (isDriveEvent()) state.currentReport = reportFrom(state.driveFiles, state.readingCache, state.corrections);
-  else state.currentReport = { ...state.currentReport, timeline: applyCorrections(state.rawTimeline, state.corrections) };
+  state.currentReport = reportFrom(state.driveFiles, state.readingCache, state.corrections);
   reportUpdated();
 }

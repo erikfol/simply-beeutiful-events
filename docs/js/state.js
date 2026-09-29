@@ -13,7 +13,6 @@ export const state = {
   statusDirty: false,
   corrections: {},       // planner corrections to facts read from documents
   details: {},           // event details the planner typed in (couple, venue, guest count…)
-  rawTimeline: [],       // demo/local events: dated mentions before corrections
   driveFiles: [],        // Drive events: the event's files
   readingCache: null,    // Drive events: cached reading results per file
   reading: null,         // Drive events: {done, total} while documents are being read

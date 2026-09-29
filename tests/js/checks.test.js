@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dueCategories, findIssues, timelineConflicts } from '../../docs/js/checks.js';
 
-const load = (f) => JSON.parse(readFileSync(new URL(`../../docs/reports/${f}`, import.meta.url), 'utf8'));
+const load = (f) => JSON.parse(readFileSync(new URL(`../demo_event/reports/${f}`, import.meta.url), 'utf8'));
 const report = load('6-12-27-harper-bennett-wedding-demo.json');
 const curated = load('6-12-27-harper-bennett-wedding-demo.timeline.json');
 const status = load('6-12-27-harper-bennett-wedding-demo.status.json');

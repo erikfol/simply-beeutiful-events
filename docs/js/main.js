@@ -1,7 +1,8 @@
 // SBE Event Manager entry point: load the event list and wire up the controls.
 import { state } from './state.js';
-import { $ } from './dom.js';
-import { loadEventList, loadEvent, setDriveEvents, isDriveEvent } from './events.js';
+import { $, setStatus } from './dom.js';
+import { isConfigured, isSignedIn } from './google.js';
+import { loadEvent, setDriveEvents, clearEvent } from './events.js';
 import { showTimeline, renderCurated, onCuratedClick, onCuratedSubmit, saveTimeline, revertTimeline, exportTimeline } from './timeline.js';
 import { openGenerator, openAddDay, openShift, closePanel, onPanelSubmit, onPanelClick, onPanelChange } from './panel.js';
 import { buildPrintSheet, printTimeline } from './print.js';
@@ -12,17 +13,19 @@ import { initDriveBar } from './drivebar.js';
 import { ROLES } from './roles.js';
 import { esc } from './util.js';
 
-// Event dropdown: Google Drive events (when signed in) above the demo and local events.
+const EVENT_BUTTONS = ['btnOverview', 'btnTimeline', 'btnStatus', 'btnDocs'];
+
+// Event dropdown: the events found in Google Drive. Empty (with a hint) until someone signs in.
 function renderPicker(selectedId) {
   const sel = $('eventSelect');
-  const opt = e => `<option value="${esc(e.id)}">${esc(e.name)}</option>`;
-  const drive = state.eventList.filter(e => isDriveEvent(e));
-  const other = state.eventList.filter(e => !isDriveEvent(e));
-  sel.innerHTML = drive.length
-    ? `<optgroup label="Google Drive">${drive.map(opt).join('')}</optgroup><optgroup label="Demo and local">${other.map(opt).join('')}</optgroup>`
-    : other.map(opt).join('');
+  const hasEvents = state.eventList.length > 0;
+  sel.innerHTML = hasEvents
+    ? state.eventList.map(e => `<option value="${esc(e.id)}">${esc(e.name)}</option>`).join('')
+    : `<option value="">${!isConfigured() ? 'No events' : isSignedIn() ? 'Choose the SBE events folder above' : 'Sign in with Google to see your events'}</option>`;
+  sel.disabled = !hasEvents;
+  for (const id of EVENT_BUTTONS) $(id).disabled = !hasEvents;
   if (selectedId && state.eventList.some(e => e.id === selectedId)) sel.value = selectedId;
-  return sel.value;
+  return hasEvents ? sel.value : '';
 }
 
 // Opening an event shows its Overview (the event hub).
@@ -45,20 +48,18 @@ function refreshVisible() {
 function onDriveEvents(events, openFirst) {
   const current = state.currentMeta && state.currentMeta.id;
   setDriveEvents(events);
+  if (!events.length) { closePanel(); clearEvent(); renderPicker(''); return; }
   let pick;
-  if (openFirst && events.length) pick = events[0].id;
-  else if (state.eventList.some(e => e.id === current)) pick = current;
-  else pick = state.eventList[0] && state.eventList[0].id;
+  if (openFirst || !events.some(e => e.id === current)) pick = events[0].id;
+  else pick = current; // Refresh: stay on the open event and reload it so new files show up
   renderPicker(pick);
-  // switch events, or reload the open Drive event so new files show up
-  if (pick && (pick !== current || isDriveEvent())) openEvent(pick);
+  openEvent(pick);
 }
 
 async function init() {
-  await loadEventList();
-  const first = renderPicker(state.eventList[0] && state.eventList[0].id);
-  if (first) await openEvent(first);
-  $('eventSelect').addEventListener('change', (e) => openEvent(e.target.value));
+  renderPicker('');
+  if (!isConfigured()) setStatus('Google sign-in is not set up for this copy of the app.');
+  $('eventSelect').addEventListener('change', (e) => { if (e.target.value) openEvent(e.target.value); });
 
   const view = $('viewRole');
   view.innerHTML = `<option value="">Full timeline</option>` + ROLES.filter(([k]) => k !== 'planner').map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join('');

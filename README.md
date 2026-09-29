@@ -23,12 +23,10 @@ Then open http://localhost:8000/docs/ (the repository root redirects there). See
 
 1. Install Python dependencies:
    `pip install -r requirements.txt`
-2. Scan a local event folder (with no argument it rebuilds the fictional demo event):
-   `python tools/scan_event.py "events/<event folder>"`
-3. Serve the repository locally with `python -m http.server`.
-4. Open the event manager and select an event.
+2. Serve the repository locally with `python -m http.server` and open http://localhost:8000/docs/.
+3. Sign in with Google and choose the SBE events folder; events appear in the dropdown.
 
-The published site shows only a fictional demo event. Real client reports are git-ignored and listed in `docs/reports/local-index.json`, so they appear only when running locally — see [`docs/README.md`](docs/README.md).
+The site shows no events until someone signs in: all event data comes from SBE's Google Drive, read in the browser. `tools/scan_event.py` (the original Python scanner) still works on a local folder, e.g. `python tools/scan_event.py "events/<event folder>"`; its output goes to the git-ignored `docs/reports/`. See [`docs/README.md`](docs/README.md).
 
 Actual client event data should live in Google Drive rather than in Git. The `events/` directory is git-ignored: keep event folders there locally to scan them, but never commit them.
 

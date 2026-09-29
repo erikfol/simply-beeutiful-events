@@ -143,6 +143,7 @@ async function afterSignIn() {
     await loadEvents(true);
   } else {
     await loadShared();
+    onEvents([]); // updates the dropdown hint
     setStatus('Signed in. Choose the SBE events folder to see its events.');
   }
 }
