@@ -43,7 +43,7 @@ The four jobs:
 |---|---|---|---|
 | 0 | Groundwork: split the app into modules, automated tests on every push, Drive naming rules | ✅ Done (commit `77c8911`) | ~1 week |
 | 1 | Timeline builder | ✅ Done, v0.4 (commit `2fee2e4`) | 3–4 weeks |
-| 2 | Google sign-in + Drive connection: events listed from the shared folder, document list with Drive links, timelines and statuses saved to the "SBE App Data" Drive folder | 🔧 Built and tested against a simulated Drive (v0.5); waiting on the Google Cloud setup (`GOOGLE_SETUP.md`) and a first real sign-in | 2–3 weeks |
+| 2 | Google sign-in + Drive connection: events listed from the shared folder, document list with Drive links, timelines and statuses saved to the "SBE App Data" Drive folder | ✅ Done, v0.5 (commits `2f1f93d`, `e9bb522`); first real sign-in against the SBE folder worked September 29, 2026 | 2–3 weeks |
 | 3 | Reading the documents: facts with source links, "needs a look" list, planner corrections, event hub page | Planned | 2–3 weeks |
 | 4 | Action center: overdue / this week / next 30 days / changed in Drive, date-based checklist, done / snooze / assign | Planned | 2–3 weeks |
 | 5 | Ask SBE: search first; optional private AI chat later | Planned | 1–2 weeks |
@@ -73,9 +73,11 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 - Inline forms instead of pop-up prompts; works on phone-width screens.
 - 33 JavaScript tests and 6 Python tests.
 
-**Phase 2: Google Drive connection (v0.5, awaiting real sign-in)**
+**Phase 2: Google Drive connection (v0.5)**
 - **Sign in with Google** bar (hidden until a Client ID is configured); only Google Cloud test users can sign in.
-- Choose the SBE events folder by name or pasted link; dated subfolders become events (upcoming first); undated folders are skipped and listed.
+- Choose the SBE events folder from a dropdown of folders shared with you (or search / paste a link); dated subfolders become events (upcoming first); undated folders are skipped and listed.
+- If Google's "see your Drive files" permission is left unticked at sign-in, the app says so and offers to ask again.
+- Every release stamps one version on all files (`tools/stamp_release.py`), so browsers never mix old and new code.
 - **Documents** view: every file grouped by kind, with Drive links, subfolder, last-changed date and a *new* tag.
 - Timelines, vendor statuses, the chosen folder and saved templates save to an **SBE App Data** folder in the signed-in person's Drive; unsaved edits stay in the browser, including when the one-hour sign-in expires mid-session.
 - The event documents are only read, never changed (checked by tests).
@@ -83,9 +85,8 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 
 ### Next steps
 
-1. Do the one-time Google setup in `GOOGLE_SETUP.md` and send the Client ID.
-2. First real sign-in against the SBE events folder; fix anything the real folder turns up.
-3. Then Phase 3: reading the documents.
+1. Check the real events in the app: skipped folders, document lists, saving a timeline to "SBE App Data".
+2. Phase 3: reading the documents (budgets, vendor lists, dates and times from contracts).
 
 ### Billing and invoicing reference: HoneyBook
 

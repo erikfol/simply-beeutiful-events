@@ -75,3 +75,6 @@ Keep anything without DOM access in the pure files so `npm test` can cover it. `
 
 ## Local development
 From the repo root: `python -m http.server`, then open http://localhost:8000/docs/. Modules don't load from `file://`.
+
+## Releasing
+Before committing app changes, run `python tools/stamp_release.py`. It stamps one version on the stylesheet and, through the import map in `index.html`, on every module, so browsers never mix new and cached files (GitHub Pages lets them cache for ~10 minutes). `npm test` fails if a module is missing from the import map.
