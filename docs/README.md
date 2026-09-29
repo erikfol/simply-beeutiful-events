@@ -8,9 +8,9 @@ Sign in with Google, pick an event, and the Overview opens. All in the browser, 
 
 ## Google Drive events
 When Google sign-in is set up (see [`../GOOGLE_SETUP.md`](../GOOGLE_SETUP.md)), a bar above the event picker offers **Sign in with Google**:
-- Choose the SBE events folder once (from the folders shared with you, by name, or by pasting its Drive link). Every subfolder whose name starts with a date (`6.12.27 Harper-Bennett Wedding`) becomes an event in the dropdown; other folders are skipped and listed. Signing out empties the dropdown again.
+- Choose the SBE events folder once (from a dropdown of folders shared with you and your own top-level folders, by name, or by pasting its Drive link). Every subfolder whose name starts with a date (`6.12.27 Harper-Bennett Wedding`) becomes an event in the dropdown; other folders are skipped and listed. Signing out empties the dropdown again.
 - **Documents** lists the event's files, grouped by kind, with links that open them in Drive.
-- Timelines and vendor statuses **save to an "SBE App Data" folder in the signed-in person's Drive** (`event-<folder id>.timeline.json`, `.status.json`, plus `settings.json` and `templates.json`). Unsaved edits are kept in the browser until saved.
+- Everything the app saves goes to one shared **"SBE App Data" folder inside the SBE events folder** (`event-<folder id>.timeline.json`, `.status.json`, `.corrections.json`, `.details.json`, `.reading.json`, plus `templates.json`), so all planners see the same work. The events folder's owner gets it created on sign-in and shares it with the other planners as **Editor**; without Editor access a planner can view but not save (the Google bar says so, with **Check again**). Each planner's own Drive keeps a small personal "SBE App Data" with just `settings.json` (which events folder they use); anything saved there before sharing existed is moved to the shared folder once. Unsaved edits are kept in the browser until saved.
 - The app only reads the event documents; it never changes them.
 - **Reading documents** happens in the browser: Google Docs and Sheets are exported by Drive; PDFs, Word and Excel files are opened with pdf.js, mammoth and SheetJS (copied into `vendor/`). Nothing is sent anywhere else. Results are cached per file in `event-<id>.reading.json`, so only new or changed files are read again. **Scanned PDFs and old Word (.doc) files** are uploaded as a temporary Google Doc inside "SBE App Data" so Google Drive converts them (text recognition for scans); the text is read and the copy deleted, and the original is never touched. Files that still can't be read, and unfamiliar budget layouts, go on a **Needs a look** list.
 - Who may sign in is controlled in Google Cloud (test users). With `GOOGLE_CLIENT_ID` empty in `js/config.js`, the bar is hidden.
@@ -31,7 +31,7 @@ The fictional Harper-Bennett wedding (6.12.27) in `tests/demo_event/` (source do
 - **Status Update**: alert banner (over-budget, balances due, unsigned contracts, timeline conflicts), per-category budget table, editable vendor/contract/payment table, upcoming/overdue items.
 
 ## Saving
-Everything the app saves goes to the "SBE App Data" folder in the signed-in person's Google Drive (see above). **Export JSON** downloads a copy of a timeline or statuses.
+Everything the app saves goes to the shared "SBE App Data" folder inside the SBE events folder (see above). **Export JSON** downloads a copy of a timeline or statuses.
 
 ## Add a new event
 Create a folder for it inside the SBE events folder in Google Drive, named with the date first (`10.3.26 Alyssa & Mick`), then click **Refresh** in the Google bar.
@@ -51,9 +51,9 @@ Plain ES modules, no build step. `index.html` loads `js/main.js`.
 | `js/reader.js` | Reads an event's new or changed files (4 at a time) and caches results in "SBE App Data" |
 | `js/corrections.js` | Stores planner corrections (Drive or browser) |
 | `js/docs.js` | Documents view |
-| `js/google.js` | Google sign-in (Google Identity Services); token kept in memory |
+| `js/google.js` | Google sign-in (Google Identity Services, full Drive permission so planners can share one app-data folder); token kept in memory |
 | `js/drive.js` | Minimal Google Drive REST client; swappable transport for tests |
-| `js/appdata.js` | The app's own files in the "SBE App Data" Drive folder |
+| `js/appdata.js` | The app's own files: shared "SBE App Data" inside the events folder (who can save, creating it, moving old personal data), personal settings |
 | `js/driveEvents.js` | Pure: folder names → events, sorting, file kinds, folder links (tested) |
 | `js/config.js` | Google Client ID and app-data folder name |
 | `js/timeline.js` | Create Timeline view: editable run sheet, suggestions, conflicts, document evidence |

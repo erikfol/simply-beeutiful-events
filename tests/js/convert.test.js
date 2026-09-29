@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { createFakeDrive } from './fakeDrive.js';
 import { useFakeAuth, signIn } from '../../docs/js/google.js';
 import { useTransport } from '../../docs/js/drive.js';
-import { forgetAppData } from '../../docs/js/appdata.js';
+import { forgetAppData, useEventsFolder, sharedAccess } from '../../docs/js/appdata.js';
 import { extractFile } from '../../docs/js/extract.js';
 import { readChanged, reportFrom } from '../../docs/js/reader.js';
 
@@ -14,11 +14,15 @@ let drive, event;
 beforeEach(async () => {
   drive = createFakeDrive({ convert: (bytes, name) => (name.includes('Bartending') ? 'Bartending agreement. Event date June 12, 2027 from 5:00 PM. Deposit of $300.00 due May 1, 2027.' : '') });
   useFakeAuth(); useTransport(drive.transport); forgetAppData(); await signIn();
-  event = drive.add({ name: '6.12.27 Test Wedding', mimeType: 'application/vnd.google-apps.folder' });
+  // the planner owns this events folder here, so the shared "SBE App Data" is created inside it
+  const events = drive.add({ name: 'SBE Events', mimeType: 'application/vnd.google-apps.folder', owner: drive.me });
+  event = drive.add({ name: '6.12.27 Test Wedding', mimeType: 'application/vnd.google-apps.folder', parent: events, owner: drive.me });
+  useEventsFolder(events);
+  await sharedAccess();
 });
 
 test('an old .doc is converted by Google, read, and the temporary copy deleted', async () => {
-  const id = drive.add({ name: 'Bartending contract (1).doc', mimeType: DOC, parent: event, content: new Uint8Array([0xd0, 0xcf, 0x11, 0xe0]) });
+  const id = drive.add({ name: 'Bartending contract (1).doc', mimeType: DOC, parent: event, owner: drive.me, content: new Uint8Array([0xd0, 0xcf, 0x11, 0xe0]) });
   const out = await extractFile(drive.files.get(id));
   assert.equal(out.via, 'google');
   assert.match(out.text, /June 12, 2027/);
@@ -31,7 +35,7 @@ test('an old .doc is converted by Google, read, and the temporary copy deleted',
 });
 
 test('the reader turns the converted text into dates and payments, marked "via Google"', async () => {
-  drive.add({ name: 'Bartending contract (1).doc', mimeType: DOC, parent: event, content: new Uint8Array([1, 2, 3]) });
+  drive.add({ name: 'Bartending contract (1).doc', mimeType: DOC, parent: event, owner: drive.me, content: new Uint8Array([1, 2, 3]) });
   const files = [...drive.files.values()].filter(f => f.parents.includes(event)).map(f => ({ ...f, path: '' }));
   const { cache } = await readChanged(event, files, { version: 4, files: {} });
   const report = reportFrom(files, cache, {});

@@ -33,8 +33,8 @@ The four jobs:
 | Build order | ✅ Timeline builder first, tested on the demo event |
 | Sending documents to AI | ✅ Not by default; Phases 1–4 use no AI |
 | Who uses it | ✅ SBE staff only |
-| Sign-in accounts | ✅ The SBE owner's Google account owns all the shared event folders. For now only one person signs in (the project lead's Gmail account), listed as the single approved user of the app's Google sign-in. More people can be added to that list later. |
-| Database / sign-in service | ✅ **Google-only for now, no Supabase.** Sign in with Google in the browser; read the event folders with the signed-in person's own Drive access (read-only); save the app's own data (timelines, statuses, notes) in an "SBE App Data" folder the app creates in that person's Drive, touching only files it created. Cost: $0. Revisit Supabase (free tier; $25/mo Pro for backups and no sleeping) when more people use the app or background features are needed (daily email digest, scheduled sync, server-side chat). |
+| Sign-in accounts | ✅ The SBE owner's Google account owns all the shared event folders. Sign-in is limited to the Google Cloud test users (the project lead and the SBE owner, as of September 29, 2026); add more under Google Auth Platform → Audience → Test users (see `GOOGLE_SETUP.md`). |
+| Database / sign-in service | ✅ **Google-only for now, no Supabase.** Sign in with Google in the browser; read the event folders with the signed-in person's own Drive access; save the app's own data (timelines, statuses, corrections, details) in **one shared "SBE App Data" folder inside the SBE events folder** (since September 29, 2026, so the owner and other planners share one set of work; planners need Editor access to that folder). This needs Google's full Drive permission; the app still only writes inside "SBE App Data". Cost: $0. Revisit Supabase (free tier; $25/mo Pro for backups and no sleeping) when more people use the app or background features are needed (daily email digest, scheduled sync, server-side chat). |
 | Chatbot privacy option | ⏳ Needed for Phase 5 (options below) |
 
 ### Phases

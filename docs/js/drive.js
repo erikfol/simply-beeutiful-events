@@ -70,6 +70,17 @@ export async function getFile(id) {
   return (await request('GET', `${API}/files/${encodeURIComponent(id)}?${params}`)).json();
 }
 
+// What the signed-in person may do with a folder, and who owns it.
+export async function getAccess(id) {
+  const params = new URLSearchParams({ fields: 'id,name,webViewLink,capabilities(canAddChildren,canEdit),owners(displayName,emailAddress)', supportsAllDrives: 'true' });
+  const f = await (await request('GET', `${API}/files/${encodeURIComponent(id)}?${params}`)).json();
+  return { id: f.id, name: f.name, link: f.webViewLink, canWrite: !!(f.capabilities && f.capabilities.canAddChildren), owner: (f.owners && f.owners[0]) || {} };
+}
+
+// Top-level folders in the person's own Drive (the owner of the events folder won't see it as "shared").
+export const listMyTopFolders = () =>
+  listFiles(`mimeType = ${quote(FOLDER_MIME)} and 'root' in parents and 'me' in owners and trashed = false`);
+
 export async function whoAmI() {
   const data = await (await request('GET', `${API}/about?fields=user(displayName,emailAddress)`)).json();
   return data.user || {};

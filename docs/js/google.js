@@ -2,9 +2,12 @@
 // Who may sign in is controlled in Google Cloud: while the app is in "Testing", only listed test users can.
 import { GOOGLE_CLIENT_ID } from './config.js';
 
-// Read everything the person can already see in Drive; write only files this app creates.
+// Full Drive permission, so several planners can save into one shared "SBE App Data" folder (Google's
+// narrower "only files this app created" permission is per person). Drive's own sharing still decides who
+// can write where, and the app only ever writes inside "SBE App Data" (see appdata.js and the tests).
+export const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive';
 export const READ_SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
-export const SCOPES = `${READ_SCOPE} https://www.googleapis.com/auth/drive.file`;
+export const SCOPES = DRIVE_SCOPE;
 
 export class NeedsSignIn extends Error {
   constructor(msg = 'Sign in with Google to continue.') { super(msg); this.name = 'NeedsSignIn'; }
@@ -22,8 +25,9 @@ export function useFakeAuth() { fake = true; }
 export const isConfigured = () => fake || !!GOOGLE_CLIENT_ID;
 export const isSignedIn = () => !!token && Date.now() < expiresAt;
 
-// Without the read permission the app can sign in but can't see the shared event folders.
-export const canReadDrive = () => fake || granted.split(' ').includes(READ_SCOPE);
+// Without the Drive permission the app can sign in but can't see (or save to) the SBE folders.
+export const canReadDrive = () => fake || granted.split(' ').some(s => s === DRIVE_SCOPE || s === READ_SCOPE);
+export const canWriteDrive = () => fake || granted.split(' ').includes(DRIVE_SCOPE);
 
 export function accessToken() {
   if (!isSignedIn()) throw new NeedsSignIn(token ? 'Your Google sign-in expired. Sign in again to continue.' : undefined);

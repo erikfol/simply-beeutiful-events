@@ -59,7 +59,12 @@ export async function readChanged(driveId, files, cache, { onProgress = () => {}
   // forget files that were deleted or moved out of the event
   for (const id of Object.keys(cache.files)) if (!files.some(f => f.id === id)) delete cache.files[id];
   if (todo.length || Object.keys(cache.files).length !== files.length) {
-    await writeEventData(driveId, 'reading', { ...cache, read: new Date().toISOString() });
+    try {
+      await writeEventData(driveId, 'reading', { ...cache, read: new Date().toISOString() });
+    } catch (e) {
+      // e.g. view-only access to the shared folder: the results still show, they just aren't kept for next time
+      if (e.name === 'NeedsSignIn') throw e;
+    }
   }
   return { cache, readCount: done };
 }

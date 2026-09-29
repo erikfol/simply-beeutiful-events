@@ -50,12 +50,27 @@ You'll also see a **Client secret**. The app doesn't use it; don't share it.
 
 ## 6. Share the events folder (SBE owner)
 
-If the SBE events folder isn't already shared with your Google account, the owner opens it in Google Drive → **Share** → adds your email as **Viewer**. The app never changes her files; Viewer is enough.
+If the SBE events folder isn't already shared with your Google account, the owner opens it in Google Drive → **Share** → adds your email as **Viewer**. The app never changes the event documents; Viewer is enough to read them.
+
+## 7. Shared saving: the "SBE App Data" folder (SBE owner, once)
+
+Everything the app saves (run sheets, vendor statuses, corrections, event details, templates) lives in one **"SBE App Data"** folder inside the SBE events folder, so every planner sees the same work.
+
+1. The owner of the events folder signs in to the app once and chooses the events folder. The app creates **"SBE App Data"** inside it automatically.
+2. The owner opens that folder in Google Drive → **Share** → adds each other planner as **Editor** (only this folder; the rest stays Viewer).
+3. Other planners click **Check again** in the app's Google bar (or sign in again). Anything they saved on their own before is moved into the shared folder once.
+
+Until step 2, other planners can see everything but not save; the app says so and keeps their changes in the browser.
+
+## Adding another person
+
+1. In Google Cloud: **Google Auth Platform → Audience → Test users → Add users**, add their Google email.
+2. In Google Drive: share the SBE events folder with them as **Viewer**, and the **SBE App Data** folder inside it as **Editor**.
 
 ## What to expect the first time you sign in
 
 - Google shows **"Google hasn't verified this app."** That's expected for a private app in Testing. Click **Continue**.
-- Google asks to allow the app to **see your Google Drive files** and to **see, edit, create and delete only the specific Google Drive files you use with this app**. The first is how it reads the event folders; the second is how it saves its own data (timelines, statuses) in an **SBE App Data** folder in your Drive. It can't change any other file.
+- Google asks to allow the app to **see, edit, create and delete all your Google Drive files**. Tick the box. This broad permission is what lets several planners save into one shared **SBE App Data** folder; Google's narrower option only works per person. The app itself only reads the event documents and only writes inside **SBE App Data** (the automated tests check this), and Drive's sharing still decides what each person can change.
 - The sign-in lasts about an hour. When it runs out, the app says so and keeps unsaved changes in the browser; click **Sign in again** and save.
 
 ## Turning it off

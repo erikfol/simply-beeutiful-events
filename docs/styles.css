@@ -277,3 +277,5 @@ dl.details .muted { color:#999; font-weight:400; font-style:italic; }
 table.grid.vendors td { vertical-align:top; }
 table.grid.vendors td.nowrap { white-space:nowrap; }
 table.grid.vendors a { word-break:break-all; }
+.db-warn { flex-basis:100%; margin:.2rem 0 0; padding:.45rem .6rem; background:#fdf1dc; border:1px solid #d9b66a; border-radius:8px; font-size:.88rem; }
+.db-warn button { margin-left:.3rem; }

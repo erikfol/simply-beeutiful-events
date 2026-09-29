@@ -2,8 +2,8 @@ import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { createFakeDrive, seedSbeDrive } from './fakeDrive.js';
 import { useFakeAuth, signIn, NeedsSignIn } from '../../docs/js/google.js';
-import { useTransport, listChildren, listTree, searchFolders, listSharedFolders, whoAmI, quote } from '../../docs/js/drive.js';
-import { readEventData, writeEventData, readData, forgetAppData } from '../../docs/js/appdata.js';
+import { useTransport, listChildren, listTree, searchFolders, listSharedFolders, listMyTopFolders, whoAmI, quote } from '../../docs/js/drive.js';
+import { readEventData, writeEventData, readData, forgetAppData, useEventsFolder, sharedAccess, readSettings, writeSettings, migratePersonalData } from '../../docs/js/appdata.js';
 import {
   parseEventFolderName, folderToEvent, sortEvents, parseFolderId, classifyFile, appDataName,
 } from '../../docs/js/driveEvents.js';
@@ -74,31 +74,87 @@ test('folder search finds the events folder and escapes quotes safely', async ()
   assert.equal((await whoAmI()).emailAddress, 'planner@example.com');
 });
 
-test('app data is created once in "SBE App Data", then updated in place', async () => {
-  assert.equal(await readEventData(ids.harper, 'timeline'), null);
-  assert.equal([...drive.files.values()].filter(f => f.name === 'SBE App Data').length, 0, 'reading does not create the folder');
-  await writeEventData(ids.harper, 'timeline', { days: [{ date: '2027-06-12', items: [] }] });
-  await writeEventData(ids.harper, 'timeline', { days: [{ date: '2027-06-12', items: [{ time: '16:00', title: 'Ceremony' }] }] });
-  const saved = [...drive.files.values()].filter(f => f.name === appDataName(ids.harper, 'timeline'));
-  assert.equal(saved.length, 1, 'no duplicate files');
-  const folders = [...drive.files.values()].filter(f => f.name === 'SBE App Data');
-  assert.equal(folders.length, 1);
-  assert.deepEqual(saved[0].parents, [folders[0].id]);
-  assert.deepEqual(saved[0].owners, ['planner@example.com'], 'saved in the planner\'s own Drive');
+// ---------- shared "SBE App Data" inside the events folder ----------
+const OWNER = 'owner@example.com';
+const PLANNER = 'planner@example.com';
+const FOLDER = 'application/vnd.google-apps.folder';
+const appFolders = () => [...drive.files.values()].filter(f => f.name === 'SBE App Data');
+async function signedInAs(email) {
+  forgetAppData(); // a different person in a fresh browser
+  useTransport(email === PLANNER ? drive.transport : drive.as(email));
+  useEventsFolder(ids.root);
+}
 
-  forgetAppData(); // e.g. a fresh browser: finds the existing folder and file again
-  const back = await readEventData(ids.harper, 'timeline');
-  assert.equal(back.days[0].items[0].title, 'Ceremony');
-  assert.equal([...drive.files.values()].filter(f => f.name === 'SBE App Data').length, 1);
+test('the events folder owner gets the shared "SBE App Data" created inside it', async () => {
+  await signedInAs(PLANNER);
+  assert.equal(await readEventData(ids.harper, 'timeline'), null);
+  assert.equal((await sharedAccess()).state, 'waiting', 'a Viewer cannot create it');
+  assert.equal(appFolders().length, 0, 'reading and checking create nothing');
+
+  await signedInAs(OWNER);
+  const access = await sharedAccess();
+  assert.equal(access.state, 'ready');
+  assert.equal(appFolders().length, 1);
+  assert.deepEqual(appFolders()[0].parents, [ids.root], 'next to the event folders');
+  assert.deepEqual(appFolders()[0].owners, [OWNER]);
+});
+
+test('without Editor access a planner sees shared work but cannot save', async () => {
+  await signedInAs(OWNER);
+  await sharedAccess();
+  await writeEventData(ids.harper, 'timeline', { days: [{ date: '2027-06-12', items: [{ time: '16:00', title: 'Ceremony' }] }] });
+
+  await signedInAs(PLANNER);
+  assert.equal((await readEventData(ids.harper, 'timeline')).days[0].items[0].title, 'Ceremony');
+  const access = await sharedAccess();
+  assert.equal(access.state, 'view-only');
+  assert.equal(access.owner.emailAddress, OWNER);
+  await assert.rejects(writeEventData(ids.harper, 'timeline', { days: [] }), /Editor access/);
+});
+
+test('with Editor access both planners save to the same files', async () => {
+  await signedInAs(OWNER);
+  await sharedAccess();
+  await writeEventData(ids.harper, 'status', { vendors: [{ name: 'Glow Studio', payment: 'Due' }] });
+  drive.share(appFolders()[0].id, PLANNER, 'editor');
+
+  await signedInAs(PLANNER);
+  assert.equal((await sharedAccess()).state, 'ready');
+  await writeEventData(ids.harper, 'status', { vendors: [{ name: 'Glow Studio', payment: 'Paid' }] });
+  assert.equal([...drive.files.values()].filter(f => f.name === appDataName(ids.harper, 'status')).length, 1, 'updated, not duplicated');
+
+  await signedInAs(OWNER);
+  assert.equal((await readEventData(ids.harper, 'status')).vendors[0].payment, 'Paid', 'the owner sees the planner change');
+});
+
+test('work saved before sharing existed moves into the shared folder once; settings stay personal', async () => {
+  // the planner's personal "SBE App Data" from before (settings + a saved run sheet)
+  const personal = drive.add({ name: 'SBE App Data', mimeType: FOLDER, owner: PLANNER });
+  drive.add({ name: appDataName(ids.harper, 'timeline'), mimeType: 'application/json', parent: personal, owner: PLANNER, content: JSON.stringify({ days: [{ date: '2027-06-12', items: [] }] }) });
+  drive.add({ name: 'settings.json', mimeType: 'application/json', parent: personal, owner: PLANNER, content: JSON.stringify({ eventsFolderId: ids.root }) });
+
+  await signedInAs(OWNER);
+  await sharedAccess();
+  drive.share(appFolders().find(f => f.parents[0] === ids.root).id, PLANNER, 'editor');
+
+  await signedInAs(PLANNER);
+  assert.equal((await readSettings()).eventsFolderId, ids.root, 'settings are read from the personal folder');
+  await sharedAccess();
+  assert.equal(await migratePersonalData(), 1, 'the run sheet moves, settings do not');
+  assert.equal((await readEventData(ids.harper, 'timeline')).days[0].date, '2027-06-12');
+  assert.equal(await migratePersonalData(), 0, 'only once');
+  assert.equal(await readData('settings.json'), null, 'settings are not shared');
 });
 
 test('the event documents themselves are never modified', async () => {
-  const before = JSON.stringify([...drive.files.values()].filter(f => f.owners.includes('owner@example.com')));
+  const docs = () => JSON.stringify([...drive.files.values()].filter(f => f.name !== 'SBE App Data' && !f.name.endsWith('.json')));
+  const before = docs();
+  await signedInAs(OWNER);
+  await sharedAccess();
   await listTree(ids.harper);
   await writeEventData(ids.harper, 'status', { vendors: [] });
-  await readData('settings.json');
-  const after = JSON.stringify([...drive.files.values()].filter(f => f.owners.includes('owner@example.com')));
-  assert.equal(after, before);
+  await writeSettings({ eventsFolderId: ids.root });
+  assert.equal(docs(), before);
 });
 
 test('an expired sign-in surfaces as NeedsSignIn', async () => {
@@ -106,7 +162,13 @@ test('an expired sign-in surfaces as NeedsSignIn', async () => {
   await assert.rejects(listChildren(ids.root), NeedsSignIn);
 });
 
-test('two first saves at the same moment still make one app folder', async () => {
-  await Promise.all([writeEventData(ids.harper, 'timeline', { days: [] }), writeEventData(ids.harper, 'status', { vendors: [] })]);
-  assert.equal([...drive.files.values()].filter(f => f.name === 'SBE App Data').length, 1);
+test('checking access twice at the same moment still makes one shared folder', async () => {
+  await signedInAs(OWNER);
+  await Promise.all([sharedAccess(), sharedAccess()]);
+  assert.equal(appFolders().length, 1);
+});
+
+test('the owner sees their own folders to pick from', async () => {
+  useTransport(drive.as(OWNER));
+  assert.deepEqual((await listMyTopFolders()).map(f => f.name), ['SBE Events']);
 });
