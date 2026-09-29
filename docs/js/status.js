@@ -62,7 +62,7 @@ function renderValidation(b, today) {
     budget: b,
     weddingDate: state.currentMeta.weddingDate,
     today,
-    checkMissing: state.currentReport.source !== 'drive',
+    checkMissing: !(state.currentReport.source === 'drive' && (state.reading || state.currentReport.num_pending)),
   });
   const el = $('validation');
   if (!issues.length) { el.innerHTML = '<div class="alert ok">✅ Timeline looks consistent — no conflicts or missing items detected.</div>'; return; }
@@ -91,11 +91,8 @@ function renderStatusDashboard(b, v, dueCats, today) {
   if (unsigned) alerts.push(`<div class="alert warn">📝 ${unsigned} vendor${unsigned === 1 ? '' : 's'} without a signed contract.</div>`);
   if (overduePay) alerts.push(`<div class="alert due">⏰ ${overduePay} vendor payment${overduePay === 1 ? '' : 's'} overdue.</div>`);
   if (unknownPay) alerts.push(`<div class="alert info">❓ ${unknownPay} vendor payment status${unknownPay === 1 ? '' : 'es'} still unknown — set them below.</div>`);
-  if (report.source === 'drive') {
-    alerts.length = 0;
-    alerts.push(`<div class="alert info">📄 Budget totals, the vendor list and due dates will be read from this event's documents in the next phase. For now, add vendors below and track their contract and payment status; it saves to Google Drive.</div>`);
-    if (unsigned) alerts.push(`<div class="alert warn">📝 ${unsigned} vendor${unsigned === 1 ? '' : 's'} without a signed contract.</div>`);
-    if (overduePay) alerts.push(`<div class="alert due">⏰ ${overduePay} vendor payment${overduePay === 1 ? '' : 's'} overdue.</div>`);
+  if (report.source === 'drive' && (state.reading || report.num_pending)) {
+    alerts.unshift(`<div class="alert info">📄 Still reading this event's documents${state.reading ? ` (${state.reading.done} of ${state.reading.total})` : ''}; budget, vendors and dates fill in when it's done.</div>`);
   }
   $('alerts').innerHTML = alerts.join('');
 

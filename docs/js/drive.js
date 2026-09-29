@@ -101,3 +101,34 @@ export async function updateJson(id, data) {
   const res = await request('PATCH', `${UPLOAD}/files/${encodeURIComponent(id)}?uploadType=media&fields=${FILE_FIELDS}`, { body: JSON.stringify(data, null, 2), headers: { 'Content-Type': 'application/json' } });
   return res.json();
 }
+
+// File contents: uploaded files download as-is; Google Docs/Sheets are exported to the given type.
+export async function fileBytes(id) {
+  return (await request('GET', `${API}/files/${encodeURIComponent(id)}?alt=media&supportsAllDrives=true`)).arrayBuffer();
+}
+
+export async function fileText(id) {
+  return (await request('GET', `${API}/files/${encodeURIComponent(id)}?alt=media&supportsAllDrives=true`)).text();
+}
+
+export async function exportFile(id, mimeType) {
+  return request('GET', `${API}/files/${encodeURIComponent(id)}/export?mimeType=${encodeURIComponent(mimeType)}`);
+}
+
+// Upload bytes as a new Google Doc: Drive converts old Word files and runs text recognition (OCR) on
+// scanned PDFs. Resumable upload: one request to start, one to send the bytes.
+export async function uploadAsGoogleDoc(name, parentId, bytes, contentType) {
+  const meta = { name, mimeType: 'application/vnd.google-apps.document', parents: [parentId] };
+  const start = await request('POST', `${UPLOAD}/files?uploadType=resumable&ocrLanguage=en&fields=${FILE_FIELDS}`, {
+    body: JSON.stringify(meta),
+    headers: { 'Content-Type': 'application/json; charset=UTF-8', 'X-Upload-Content-Type': contentType },
+  });
+  const location = start.headers.get('Location');
+  if (!location) throw new Error('Google Drive did not accept the file for conversion.');
+  return (await request('PUT', location, { body: bytes, headers: { 'Content-Type': contentType } })).json();
+}
+
+// Only ever used on files this app created (the temporary converted copies).
+export async function deleteFile(id) {
+  await request('DELETE', `${API}/files/${encodeURIComponent(id)}`);
+}

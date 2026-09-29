@@ -225,3 +225,55 @@ button:disabled { opacity:.5; cursor:not-allowed; }
 
 /* The hidden attribute always wins over display rules above (e.g. .drivebar { display:flex }). */
 [hidden] { display:none !important; }
+
+/* ---------- Phase 3: Overview (event hub) ---------- */
+.tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:.6rem; margin:.4rem 0 1rem; }
+.tile { background:#faf7f2; border:1px solid #e5dcc8; border-radius:10px; padding:.6rem .8rem; }
+.tile .tk { font-size:.75rem; text-transform:uppercase; letter-spacing:.08em; color:#6b5a2e; }
+.tile .tv { font-size:1.2rem; font-weight:700; margin:.15rem 0; font-variant-numeric:tabular-nums; }
+.tile .ts { font-size:.82rem; color:#666; }
+.readbar { margin:.3rem 0 .8rem; font-size:.9rem; color:#6b5a2e; }
+.readbar .bar { height:6px; background:#eee4cf; border-radius:4px; overflow:hidden; margin-top:.25rem; }
+.readbar .bar span { display:block; height:100%; background:#b89b5e; }
+table.grid.actions td { vertical-align:top; }
+table.grid.actions tr.past td { color:#777; }
+table.grid.actions td.acts { white-space:nowrap; }
+table.grid.actions td.acts button { margin:0 .15rem .15rem 0; }
+table.grid.actions small { color:#666; }
+tr.fixrow td { background:#fffdf6; }
+.fixform { display:flex; flex-wrap:wrap; gap:.5rem .8rem; align-items:flex-end; }
+.fixform label { display:grid; gap:.15rem; font-size:.82rem; color:#555; }
+.fixform label.wide { flex:1 1 220px; }
+.fixform input { padding:.35rem; border-radius:6px; border:1px solid #ccc; font-size:.9rem; min-width:0; }
+.pastlist { margin:.5rem 0 1rem; }
+.pastlist summary { cursor:pointer; color:#6b5a2e; font-weight:600; }
+ul.contacts, ul.needslook { margin:.3rem 0 1rem; padding-left:1.2rem; display:grid; gap:.3rem; }
+/* Tables keep whole words; wide ones scroll sideways inside .tablewrap instead of wrapping letter by letter. */
+.tablewrap table.grid { overflow-wrap:normal; }
+table.grid.actions td.num, table.grid.actions th.num { white-space:nowrap; }
+/* Phones: each payment/deadline becomes a small card. */
+@media (max-width:640px) {
+  table.grid.cards, table.grid.cards tbody, table.grid.cards tr, table.grid.cards td { display:block; width:auto; }
+  table.grid.cards tr.head { display:none; }
+  table.grid.cards tr { border:1px solid #e5dcc8; border-radius:10px; margin:0 0 .6rem; padding:.4rem .6rem; background:#fff; }
+  table.grid.cards td { border:0; padding:.15rem 0; text-align:left; }
+  table.grid.cards td[data-label]::before { content:attr(data-label); display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:#6b5a2e; }
+  table.grid.cards td.num, table.grid.cards td.nowrap { white-space:normal; }
+  table.grid.cards td.acts { white-space:normal; padding-top:.3rem; }
+}
+/* Event details (top of the Overview) */
+dl.details { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:.5rem 1.2rem; margin:.2rem 0 .3rem; }
+dl.details > div { border-bottom:1px solid #f0e8d6; padding-bottom:.35rem; }
+dl.details dt { font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:#6b5a2e; }
+dl.details dd { margin:.1rem 0 0; font-weight:600; }
+dl.details dd small, dl.details dd .pill { font-weight:400; }
+dl.details .muted { color:#999; font-weight:400; font-style:italic; }
+.details-actions { margin:.2rem 0 .8rem; }
+.detailsform { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:.6rem 1rem; background:#fffdf6; border:1px solid #e5dcc8; border-radius:10px; padding:.8rem; margin:.3rem 0 1rem; }
+.detailsform label { display:grid; gap:.2rem; font-size:.85rem; color:#555; }
+.detailsform .wide { grid-column:1 / -1; }
+.detailsform input, .detailsform textarea { padding:.4rem; border-radius:6px; border:1px solid #ccc; font-size:.95rem; font-family:inherit; min-width:0; }
+
+table.grid.vendors td { vertical-align:top; }
+table.grid.vendors td.nowrap { white-space:nowrap; }
+table.grid.vendors a { word-break:break-all; }

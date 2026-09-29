@@ -231,8 +231,8 @@ function renderDocEvidence() {
       dayOf.map(e => `<li><strong>${e.time}</strong> — ${esc(e.snippet)} <em>[${esc(e.source)}]</em></li>`).join('') +
       `</ol></div>` + html;
   }
-  $('daySchedule').innerHTML = html || (report.source === 'drive'
-    ? '<p class="empty">Dates and times from this event\'s documents will appear here once the app reads the documents (next phase). The document list is under <strong>Documents</strong>.</p>'
-    : '<p>No dated items.</p>');
+  $('daySchedule').innerHTML = html || (state.reading
+    ? '<p class="empty">Still reading this event\'s documents; dates and times appear here when it\'s done.</p>'
+    : '<p>No dated items found in the documents.</p>');
   setStatus(`Timeline: ${dates.length} dates, ${report.timeline.length} items.`);
 }

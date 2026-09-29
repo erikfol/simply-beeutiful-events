@@ -17,7 +17,7 @@ export function downloadJSON(data, filename) {
   a.click();
 }
 
-const SECTIONS = ['timelineSection', 'statusSection', 'docsSection'];
+const SECTIONS = ['overviewSection', 'timelineSection', 'statusSection', 'docsSection'];
 
 // Show one view (or none) and hide the others.
 export function showSection(id) {

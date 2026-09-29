@@ -7,6 +7,7 @@ import { openGenerator, openAddDay, openShift, closePanel, onPanelSubmit, onPane
 import { buildPrintSheet, printTimeline } from './print.js';
 import { showStatus, onStatusChange, onStatusClick, saveStatus, revertStatus, exportStatus } from './status.js';
 import { showDocuments } from './docs.js';
+import { showOverview, renderOverview, onOverviewClick, onOverviewSubmit } from './overview.js';
 import { initDriveBar } from './drivebar.js';
 import { ROLES } from './roles.js';
 import { esc } from './util.js';
@@ -24,10 +25,19 @@ function renderPicker(selectedId) {
   return sel.value;
 }
 
-function openEvent(id) {
+// Opening an event shows its Overview (the event hub).
+async function openEvent(id) {
   closePanel();
   $('eventSelect').value = id;
-  return loadEvent(id);
+  if (await loadEvent(id)) showOverview();
+}
+
+// Documents finished reading or a correction was saved: redraw whichever view is open.
+function refreshVisible() {
+  if (!$('overviewSection').hidden) renderOverview();
+  else if (!$('timelineSection').hidden) showTimeline();
+  else if (!$('statusSection').hidden) showStatus();
+  else if (!$('docsSection').hidden) showDocuments();
 }
 
 // Called by the Google bar with the events found in Drive ([] after sign-out).
@@ -47,7 +57,7 @@ function onDriveEvents(events, openFirst) {
 async function init() {
   await loadEventList();
   const first = renderPicker(state.eventList[0] && state.eventList[0].id);
-  if (first) await loadEvent(first);
+  if (first) await openEvent(first);
   $('eventSelect').addEventListener('change', (e) => openEvent(e.target.value));
 
   const view = $('viewRole');
@@ -55,6 +65,7 @@ async function init() {
   view.addEventListener('change', () => { state.viewRole = view.value; if (state.currentCurated) renderCurated(); });
 
   const on = (id, evt, fn) => $(id).addEventListener(evt, fn);
+  on('btnOverview', 'click', showOverview);
   on('btnTimeline', 'click', showTimeline);
   on('btnStatus', 'click', showStatus);
   on('btnDocs', 'click', showDocuments);
@@ -75,6 +86,10 @@ async function init() {
   on('statusSection', 'click', onStatusClick);
   on('curated', 'click', onCuratedClick);
   on('curated', 'submit', onCuratedSubmit);
+  on('overviewSection', 'click', onOverviewClick);
+  on('overviewSection', 'submit', onOverviewSubmit);
+  window.addEventListener('sbe:report-updated', refreshVisible);
+  window.addEventListener('sbe:reading', () => { if (!$('overviewSection').hidden) renderOverview(); else if (!$('docsSection').hidden) showDocuments(); });
   // Ctrl+P prints the same branded sheet as the button
   window.addEventListener('beforeprint', buildPrintSheet);
 

@@ -1,4 +1,4 @@
-# SBE Event Manager (v0.5)
+# SBE Event Manager (v0.6)
 
 Live app: https://erikfol.github.io/simply-beeutiful-events/
 
@@ -11,7 +11,8 @@ When Google sign-in is set up (see [`../GOOGLE_SETUP.md`](../GOOGLE_SETUP.md)), 
 - Choose the SBE events folder once (search by name or paste its Drive link). Every subfolder whose name starts with a date (`6.12.27 Harper-Bennett Wedding`) becomes an event under **Google Drive** in the dropdown; other folders are skipped and listed.
 - **Documents** lists the event's files, grouped by kind, with links that open them in Drive.
 - Timelines and vendor statuses **save to an "SBE App Data" folder in the signed-in person's Drive** (`event-<folder id>.timeline.json`, `.status.json`, plus `settings.json` and `templates.json`). Unsaved edits are kept in the browser until saved.
-- The app only reads the event documents; it never changes them. Reading budgets, vendor lists and dates out of the documents is the next phase.
+- The app only reads the event documents; it never changes them.
+- **Reading documents** happens in the browser: Google Docs and Sheets are exported by Drive; PDFs, Word and Excel files are opened with pdf.js, mammoth and SheetJS (copied into `vendor/`). Nothing is sent anywhere else. Results are cached per file in `event-<id>.reading.json`, so only new or changed files are read again. **Scanned PDFs and old Word (.doc) files** are uploaded as a temporary Google Doc inside "SBE App Data" so Google Drive converts them (text recognition for scans); the text is read and the copy deleted, and the original is never touched. Files that still can't be read, and unfamiliar budget layouts, go on a **Needs a look** list.
 - Who may sign in is controlled in Google Cloud (test users). With `GOOGLE_CLIENT_ID` empty in `js/config.js`, the bar is hidden.
 
 ## Demo data vs. real events
@@ -26,6 +27,7 @@ Real client events never get published: `.gitignore` excludes everything in `rep
 - Scanner extracts dates, times (4pm, 6:00 PM – 9:00 PM, 6-10pm), budget totals, vendors.
 
 ## Views
+- **Overview** (opens first): **event details** (couple, venue, wedding date, guest count, getting ready, hotel / room block, other days, notes; guessed from labels in the documents such as "Clients:" or "Purchaser:", the vendor list and the run sheet, each with its source; **Edit details** overrides any guess and is saved with the event), at a glance (days to go, still owed, next up, documents read), **payments and deadlines** found in the documents plus due dates from Status Update, budget, a **vendors and contacts table** (vendor sheet rows first, with emails and phones from their contracts merged in; other vendors found in documents after; each with its source), and a *Needs a look* list. Every fact links to its document. **Looks right / Fix / Ignore** save a correction (Drive: `event-<id>.corrections.json`; demo: this browser) that sticks when documents are read again.
 - **Create Timeline**: Knot-style run sheet plus document evidence below.
   - **Generate draft**: a short questionnaire (ceremony time, traditional / first look / elopement, hair & makeup headcount, cocktail and reception length, shuttles, sunset, which moments to include) builds a full wedding day. Generated stops are marked *estimated*.
   - **Add day**: blank, a built-in template (rehearsal + dinner, welcome party, farewell brunch), or one of your saved templates. **Save as template** on any day reuses it for other events.
@@ -54,6 +56,11 @@ Plain ES modules, no build step. `index.html` loads `js/main.js`.
 | `js/state.js` | Shared app state (current event, report, timeline, statuses, view) |
 | `js/events.js` | Loads `reports/index.json`, `local-index.json`, and one event (from reports or from Google Drive) |
 | `js/drivebar.js` | Google bar: sign in, choose the events folder, refresh, sign out |
+| `js/overview.js` | Overview (event hub): payments and deadlines with corrections, budget, vendors, needs a look |
+| `js/scan.js` | Pure document-reading rules (port of `tools/scan_event.py`) + payments, deadlines, contacts, report building (tested for parity with Python) |
+| `js/extract.js` | Text and spreadsheet rows from one Drive file (Docs/Sheets export, PDF, Word, Excel, text) |
+| `js/reader.js` | Reads an event's new or changed files (4 at a time) and caches results in "SBE App Data" |
+| `js/corrections.js` | Stores planner corrections (Drive or browser) |
 | `js/docs.js` | Documents view |
 | `js/google.js` | Google sign-in (Google Identity Services); token kept in memory |
 | `js/drive.js` | Minimal Google Drive REST client; swappable transport for tests |
@@ -71,7 +78,7 @@ Plain ES modules, no build step. `index.html` loads `js/main.js`.
 | `js/util.js` | Pure helpers: formatting, time parsing (tested) |
 | `js/dom.js`, `js/storage.js` | DOM helpers; browser-saved edits and saved templates |
 
-Keep anything without DOM access in the pure files so `npm test` can cover it. `tests/js/fakeDrive.js` is an in-memory Google Drive used by the Drive tests.
+Keep anything without DOM access in the pure files so `npm test` can cover it. Third-party libraries live in `vendor/` (see `vendor/README.md`); when a scanning rule changes, bump `SCANNER_VERSION` in `js/scan.js` so cached results are re-read. `tests/js/fakeDrive.js` is an in-memory Google Drive used by the Drive tests.
 
 ## Local development
 From the repo root: `python -m http.server`, then open http://localhost:8000/docs/. Modules don't load from `file://`.

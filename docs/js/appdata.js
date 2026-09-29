@@ -45,5 +45,8 @@ export async function writeData(name, data) {
   return created;
 }
 
+// The "SBE App Data" folder id, creating it if needed (e.g. for temporary converted copies).
+export const appFolderId = () => appFolder({ create: true });
+
 export const readEventData = (driveId, kind) => readData(appDataName(driveId, kind));
 export const writeEventData = (driveId, kind, data) => writeData(appDataName(driveId, kind), data);

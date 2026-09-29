@@ -3,17 +3,22 @@
 
 const FOLDER = 'application/vnd.google-apps.folder';
 
-export function createFakeDrive({ me = 'planner@example.com', pageSize } = {}) {
+// convert(bytes, contentType) stands in for Google's conversion/OCR when a file is uploaded as a Google Doc.
+export function createFakeDrive({ me = 'planner@example.com', pageSize, convert = () => '' } = {}) {
   const files = new Map();
   let seq = 0;
   let expired = false;
   const calls = [];
+  const uploads = new Map(); // resumable upload id -> {meta, contentType}
+  const deleted = [];
 
   const now = () => new Date().toISOString();
-  function add({ name, mimeType = 'application/pdf', parent = 'root', owner = 'owner@example.com', content = null, modifiedTime = now(), sharedWithMe = false }) {
+  // content: string or bytes (alt=media); exports: {mimeType: string or bytes} for Google Docs/Sheets
+  function add({ name, mimeType = 'application/pdf', parent = 'root', owner = 'owner@example.com', content = null, exports = null, modifiedTime = now(), sharedWithMe = false }) {
     const id = `f${String(++seq).padStart(4, '0')}xxxxxxxx`;
     const link = mimeType === FOLDER ? `https://drive.google.com/drive/folders/${id}` : `https://drive.google.com/file/d/${id}/view`;
-    files.set(id, { id, name, mimeType, parents: [parent], owners: [owner], trashed: false, sharedWithMe, content, modifiedTime, webViewLink: link, size: content ? String(content.length) : '12345' });
+    const size = content ? String(content.byteLength ?? content.length) : '12345';
+    files.set(id, { id, name, mimeType, parents: [parent], owners: [owner], trashed: false, sharedWithMe, content, exports, modifiedTime, webViewLink: link, size });
     return id;
   }
 
@@ -42,6 +47,14 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize } = {}) {
     const u = new URL(url);
     const path = u.pathname.replace(/^\/(upload\/)?drive\/v3/, '');
     const idMatch = /^\/files\/([^/]+)$/.exec(path);
+    const exportMatch = /^\/files\/([^/]+)\/export$/.exec(path);
+
+    if (method === 'GET' && exportMatch) {
+      const f = files.get(decodeURIComponent(exportMatch[1]));
+      const out = f && f.exports && f.exports[u.searchParams.get('mimeType')];
+      if (out === undefined || out === null) return json(400, { error: { message: 'Export only supports Docs Editors files.' } });
+      return new Response(out, { status: 200 });
+    }
 
     if (method === 'GET' && path === '/about') return json(200, { user: { displayName: 'Test Planner', emailAddress: me } });
 
@@ -67,6 +80,26 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize } = {}) {
         f.content = body; f.modifiedTime = now();
         return json(200, pub(f));
       }
+      if (method === 'DELETE') {
+        if (!f.owners.includes(me)) return json(403, { error: { message: 'The user does not have sufficient permissions for this file.' } });
+        files.delete(f.id); deleted.push(f.name);
+        return new Response(null, { status: 204 });
+      }
+    }
+
+    // resumable upload, step 1: metadata -> upload URL
+    if (method === 'POST' && path === '/files' && u.searchParams.get('uploadType') === 'resumable') {
+      const uploadId = `u${uploads.size + 1}`;
+      uploads.set(uploadId, { meta: JSON.parse(body), ocr: u.searchParams.get('ocrLanguage') });
+      return new Response('', { status: 200, headers: { Location: `https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&upload_id=${uploadId}` } });
+    }
+    // resumable upload, step 2: the bytes -> the new (converted) file
+    if (method === 'PUT' && path === '/files' && uploads.has(u.searchParams.get('upload_id'))) {
+      const { meta } = uploads.get(u.searchParams.get('upload_id'));
+      const bytes = body instanceof Uint8Array ? body : new Uint8Array(body);
+      const text = meta.mimeType === 'application/vnd.google-apps.document' ? convert(bytes, meta.name) : null;
+      const id = add({ name: meta.name, mimeType: meta.mimeType, parent: meta.parents[0], owner: me, exports: text === null ? null : { 'text/plain': text } });
+      return json(200, pub(files.get(id)));
     }
 
     if (method === 'POST' && path === '/files') {
@@ -85,7 +118,7 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize } = {}) {
     return json(404, { error: { message: `Fake Drive has no handler for ${method} ${path}` } });
   }
 
-  return { transport, add, files, calls, me, expire: () => { expired = true; }, restore: () => { expired = false; } };
+  return { transport, add, files, calls, me, deleted, expire: () => { expired = true; }, restore: () => { expired = false; } };
 }
 
 // A fictional SBE Drive: an events folder owned by the business owner, shared with the planner.

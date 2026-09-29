@@ -4,7 +4,7 @@ This document captures recommended improvements for the Simply Beeutiful Events 
 
 ## Current plan and progress
 
-_Last updated September 29, 2026 (app v0.5)._
+_Last updated September 29, 2026 (app v0.6)._
 
 ### Goal
 
@@ -44,7 +44,7 @@ The four jobs:
 | 0 | Groundwork: split the app into modules, automated tests on every push, Drive naming rules | ✅ Done (commit `77c8911`) | ~1 week |
 | 1 | Timeline builder | ✅ Done, v0.4 (commit `2fee2e4`) | 3–4 weeks |
 | 2 | Google sign-in + Drive connection: events listed from the shared folder, document list with Drive links, timelines and statuses saved to the "SBE App Data" Drive folder | ✅ Done, v0.5 (commits `2f1f93d`, `e9bb522`); first real sign-in against the SBE folder worked September 29, 2026 | 2–3 weeks |
-| 3 | Reading the documents: facts with source links, "needs a look" list, planner corrections, event hub page | Planned | 2–3 weeks |
+| 3 | Reading the documents: facts with source links, "needs a look" list, planner corrections, event hub page | ✅ Built, v0.6; matches the Python scanner on the demo and on a real event | 2–3 weeks |
 | 4 | Action center: overdue / this week / next 30 days / changed in Drive, date-based checklist, done / snooze / assign | Planned | 2–3 weeks |
 | 5 | Ask SBE: search first; optional private AI chat later | Planned | 1–2 weeks |
 | $ | Billing and invoicing (client invoices, payment schedules, proposals, contracts), using HoneyBook as the reference; see below | Not scheduled | — |
@@ -83,10 +83,22 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 - The event documents are only read, never changed (checked by tests).
 - Tested with an in-memory fake Drive (`tests/js/fakeDrive.js`): 44 JavaScript tests plus a full browser run of the sign-in → folder → documents → save → expiry → sign-out → sign-in flow.
 
+**Phase 3: reading the documents (v0.6)**
+- Documents are read in the browser straight from Drive: Google Docs and Sheets (exported by Drive), PDFs (pdf.js), Word (mammoth), Excel (SheetJS). No document content is sent anywhere else; the libraries are copied into the site (`docs/vendor/`).
+- The Python scanner's rules were ported to the browser (`docs/js/scan.js`) and checked for parity: identical dated mentions, amounts, budget and vendor list on the demo event, and on a real event (18 of 18 files with dates, 44 of 44 timeline entries, budget and vendors identical).
+- **Scanned PDFs and old Word (.doc) files** are converted by Google Drive (its built-in text recognition), via a temporary copy in "SBE App Data" that is deleted after reading; originals are never touched.
+- New findings on top of the scanner: **payments** (deposit / balance with amount and due date), **deadlines** ("due", "final count", "must … by"), **contacts** (emails and phones per vendor document), and a **Needs a look** list (scanned PDFs with no text, unreadable files, unfamiliar budget layouts, impossible dates).
+- **Overview** page (the event hub) opens first: at a glance, payments and deadlines, budget, vendors and contacts, needs a look. Each fact links to its document; **Looks right / Fix / Ignore** corrections stick when documents are re-read.
+- **Event details** at the top of the Overview: couple, venue, wedding date, guest count, getting ready, hotel / room block, other days and notes, guessed from the documents with sources; **Edit details** overrides any guess.
+- **Vendors and contacts table**: vendor sheet rows first with emails and phones from their contracts merged in, then other vendors found in documents; each row links to its source.
+- Only new or changed files are read again (cached in "SBE App Data"); the event opens right away with what was already read.
+- Status Update and Create Timeline now work fully for Drive events (budget, vendors, date suggestions, conflict warnings).
+- 55 JavaScript tests plus browser runs against a simulated Drive with real PDF, Word, Excel, Google Doc/Sheet files and a scanned PDF.
+
 ### Next steps
 
-1. Check the real events in the app: skipped folders, document lists, saving a timeline to "SBE App Data".
-2. Phase 3: reading the documents (budgets, vendor lists, dates and times from contracts).
+1. Open the real events in the app and check the Overview: payments, deadlines, budget and the *Needs a look* list. Use Fix / Ignore where it read something wrong, and tell Claude about patterns it misses.
+2. Phase 4: action center across all events (overdue, this week, next 30 days, changed in Drive, date-based checklist).
 
 ### Billing and invoicing reference: HoneyBook
 
