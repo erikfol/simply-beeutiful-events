@@ -4,7 +4,7 @@ This document captures recommended improvements for the Simply Beeutiful Events 
 
 ## Current plan and progress
 
-_Last updated September 27, 2026 (app v0.4)._
+_Last updated September 29, 2026 (app v0.4)._
 
 ### Goal
 
@@ -33,8 +33,8 @@ The four jobs:
 | Build order | ✅ Timeline builder first, tested on the demo event |
 | Sending documents to AI | ✅ Not by default; Phases 1–4 use no AI |
 | Who uses it | ✅ SBE staff only |
-| Sign-in accounts | ⏳ Needed for Phase 2: which Google account owns the shared folder, and which email addresses may sign in. SBE's domain email (simplybeeutifulevents.com) runs on Stackmail, not Google Workspace, so sign-in will use an allowlist of Google accounts. |
-| Database / sign-in service | ⏳ Needed for Phase 2: Supabase recommended (free tier, keeps GitHub Pages hosting) |
+| Sign-in accounts | ✅ The SBE owner's Google account owns all the shared event folders. For now only one person signs in (the project lead's Gmail account), listed as the single approved user of the app's Google sign-in. More people can be added to that list later. |
+| Database / sign-in service | ✅ **Google-only for now, no Supabase.** Sign in with Google in the browser; read the event folders with the signed-in person's own Drive access (read-only); save the app's own data (timelines, statuses, notes) in an "SBE App Data" folder the app creates in that person's Drive, touching only files it created. Cost: $0. Revisit Supabase (free tier; $25/mo Pro for backups and no sleeping) when more people use the app or background features are needed (daily email digest, scheduled sync, server-side chat). |
 | Chatbot privacy option | ⏳ Needed for Phase 5 (options below) |
 
 ### Phases
@@ -43,14 +43,14 @@ The four jobs:
 |---|---|---|---|
 | 0 | Groundwork: split the app into modules, automated tests on every push, Drive naming rules | ✅ Done (commit `77c8911`) | ~1 week |
 | 1 | Timeline builder | ✅ Done, v0.4 (commit `2fee2e4`) | 3–4 weeks |
-| 2 | Sign-in + Google Drive connection; timelines and statuses move to a shared database | ⏳ Next; waiting on the two decisions above | 2–3 weeks |
+| 2 | Google sign-in + Drive connection: events listed from the shared folder, document list with Drive links, timelines and statuses saved to the "SBE App Data" Drive folder | ⏳ Next; decisions made, needs a one-time Google Cloud setup (free) | 2–3 weeks |
 | 3 | Reading the documents: facts with source links, "needs a look" list, planner corrections, event hub page | Planned | 2–3 weeks |
 | 4 | Action center: overdue / this week / next 30 days / changed in Drive, date-based checklist, done / snooze / assign | Planned | 2–3 weeks |
 | 5 | Ask SBE: search first; optional private AI chat later | Planned | 1–2 weeks |
 | $ | Billing and invoicing (client invoices, payment schedules, proposals, contracts), using HoneyBook as the reference; see below | Not scheduled | — |
 | + | Later, if wanted: daily email digest, client/vendor share links, wedding-day texts, time tracking, calendar (.ics) export | Not scheduled | — |
 
-Estimates assume part-time work with Claude doing most of the coding. Expected running cost: $0–25/month without AI (Supabase free tier, then $25/mo Pro for backups).
+Estimates assume part-time work with Claude doing most of the coding. Expected running cost: $0/month with the Google-only approach (no AI).
 
 ### What's done
 
@@ -76,8 +76,7 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 ### Next steps
 
 1. Try the timeline builder on the demo event and note what a planner would change.
-2. Decide the Phase 2 items: the Google account that owns the events folder, the allowed sign-in emails, and Supabase.
-3. Start Phase 2.
+2. Start Phase 2. It includes a one-time free Google Cloud registration for the app's sign-in (step-by-step guide provided), and the owner sharing the SBE events folder with the signed-in account if it isn't already.
 
 ### Billing and invoicing reference: HoneyBook
 
