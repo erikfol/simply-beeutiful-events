@@ -64,3 +64,9 @@ test('timeline stops that disagree with every document time are flagged', () => 
   assert.ok(findIssues({ timeline: report.timeline, curated: moved, vendors: [], budget: {}, weddingDate: '2027-06-12', today: '2026-09-27' })
     .some(i => /Timeline has/.test(i.msg)), 'status page shows it too');
 });
+
+test('missing-item warnings can be turned off for events whose documents are not read yet', () => {
+  const base = { timeline: [], curated: null, vendors: [], budget: {}, weddingDate: '2027-06-12', today: '2026-09-27' };
+  assert.ok(findIssues(base).some(i => i.msg.startsWith('No ')));
+  assert.equal(findIssues({ ...base, checkMissing: false }).filter(i => i.msg.startsWith('No ')).length, 0);
+});

@@ -16,3 +16,13 @@ export function downloadJSON(data, filename) {
   a.download = filename.split('/').pop();
   a.click();
 }
+
+const SECTIONS = ['timelineSection', 'statusSection', 'docsSection'];
+
+// Show one view (or none) and hide the others.
+export function showSection(id) {
+  for (const s of SECTIONS) { const el = $(s); if (el) el.hidden = s !== id; }
+}
+
+// Ask the Google bar to offer "Sign in again" (e.g. the one-hour sign-in ran out mid-session).
+export function needSignIn() { window.dispatchEvent(new CustomEvent('sbe:needs-signin')); }

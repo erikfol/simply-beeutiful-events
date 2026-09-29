@@ -1,8 +1,9 @@
 // Create Timeline view: editable curated run sheet (Knot-style spine) + document evidence.
 import { state } from './state.js';
-import { $, setStatus, updateDirty, downloadJSON } from './dom.js';
+import { $, setStatus, updateDirty, downloadJSON, showSection, needSignIn } from './dom.js';
 import { persistLocal, clearLocal } from './storage.js';
-import { loadEvent } from './events.js';
+import { loadEvent, isDriveEvent } from './events.js';
+import { writeEventData } from './appdata.js';
 import { openShift, openSaveTemplate, closePanel } from './panel.js'; // circular with panel.js; only used inside handlers
 import { ROLES, rolesOf, itemInView, roleLabel } from './roles.js';
 import { docSuggestions } from './suggestions.js';
@@ -14,8 +15,7 @@ let timelineObj = null;
 
 export function showTimeline() {
   if (!state.currentReport) { setStatus('Pick an event first.'); return; }
-  $('statusSection').hidden = true;
-  $('timelineSection').hidden = false;
+  showSection('timelineSection');
   $('timelineTitle').textContent = state.currentMeta.name;
 
   // 1) Curated run sheet (preferred) — mirrors the Knot template with actual event times
@@ -155,15 +155,32 @@ export function onCuratedSubmit(ev) {
   if (moved) setStatus(`Moved ${moved} later stop${moved === 1 ? '' : 's'} by the same amount. Save to keep.`);
 }
 
-export function saveTimeline() {
+export async function saveTimeline() {
   if (!state.currentCurated) { setStatus('Nothing to save.'); return; }
+  if (isDriveEvent()) {
+    const meta = state.currentMeta;
+    const data = state.currentCurated;
+    setStatus('Saving to Google Drive…');
+    try {
+      await writeEventData(meta.driveId, 'timeline', data);
+      if (state.currentMeta !== meta) return;
+      clearLocal();
+      state.isDirty = false; updateDirty();
+      setStatus('Saved to Google Drive (SBE App Data).');
+    } catch (e) {
+      if (state.currentMeta === meta) persistLocal();
+      setStatus(`Not saved to Google Drive: ${e.message} Your changes are kept in this browser; save again once that's fixed.`);
+      if (e.name === 'NeedsSignIn') needSignIn();
+    }
+    return;
+  }
   if (!persistLocal()) { setStatus('Could not save in this browser (storage blocked) — use Export JSON.'); return; }
   state.isDirty = false; updateDirty();
   setStatus('Saved in this browser. Use Export JSON to share with others.');
 }
 
 export async function revertTimeline() {
-  if (!confirm('Discard edits and reload from file?')) return;
+  if (!confirm(isDriveEvent() ? 'Discard unsaved edits and reload the version saved in Google Drive?' : 'Discard edits and reload from file?')) return;
   clearLocal();
   state.editing = null; state.isDirty = false; updateDirty();
   await loadEvent(state.currentMeta.id);
@@ -214,6 +231,8 @@ function renderDocEvidence() {
       dayOf.map(e => `<li><strong>${e.time}</strong> — ${esc(e.snippet)} <em>[${esc(e.source)}]</em></li>`).join('') +
       `</ol></div>` + html;
   }
-  $('daySchedule').innerHTML = html || '<p>No dated items.</p>';
+  $('daySchedule').innerHTML = html || (report.source === 'drive'
+    ? '<p class="empty">Dates and times from this event\'s documents will appear here once the app reads the documents (next phase). The document list is under <strong>Documents</strong>.</p>'
+    : '<p>No dated items.</p>');
   setStatus(`Timeline: ${dates.length} dates, ${report.timeline.length} items.`);
 }

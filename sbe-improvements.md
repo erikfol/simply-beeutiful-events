@@ -4,7 +4,7 @@ This document captures recommended improvements for the Simply Beeutiful Events 
 
 ## Current plan and progress
 
-_Last updated September 29, 2026 (app v0.4)._
+_Last updated September 29, 2026 (app v0.5)._
 
 ### Goal
 
@@ -43,7 +43,7 @@ The four jobs:
 |---|---|---|---|
 | 0 | Groundwork: split the app into modules, automated tests on every push, Drive naming rules | ✅ Done (commit `77c8911`) | ~1 week |
 | 1 | Timeline builder | ✅ Done, v0.4 (commit `2fee2e4`) | 3–4 weeks |
-| 2 | Google sign-in + Drive connection: events listed from the shared folder, document list with Drive links, timelines and statuses saved to the "SBE App Data" Drive folder | ⏳ Next; decisions made, needs a one-time Google Cloud setup (free) | 2–3 weeks |
+| 2 | Google sign-in + Drive connection: events listed from the shared folder, document list with Drive links, timelines and statuses saved to the "SBE App Data" Drive folder | 🔧 Built and tested against a simulated Drive (v0.5); waiting on the Google Cloud setup (`GOOGLE_SETUP.md`) and a first real sign-in | 2–3 weeks |
 | 3 | Reading the documents: facts with source links, "needs a look" list, planner corrections, event hub page | Planned | 2–3 weeks |
 | 4 | Action center: overdue / this week / next 30 days / changed in Drive, date-based checklist, done / snooze / assign | Planned | 2–3 weeks |
 | 5 | Ask SBE: search first; optional private AI chat later | Planned | 1–2 weeks |
@@ -73,10 +73,19 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 - Inline forms instead of pop-up prompts; works on phone-width screens.
 - 33 JavaScript tests and 6 Python tests.
 
+**Phase 2: Google Drive connection (v0.5, awaiting real sign-in)**
+- **Sign in with Google** bar (hidden until a Client ID is configured); only Google Cloud test users can sign in.
+- Choose the SBE events folder by name or pasted link; dated subfolders become events (upcoming first); undated folders are skipped and listed.
+- **Documents** view: every file grouped by kind, with Drive links, subfolder, last-changed date and a *new* tag.
+- Timelines, vendor statuses, the chosen folder and saved templates save to an **SBE App Data** folder in the signed-in person's Drive; unsaved edits stay in the browser, including when the one-hour sign-in expires mid-session.
+- The event documents are only read, never changed (checked by tests).
+- Tested with an in-memory fake Drive (`tests/js/fakeDrive.js`): 44 JavaScript tests plus a full browser run of the sign-in → folder → documents → save → expiry → sign-out → sign-in flow.
+
 ### Next steps
 
-1. Try the timeline builder on the demo event and note what a planner would change.
-2. Start Phase 2. It includes a one-time free Google Cloud registration for the app's sign-in (step-by-step guide provided), and the owner sharing the SBE events folder with the signed-in account if it isn't already.
+1. Do the one-time Google setup in `GOOGLE_SETUP.md` and send the Client ID.
+2. First real sign-in against the SBE events folder; fix anything the real folder turns up.
+3. Then Phase 3: reading the documents.
 
 ### Billing and invoicing reference: HoneyBook
 

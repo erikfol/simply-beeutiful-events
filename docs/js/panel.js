@@ -3,6 +3,7 @@ import { state } from './state.js';
 import { $, setStatus } from './dom.js';
 import { commitEdit, ensureCurated } from './timeline.js';
 import { loadTemplates, saveTemplates } from './storage.js';
+import { saveTemplatesToDrive } from './drivebar.js';
 import {
   STYLES, EXTRAS, WEDDING_DEFAULTS, DAY_TEMPLATES, generateWeddingDay, applyTemplate, templateFromDay,
   normalizeHHMM, shiftDay, shiftFrom,
@@ -189,7 +190,7 @@ export function openSaveTemplate(dayIndex) {
   open(`Save ${esc(day.date)} as a template`, 'savetpl', `
     <input type="hidden" name="day" value="${dayIndex}" />
     <div class="fgrid">${field('t-name', 'Template name', `<input id="t-name" name="name" value="${esc(day.title)}" required />`)}</div>
-    <p class="hint">Saved in this browser. Use it from <em>Add day</em> on any event; times are kept relative to the first stop.</p>`,
+    <p class="hint">Use it from <em>Add day</em> on any event; times are kept relative to the first stop. Saved in this browser, and in Google Drive when you're signed in.</p>`,
   'Save template');
 }
 
@@ -203,6 +204,9 @@ function submitSaveTemplate(form) {
   if (!saveTemplates(list)) return fail(form, 'This browser is blocking storage, so the template could not be saved.');
   closePanel();
   setStatus(`Saved template "${name}" (${tpl.items.length} stops).`);
+  saveTemplatesToDrive(list)
+    .then(saved => { if (saved) setStatus(`Saved template "${name}" (${tpl.items.length} stops) to this browser and Google Drive.`); })
+    .catch(e => setStatus(`Saved template "${name}" in this browser, but not to Google Drive: ${e.message}`));
 }
 
 const SUBMIT = { generate: submitGenerate, addday: submitAddDay, shift: submitShift, savetpl: submitSaveTemplate };

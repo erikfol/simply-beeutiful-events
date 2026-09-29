@@ -61,9 +61,10 @@ const PLANNING_CHECKLIST = [
  * @param {object} p.budget    budget block from the report
  * @param {string|null} p.weddingDate  YYYY-MM-DD
  * @param {string} p.today     YYYY-MM-DD
+ * @param {boolean} [p.checkMissing]  warn about planning items the documents never mention (needs documents that were read)
  * @returns {Array<{level: 'high'|'warn'|'info', msg: string}>}
  */
-export function findIssues({ timeline, curated, vendors, budget, weddingDate, today }) {
+export function findIssues({ timeline, curated, vendors, budget, weddingDate, today, checkMissing = true }) {
   const issues = [];
   const dayDiff = weddingDate ? daysBetween(today, weddingDate) : null;
   const allText = [
@@ -90,7 +91,7 @@ export function findIssues({ timeline, curated, vendors, budget, weddingDate, to
   // 2b) the timeline disagrees with every document time
   issues.push(...timelineConflicts({ timeline, curated, weddingDate }));
   // 3) missing common planning items
-  for (const m of PLANNING_CHECKLIST.filter(c => !c.key.test(allText))) {
+  for (const m of checkMissing ? PLANNING_CHECKLIST.filter(c => !c.key.test(allText)) : []) {
     issues.push({ level: 'info', msg: `No <strong>${m.label}</strong> found in documents — confirm it is planned.` });
   }
   // 4) vendor due dates vs today

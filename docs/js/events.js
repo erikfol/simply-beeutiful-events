@@ -1,10 +1,15 @@
-// Event list + loading one event's report, curated timeline, and status overlay.
+// Event list + loading one event: demo/local events from reports/*.json, Drive events from Google Drive.
 import { state } from './state.js';
-import { $, setStatus, updateDirty, updateStatusDirty } from './dom.js';
+import { $, setStatus, updateDirty, updateStatusDirty, showSection, needSignIn } from './dom.js';
 import { loadLocal, loadStatusLocal } from './storage.js';
-import { enrichEvent } from './util.js';
+import { listTree } from './drive.js';
+import { readEventData } from './appdata.js';
+import { classifyFile } from './driveEvents.js';
+import { enrichEvent, esc, fmtDate } from './util.js';
 
 const DEMO_EVENT = { id: '6-12-27-harper-bennett-wedding-demo', name: '6.12.27 Harper-Bennett Wedding (Demo)', report: '6-12-27-harper-bennett-wedding-demo.json', timeline: '6-12-27-harper-bennett-wedding-demo.timeline.json', status: '6-12-27-harper-bennett-wedding-demo.status.json', weddingDate: '2027-06-12', venue: 'Willow Brook Barn, Maple Hollow, NH' };
+
+export const isDriveEvent = (meta = state.currentMeta) => !!meta && meta.source === 'drive';
 
 export async function loadEventList() {
   try {
@@ -22,53 +27,101 @@ export async function loadEventList() {
   } catch { /* not present on the published site */ }
 }
 
+// Replace the Drive events in the list (after sign-in, refresh, or sign-out).
+export function setDriveEvents(events) {
+  state.eventList = [...events, ...state.eventList.filter(e => !isDriveEvent(e))];
+}
+
+function showMeta(meta) {
+  const parts = [];
+  if (meta.venue) parts.push(esc(meta.venue));
+  parts.push(`Wedding date: ${meta.weddingDate ? esc(fmtDate(meta.weddingDate)) : 'n/a'}`);
+  if (isDriveEvent(meta) && /^https:\/\//.test(meta.webViewLink)) parts.push(`<a href="${esc(meta.webViewLink)}" target="_blank" rel="noopener">Open folder in Google Drive</a>`);
+  $('eventMeta').innerHTML = parts.join(' · ');
+}
+
+let loadSeq = 0; // a slower, earlier load must not overwrite the event picked after it
+
 export async function loadEvent(id) {
-  state.currentMeta = state.eventList.find(e => e.id === id) || state.eventList[0];
-  const meta = state.currentMeta;
+  const meta = state.eventList.find(e => e.id === id) || state.eventList[0];
   if (!meta) return;
+  const ticket = ++loadSeq;
+  state.currentMeta = meta;
+  state.isDirty = false; state.statusDirty = false; state.editing = null;
+  updateDirty(); updateStatusDirty();
+  showSection(null);
+  showMeta(meta);
   setStatus(`Loading ${meta.name}…`);
-  $('eventMeta').textContent = `${meta.venue || ''} · Wedding date: ${meta.weddingDate || 'n/a'}`;
   try {
-    const r = await fetch(`reports/${meta.report}`);
-    if (!r.ok) throw new Error(`HTTP ${r.status} — run via python -m http.server, not file://`);
-    const report = await r.json();
-    // normalize timeline events (support old + new field names)
-    report.timeline = (report.timeline || []).map(e => enrichEvent({
-      date_raw: e.date_raw || e.dateRaw, date_iso: e.date_iso || e.dateISO,
-      snippet: e.snippet || '', source: e.source || '',
-      times: e.times || [], time: e.time || null, label: e.label || ''
-    })).filter(e => e.date_iso);
-    report.timeline.sort((a, b) => (a.date_iso + (a.time || '')).localeCompare(b.date_iso + (b.time || '')));
-    state.currentReport = report;
-    // curated Knot-style timeline (per-event, with actual times) — optional
-    state.currentCurated = null;
-    state.curatedFile = meta.timeline || null;
-    state.isDirty = false; state.editing = null; updateDirty();
-    if (state.curatedFile) {
-      try {
-        const rt = await fetch(`reports/${state.curatedFile}`);
-        if (rt.ok) state.currentCurated = await rt.json();
-      } catch { /* fallback to auto timeline */ }
-      // local edits override file
-      const local = loadLocal();
-      if (local) state.currentCurated = local;
-    }
-    // contract + payment status overlay
-    state.currentStatus = null;
-    state.statusFile = meta.status || null;
-    state.statusDirty = false; updateStatusDirty();
-    if (state.statusFile) {
-      try {
-        const rs = await fetch(`reports/${state.statusFile}`);
-        if (rs.ok) state.currentStatus = await rs.json();
-      } catch { /* overlay optional */ }
-      const slocal = loadStatusLocal();
-      if (slocal) state.currentStatus = slocal;
-    }
-    setStatus(`Loaded ${meta.name}: ${report.timeline.length} dated items${state.currentCurated ? ' + curated run sheet' : ''}.`);
-    $('timelineSection').hidden = true;
-    $('statusSection').hidden = true;
+    const loaded = isDriveEvent(meta) ? await loadFromDrive(meta, ticket) : await loadFromReports(meta, ticket);
+    if (!loaded) return;
+    updateDirty(); updateStatusDirty();
+    const where = isDriveEvent(meta) ? `from Google Drive: ${state.currentReport.num_files} documents` : `${state.currentReport.timeline.length} dated items`;
+    setStatus(`Loaded ${meta.name} ${where}${state.currentCurated ? ' + run sheet' : ''}${state.isDirty ? ' (with unsaved changes from this browser)' : ''}.`);
   } catch (e) {
-    setStatus(`Load failed: ${e.message}`);
+    if (ticket !== loadSeq) return;
+    state.currentReport = null;
+    setStatus(`Could not open ${meta.name}: ${e.message}`);
+    if (e.name === 'NeedsSignIn') needSignIn();
   }
+}
+
+async function loadFromReports(meta, ticket) {
+  const r = await fetch(`reports/${meta.report}`);
+  if (!r.ok) throw new Error(`HTTP ${r.status} — run via python -m http.server, not file://`);
+  const report = await r.json();
+  // normalize timeline events (support old + new field names)
+  report.timeline = (report.timeline || []).map(e => enrichEvent({
+    date_raw: e.date_raw || e.dateRaw, date_iso: e.date_iso || e.dateISO,
+    snippet: e.snippet || '', source: e.source || '',
+    times: e.times || [], time: e.time || null, label: e.label || ''
+  })).filter(e => e.date_iso);
+  report.timeline.sort((a, b) => (a.date_iso + (a.time || '')).localeCompare(b.date_iso + (b.time || '')));
+
+  // curated Knot-style timeline (per-event, with actual times) — optional; browser edits override the file
+  let curated = null;
+  if (meta.timeline) {
+    try { const rt = await fetch(`reports/${meta.timeline}`); if (rt.ok) curated = await rt.json(); } catch { /* optional */ }
+  }
+  // contract + payment status overlay
+  let status = null;
+  if (meta.status) {
+    try { const rs = await fetch(`reports/${meta.status}`); if (rs.ok) status = await rs.json(); } catch { /* optional */ }
+  }
+  if (ticket !== loadSeq) return false;
+  state.currentReport = report;
+  state.curatedFile = meta.timeline || null;
+  state.statusFile = meta.status || null;
+  state.currentCurated = (meta.timeline && loadLocal()) || curated;
+  state.currentStatus = (meta.status && loadStatusLocal()) || status;
+  return true;
+}
+
+// Drive events: the document list comes straight from Drive; the run sheet and statuses from "SBE App Data".
+// Reading budgets, vendor lists and dates out of the documents is the next phase.
+async function loadFromDrive(meta, ticket) {
+  const [files, curated, status] = await Promise.all([
+    listTree(meta.driveId),
+    readEventData(meta.driveId, 'timeline'),
+    readEventData(meta.driveId, 'status'),
+  ]);
+  if (ticket !== loadSeq) return false;
+  const docs = files.map(f => ({
+    file: `${f.path}${f.name}`, name: f.name, path: f.path, mimeType: f.mimeType,
+    modifiedTime: f.modifiedTime, webViewLink: f.webViewLink, ...classifyFile(f.name, f.mimeType),
+  }));
+  state.currentReport = {
+    source: 'drive', timeline: [], budget: {}, files: docs, num_files: docs.length, num_text_parsed: 0,
+    vendors: { booked: [], contract_files: docs.filter(d => d.kind === 'contract').map(d => d.file) },
+  };
+  state.curatedFile = `${meta.id}.timeline.json`;
+  state.statusFile = `${meta.id}.status.json`;
+  // Edits not yet saved to Drive are kept in this browser and win until saved.
+  const draft = loadLocal();
+  const sdraft = loadStatusLocal();
+  state.currentCurated = draft || curated;
+  state.currentStatus = sdraft || status;
+  state.isDirty = !!draft;
+  state.statusDirty = !!sdraft;
+  return true;
 }

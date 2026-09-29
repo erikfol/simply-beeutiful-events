@@ -1,23 +1,54 @@
 // SBE Event Manager entry point: load the event list and wire up the controls.
 import { state } from './state.js';
 import { $ } from './dom.js';
-import { loadEventList, loadEvent } from './events.js';
+import { loadEventList, loadEvent, setDriveEvents, isDriveEvent } from './events.js';
 import { showTimeline, renderCurated, onCuratedClick, onCuratedSubmit, saveTimeline, revertTimeline, exportTimeline } from './timeline.js';
 import { openGenerator, openAddDay, openShift, closePanel, onPanelSubmit, onPanelClick, onPanelChange } from './panel.js';
 import { buildPrintSheet, printTimeline } from './print.js';
-import { showStatus, onStatusChange, saveStatus, revertStatus, exportStatus } from './status.js';
+import { showStatus, onStatusChange, onStatusClick, saveStatus, revertStatus, exportStatus } from './status.js';
+import { showDocuments } from './docs.js';
+import { initDriveBar } from './drivebar.js';
 import { ROLES } from './roles.js';
 import { esc } from './util.js';
 
+// Event dropdown: Google Drive events (when signed in) above the demo and local events.
+function renderPicker(selectedId) {
+  const sel = $('eventSelect');
+  const opt = e => `<option value="${esc(e.id)}">${esc(e.name)}</option>`;
+  const drive = state.eventList.filter(e => isDriveEvent(e));
+  const other = state.eventList.filter(e => !isDriveEvent(e));
+  sel.innerHTML = drive.length
+    ? `<optgroup label="Google Drive">${drive.map(opt).join('')}</optgroup><optgroup label="Demo and local">${other.map(opt).join('')}</optgroup>`
+    : other.map(opt).join('');
+  if (selectedId && state.eventList.some(e => e.id === selectedId)) sel.value = selectedId;
+  return sel.value;
+}
+
+function openEvent(id) {
+  closePanel();
+  $('eventSelect').value = id;
+  return loadEvent(id);
+}
+
+// Called by the Google bar with the events found in Drive ([] after sign-out).
+// openFirst: right after sign-in or choosing a folder, open the soonest upcoming event.
+function onDriveEvents(events, openFirst) {
+  const current = state.currentMeta && state.currentMeta.id;
+  setDriveEvents(events);
+  let pick;
+  if (openFirst && events.length) pick = events[0].id;
+  else if (state.eventList.some(e => e.id === current)) pick = current;
+  else pick = state.eventList[0] && state.eventList[0].id;
+  renderPicker(pick);
+  // switch events, or reload the open Drive event so new files show up
+  if (pick && (pick !== current || isDriveEvent())) openEvent(pick);
+}
+
 async function init() {
   await loadEventList();
-  const sel = $('eventSelect');
-  sel.innerHTML = state.eventList.map(e => `<option value="${esc(e.id)}">${esc(e.name)}</option>`).join('');
-  if (state.eventList.length) {
-    sel.value = state.eventList[0].id;
-    await loadEvent(sel.value);
-  }
-  sel.addEventListener('change', () => { closePanel(); loadEvent(sel.value); });
+  const first = renderPicker(state.eventList[0] && state.eventList[0].id);
+  if (first) await loadEvent(first);
+  $('eventSelect').addEventListener('change', (e) => openEvent(e.target.value));
 
   const view = $('viewRole');
   view.innerHTML = `<option value="">Full timeline</option>` + ROLES.filter(([k]) => k !== 'planner').map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join('');
@@ -26,6 +57,7 @@ async function init() {
   const on = (id, evt, fn) => $(id).addEventListener(evt, fn);
   on('btnTimeline', 'click', showTimeline);
   on('btnStatus', 'click', showStatus);
+  on('btnDocs', 'click', showDocuments);
   on('btnSave', 'click', saveTimeline);
   on('btnRevert', 'click', revertTimeline);
   on('btnExport', 'click', exportTimeline);
@@ -40,10 +72,13 @@ async function init() {
   on('btnRevertStatus', 'click', revertStatus);
   on('btnExportStatus', 'click', exportStatus);
   on('statusSection', 'change', onStatusChange);
+  on('statusSection', 'click', onStatusClick);
   on('curated', 'click', onCuratedClick);
   on('curated', 'submit', onCuratedSubmit);
   // Ctrl+P prints the same branded sheet as the button
   window.addEventListener('beforeprint', buildPrintSheet);
+
+  initDriveBar(onDriveEvents);
 }
 
 init();

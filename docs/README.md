@@ -1,10 +1,18 @@
-# SBE Event Manager (v0.4)
+# SBE Event Manager (v0.5)
 
 Live app: https://erikfol.github.io/simply-beeutiful-events/
 
 This folder is the app and the published site (GitHub Pages serves `main` → `/docs`). There is no separate copy to sync — edit files here directly.
 
 Pick an event, then Create Timeline or Status Update. All in the browser, no upload.
+
+## Google Drive events
+When Google sign-in is set up (see [`../GOOGLE_SETUP.md`](../GOOGLE_SETUP.md)), a bar above the event picker offers **Sign in with Google**:
+- Choose the SBE events folder once (search by name or paste its Drive link). Every subfolder whose name starts with a date (`6.12.27 Harper-Bennett Wedding`) becomes an event under **Google Drive** in the dropdown; other folders are skipped and listed.
+- **Documents** lists the event's files, grouped by kind, with links that open them in Drive.
+- Timelines and vendor statuses **save to an "SBE App Data" folder in the signed-in person's Drive** (`event-<folder id>.timeline.json`, `.status.json`, plus `settings.json` and `templates.json`). Unsaved edits are kept in the browser until saved.
+- The app only reads the event documents; it never changes them. Reading budgets, vendor lists and dates out of the documents is the next phase.
+- Who may sign in is controlled in Google Cloud (test users). With `GOOGLE_CLIENT_ID` empty in `js/config.js`, the bar is hidden.
 
 ## Demo data vs. real events
 The published site only contains a **fictional demo event** (Harper-Bennett, 6.12.27) — every person, vendor, and amount is made up. Its source documents live in `tests/demo_event/` and can be regenerated with `python tools/scan_event.py` (no arguments).
@@ -25,10 +33,11 @@ Real client events never get published: `.gitignore` excludes everything in `rep
   - **From the documents**: times found in the contracts that aren't on a day yet are listed under it; **Add** puts them on the timeline as *confirmed*, citing the document.
   - **Conflicts**: a warning appears when a timeline stop (ceremony, cocktail hour, reception) disagrees with every document time.
   - **Who's involved**: each stop is tagged with roles (photographer, florist, couple, …). **View as** filters to one role; **Print / PDF** prints a branded sheet of the current view (choose *Save as PDF* in the print dialog).
+- **Documents**: every file in the event, grouped (budget, vendor list, contracts and quotes, documents, photos), with type, subfolder, last-changed date, and a *new* tag for the past week.
 - **Status Update**: alert banner (over-budget, balances due, unsigned contracts, timeline conflicts), per-category budget table, editable vendor/contract/payment table, upcoming/overdue items.
 
 ## Saving
-Edits save in the viewer's browser only. Use **Export JSON** to download the file and drop it into `reports/` to keep it. For the demo event, commit + push to publish; real event files stay local.
+Google Drive events save to Google Drive (see above). Demo and local events save in the viewer's browser only; use **Export JSON** to download the file and drop it into `reports/` to keep it.
 
 ## Add a new event
 1. Add the event folder locally under `events/` (not tracked in Git).
@@ -43,7 +52,14 @@ Plain ES modules, no build step. `index.html` loads `js/main.js`.
 |---|---|
 | `js/main.js` | Entry point: loads the event list, wires up buttons |
 | `js/state.js` | Shared app state (current event, report, timeline, statuses, view) |
-| `js/events.js` | Loads `reports/index.json`, `local-index.json`, and one event's files |
+| `js/events.js` | Loads `reports/index.json`, `local-index.json`, and one event (from reports or from Google Drive) |
+| `js/drivebar.js` | Google bar: sign in, choose the events folder, refresh, sign out |
+| `js/docs.js` | Documents view |
+| `js/google.js` | Google sign-in (Google Identity Services); token kept in memory |
+| `js/drive.js` | Minimal Google Drive REST client; swappable transport for tests |
+| `js/appdata.js` | The app's own files in the "SBE App Data" Drive folder |
+| `js/driveEvents.js` | Pure: folder names → events, sorting, file kinds, folder links (tested) |
+| `js/config.js` | Google Client ID and app-data folder name |
 | `js/timeline.js` | Create Timeline view: editable run sheet, suggestions, conflicts, document evidence |
 | `js/panel.js` | Inline forms: generate draft, add day, shift times, save template |
 | `js/print.js` | Branded print / PDF sheet for the current view |
@@ -55,7 +71,7 @@ Plain ES modules, no build step. `index.html` loads `js/main.js`.
 | `js/util.js` | Pure helpers: formatting, time parsing (tested) |
 | `js/dom.js`, `js/storage.js` | DOM helpers; browser-saved edits and saved templates |
 
-Keep anything without DOM access in the pure files so `npm test` can cover it.
+Keep anything without DOM access in the pure files so `npm test` can cover it. `tests/js/fakeDrive.js` is an in-memory Google Drive used by the Drive tests.
 
 ## Local development
 From the repo root: `python -m http.server`, then open http://localhost:8000/docs/. Modules don't load from `file://`.

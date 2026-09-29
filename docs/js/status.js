@@ -1,8 +1,9 @@
 // Status Update view: countdown, validation alerts, budget table, editable vendor/contract table.
 import { state } from './state.js';
-import { $, setStatus, updateStatusDirty, downloadJSON } from './dom.js';
+import { $, setStatus, updateStatusDirty, downloadJSON, showSection, needSignIn } from './dom.js';
 import { persistStatusLocal, clearStatusLocal } from './storage.js';
-import { loadEvent } from './events.js';
+import { loadEvent, isDriveEvent } from './events.js';
+import { writeEventData } from './appdata.js';
 import { dueCategories, findIssues } from './checks.js';
 import { esc, fmtDate, fmt$, todayISO, daysBetween } from './util.js';
 
@@ -12,8 +13,7 @@ const PAYMENTS = ['Unknown', 'Not Due', 'Due', 'Partially Paid', 'Paid', 'Overdu
 export function showStatus() {
   const report = state.currentReport;
   if (!report) { setStatus('Pick an event first.'); return; }
-  $('timelineSection').hidden = true;
-  $('statusSection').hidden = false;
+  showSection('statusSection');
   $('statusTitle').textContent = state.currentMeta.name;
 
   const now = new Date();
@@ -62,6 +62,7 @@ function renderValidation(b, today) {
     budget: b,
     weddingDate: state.currentMeta.weddingDate,
     today,
+    checkMissing: state.currentReport.source !== 'drive',
   });
   const el = $('validation');
   if (!issues.length) { el.innerHTML = '<div class="alert ok">✅ Timeline looks consistent — no conflicts or missing items detected.</div>'; return; }
@@ -71,6 +72,7 @@ function renderValidation(b, today) {
 }
 
 function renderStatusDashboard(b, v, dueCats, today) {
+  const report = state.currentReport;
   renderValidation(b, today);
   // --- alerts ---
   const alerts = [];
@@ -89,6 +91,12 @@ function renderStatusDashboard(b, v, dueCats, today) {
   if (unsigned) alerts.push(`<div class="alert warn">📝 ${unsigned} vendor${unsigned === 1 ? '' : 's'} without a signed contract.</div>`);
   if (overduePay) alerts.push(`<div class="alert due">⏰ ${overduePay} vendor payment${overduePay === 1 ? '' : 's'} overdue.</div>`);
   if (unknownPay) alerts.push(`<div class="alert info">❓ ${unknownPay} vendor payment status${unknownPay === 1 ? '' : 'es'} still unknown — set them below.</div>`);
+  if (report.source === 'drive') {
+    alerts.length = 0;
+    alerts.push(`<div class="alert info">📄 Budget totals, the vendor list and due dates will be read from this event's documents in the next phase. For now, add vendors below and track their contract and payment status; it saves to Google Drive.</div>`);
+    if (unsigned) alerts.push(`<div class="alert warn">📝 ${unsigned} vendor${unsigned === 1 ? '' : 's'} without a signed contract.</div>`);
+    if (overduePay) alerts.push(`<div class="alert due">⏰ ${overduePay} vendor payment${overduePay === 1 ? '' : 's'} overdue.</div>`);
+  }
   $('alerts').innerHTML = alerts.join('');
 
   // --- budget table ---
@@ -111,14 +119,13 @@ function renderStatusDashboard(b, v, dueCats, today) {
   }
   const costOf = (n) => (booked.find(x => (x.vendor || '').toLowerCase() === (n || '').toLowerCase()) || {}).cost || '';
   $('vendorTable').innerHTML = `<table class="grid"><tr><th>Vendor</th><th>Cost</th><th>Contract</th><th>Payment</th><th>Due date</th><th>Notes</th></tr>` +
-    status.vendors.map((s, i) => `<tr><td><strong>${esc(s.name)}</strong></td><td><small>${esc(costOf(s.name) || '—')}</small></td>` +
+    status.vendors.map((s, i) => `<tr><td>${booked.some(x => (x.vendor || '').toLowerCase() === (s.name || '').toLowerCase()) ? `<strong>${esc(s.name)}</strong>` : `<input type="text" data-vrow="${i}" data-field="name" value="${esc(s.name || '')}" placeholder="Vendor name" aria-label="Vendor name" />`}</td><td><small>${esc(costOf(s.name) || '—')}</small></td>` +
       `<td><select data-vrow="${i}" data-field="contract">${CONTRACTS.map(c => `<option${c === s.contract ? ' selected' : ''}>${c}</option>`).join('')}</select></td>` +
       `<td><select data-vrow="${i}" data-field="payment">${PAYMENTS.map(c => `<option${c === s.payment ? ' selected' : ''}>${c}</option>`).join('')}</select></td>` +
       `<td><input type="date" data-vrow="${i}" data-field="dueDate" value="${esc(s.dueDate || '')}" /></td>` +
       `<td><input type="text" data-vrow="${i}" data-field="notes" value="${esc(s.notes || '')}" placeholder="notes" /></td></tr>`).join('') +
-    `</table><p class="legend">Contract: Draft / Sent / Signed / Expired / Needs Review · Payment: Not Due / Due / Partially Paid / Paid / Overdue</p>`;
+    `</table><button type="button" class="mini" data-act="addvendor">+ Add vendor</button><p class="legend">Contract: Draft / Sent / Signed / Expired / Needs Review · Payment: Not Due / Due / Partially Paid / Paid / Overdue</p>`;
 
-  const report = state.currentReport;
   $('statusCards').innerHTML = `<div class="stat"><h4>Files</h4><p>${report.num_files} files, ${report.num_text_parsed} parsed, ${report.timeline.length} dated items.<br>Contracts on file: ${(v.contract_files || []).length}</p></div>`;
 }
 
@@ -132,15 +139,42 @@ export function onStatusChange(ev) {
   state.statusDirty = true; persistStatusLocal(); updateStatusDirty();
 }
 
-export function saveStatus() {
+export function onStatusClick(ev) {
+  if (!ev.target.closest('[data-act="addvendor"]')) return;
+  if (!state.currentStatus) state.currentStatus = { updated: todayISO(), vendors: [] };
+  state.currentStatus.vendors.push({ name: '', contract: 'Unknown', payment: 'Unknown', dueDate: '', notes: '' });
+  state.statusDirty = true; persistStatusLocal(); updateStatusDirty();
+  showStatus();
+  const inputs = document.querySelectorAll('#vendorTable input[data-field="name"]');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+}
+
+export async function saveStatus() {
   if (!state.currentStatus) { setStatus('Nothing to save.'); return; }
+  if (isDriveEvent()) {
+    const meta = state.currentMeta;
+    const data = state.currentStatus;
+    setStatus('Saving statuses to Google Drive…');
+    try {
+      await writeEventData(meta.driveId, 'status', data);
+      if (state.currentMeta !== meta) return;
+      clearStatusLocal();
+      state.statusDirty = false; updateStatusDirty();
+      setStatus('Statuses saved to Google Drive (SBE App Data).');
+    } catch (e) {
+      if (state.currentMeta === meta) persistStatusLocal();
+      setStatus(`Not saved to Google Drive: ${e.message} Your changes are kept in this browser; save again once that's fixed.`);
+      if (e.name === 'NeedsSignIn') needSignIn();
+    }
+    return;
+  }
   if (!persistStatusLocal()) { setStatus('Could not save in this browser (storage blocked) — use Export JSON.'); return; }
   state.statusDirty = false; updateStatusDirty();
   setStatus('Statuses saved in this browser. Use Export JSON to share with others.');
 }
 
 export async function revertStatus() {
-  if (!confirm('Discard status edits and reload from file?')) return;
+  if (!confirm(isDriveEvent() ? 'Discard unsaved status edits and reload the version saved in Google Drive?' : 'Discard status edits and reload from file?')) return;
   clearStatusLocal();
   state.statusDirty = false; updateStatusDirty();
   await loadEvent(state.currentMeta.id);
