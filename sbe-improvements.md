@@ -127,6 +127,7 @@ Fits with the existing app: budget tracking, per-vendor contract and payment sta
 
 ## To do
 
+- [ ] **Public website (simplybeeutifulevents.com):** see the *Next steps* checklist in `WEBSITE.md` (local only, git-ignored) (WordPress access, hosting questions for the developer, Squarespace billing, Claude in Chrome setup).
 - [ ] **Purge client files from Git history.** As of September 2026 `events/` and the real reports in `docs/reports/` are untracked and git-ignored (the published site now shows a fictional demo event), but every contract, budget, photo, and generated report committed before then can still be recovered from past commits (and from any existing clone or fork). Fixing it means rewriting history with `git filter-repo --invert-paths --path events --path doc-reader/reports --path-glob 'docs/reports/6-6-26-*'` (or BFG), force-pushing `main`, and asking anyone with a clone to re-clone. Deferred for now; do it before the repo gets more collaborators or clients. Note that GitHub may still serve old commits by SHA until cached views expire; contact GitHub Support if a full purge is required.
 
 ## Critical storage and data workflow update

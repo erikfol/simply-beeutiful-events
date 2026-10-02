@@ -30,6 +30,10 @@ The site shows no events until someone signs in: all event data comes from SBE's
 
 Actual client event data should live in Google Drive rather than in Git. The `events/` directory is git-ignored: keep event folders there locally to scan them, but never commit them.
 
+## Public website
+
+The marketing site, https://www.simplybeeutifulevents.com, is a separate WordPress site and is not deployed from this repo. How it's built and how to make changes is in `WEBSITE.md`, which is kept on the maintainer's computer only (git-ignored) because it names accounts and people.
+
 ## Google Drive event folders
 
 The app will read events from SBE's shared Google Drive folder. These conventions keep that reliable; they match how folders are named today.

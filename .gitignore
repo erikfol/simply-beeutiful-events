@@ -26,3 +26,6 @@ venv/
 
 # Reports made by tools/scan_event.py stay local; events come from Google Drive after sign-in
 docs/reports/
+
+# Website notes name accounts and people; kept on this computer only
+WEBSITE.md
