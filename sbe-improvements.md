@@ -48,6 +48,7 @@ The four jobs:
 | 4 | Action center: overdue / this week / next 30 days / changed in Drive, date-based checklist, done / snooze / assign | Planned | 2–3 weeks |
 | 5 | Ask SBE: search first; optional private AI chat later | Planned | 1–2 weeks |
 | $ | Billing and invoicing (client invoices, payment schedules, proposals, contracts), using HoneyBook as the reference; see below | Not scheduled | — |
+| 📦 | Inventory and reservations: count of SBE's lendable items, and claiming items for an event date so they can't be double-booked; see *Inventory and reservations* below | Not scheduled (idea, October 9, 2026) | 1–2 weeks |
 | + | Later, if wanted: daily email digest, client/vendor share links, wedding-day texts, time tracking, calendar (.ics) export | Not scheduled | — |
 
 Estimates assume part-time work with Claude doing most of the coding. Expected running cost: $0/month with the Google-only approach (no AI).
@@ -99,6 +100,49 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 
 1. Open the real events in the app and check the Overview: payments, deadlines, budget and the *Needs a look* list. Use Fix / Ignore where it read something wrong, and tell Claude about patterns it misses.
 2. Phase 4: action center across all events (overdue, this week, next 30 days, changed in Drive, date-based checklist).
+
+### Inventory and reservations (idea, October 9, 2026)
+
+**The need:** the SBE owner has decor and equipment that clients can use or borrow for their event, such as pop-up tents, votives, candles, and artificial flowers, plus much more. Today there is no record of **how many of each item SBE owns**, and no way to **claim items for a date**. So two events on the same day could both be promised the same tents.
+
+**What it would do:**
+
+- **Inventory list:** every item with its quantity owned, plus:
+  - category (tents, candles and votives, florals, linens, signs, ...)
+  - where it's stored
+  - a photo
+  - condition
+  - notes, e.g. "2 tents have a torn side panel"
+- **Reusable vs. used up:** tents and votives come back; candles get burned. Used-up items lower the count when used, and the list flags when stock runs low (e.g. "only 30 tea lights left").
+- **Claiming (reservations):** reserve a number of an item for an event and a date range. The range runs from pickup or setup through return, plus a little time for cleaning. Partial claims work: one event claims 40 of the 60 votives, and the other 20 stay available that day.
+- **Availability check:** "what's free on June 12?" shows each item as quantity owned minus what's claimed on overlapping dates. The app **warns before a double-booking**, e.g. when only 4 tents are owned and 6 would be claimed for the same day.
+- **Statuses for a claim:** On hold → Confirmed → Out (picked up / delivered) → Returned. When returned, record any items missing or damaged, which updates the count and condition.
+- **Pull list per event:** a printable packing list of everything claimed for an event, to load the car and check items back in after.
+- **Calendar view:** what's out each week, so returns and cleaning can be planned.
+
+**Fits the app:**
+
+- The event hub (Overview) gets an **Inventory** section listing what's claimed for that event.
+- Overdue returns show in the action center (Phase 4).
+- Later, couples could see or request items in their client portal (see `CLIENT_PORTAL.md`).
+
+**Where the data lives (Google-only, $0):**
+
+- A Google Sheet, **"SBE Inventory"**, in the "SBE App Data" folder, with two tabs:
+  - **Items:** name, category, quantity owned, reusable or used up, location, condition, photo link, notes.
+  - **Reservations:** item, quantity, event, start date, end date, status, notes.
+- A Sheet means the inventory count can **start right away, on a phone, before any app work**. The app later reads it and adds the claiming, conflict warnings, and pull lists on top.
+- Inventory isn't client personal data, but reservations name events, so the Sheet stays private like the rest of "SBE App Data".
+
+**Questions to decide later:**
+
+- Is borrowing **free (included in packages) or a rental fee**? Is there a deposit, or a charge for lost or damaged items? If there are fees, this ties to billing (see HoneyBook below).
+- **Who can claim:** only SBE staff in the app, or can clients request items (approved by SBE)?
+- **Only for SBE clients, or rented to others too?**
+- How much **turnaround time** between events: same-day reuse allowed, or a day for cleaning?
+- Do individual items need tracking (e.g. tent #1 vs tent #2, because of different damage), or are counts enough? Counts are enough to start.
+
+**First step (no code):** take the inventory count into the Sheet, starting with the most-borrowed items (tents, votives, candles, florals).
 
 ### Billing and invoicing reference: HoneyBook
 
