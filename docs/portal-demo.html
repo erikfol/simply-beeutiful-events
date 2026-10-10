@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Client Portal (Demo)</title>
+  <style>
+    :root {
+      --ink: #2d2a26;
+      --cream: #faf7f2;
+      --gold: #b89b5e;
+      --gold-soft: #f2d9a4;
+      --gold-wash: #fbf4e6;
+      --text: #333;
+      --muted: #6b655c;
+      --line: #e8e1d5;
+      --ok: #4f7a52;
+      --ok-wash: #e9f2e7;
+      --warn: #a5672a;
+      --warn-wash: #fbeee0;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, Arial, sans-serif; background: var(--cream); color: var(--text); line-height: 1.45; }
+    a { color: #8a6d2f; }
+
+    .demo-banner { background: var(--gold-wash); border-bottom: 1px solid var(--gold-soft); color: var(--ink); font-size: .85rem; padding: .5rem 1rem; text-align: center; }
+    .demo-banner button { font-size: .8rem; padding: .15rem .6rem; margin-left: .4rem; background: transparent; color: #8a6d2f; border: 1px solid var(--gold); }
+
+    header { background: var(--ink); color: var(--gold-soft); padding: 1.1rem 1rem 0; }
+    .head-inner { max-width: 960px; margin: 0 auto; }
+    .brand { display: flex; align-items: center; gap: .6rem; font-size: .9rem; opacity: .9; }
+    .brand img { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,.08); padding: .15rem; object-fit: contain; }
+    .couple { margin: .8rem 0 .1rem; font-size: clamp(1.6rem, 5vw, 2.3rem); color: #fff; font-weight: 600; letter-spacing: .01em; }
+    .event-line { margin: 0; color: var(--gold-soft); font-size: .95rem; }
+
+    nav.tabs { display: flex; gap: .25rem; overflow-x: auto; margin-top: 1rem; scrollbar-width: none; }
+    nav.tabs::-webkit-scrollbar { display: none; }
+    nav.tabs button { flex: 0 0 auto; background: transparent; color: var(--gold-soft); border: none; border-bottom: 3px solid transparent; padding: .6rem .8rem; font-size: .95rem; cursor: pointer; border-radius: 0; }
+    nav.tabs button[aria-selected="true"] { color: #fff; border-bottom-color: var(--gold); }
+    nav.tabs .count { display: inline-block; background: var(--gold); color: #fff; border-radius: 10px; font-size: .72rem; padding: 0 .4rem; margin-left: .25rem; }
+
+    main { max-width: 960px; margin: 0 auto; padding: 1rem; }
+    section[role="tabpanel"] { display: grid; gap: 1rem; }
+    section[hidden] { display: none; }
+    .grid-2 { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+    .card { background: #fff; border-radius: 12px; padding: 1rem 1.1rem; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .card h2 { margin: 0 0 .6rem; font-size: 1.1rem; color: var(--ink); }
+    .card h3 { margin: 0 0 .25rem; font-size: 1rem; color: var(--ink); }
+    .muted { color: var(--muted); font-size: .88rem; }
+    .small { font-size: .85rem; }
+
+    .hero { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .stat { background: #fff; border-radius: 12px; padding: 1rem 1.1rem; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .stat .big { font-size: 2rem; font-weight: 700; color: var(--ink); line-height: 1.1; }
+    .stat .label { color: var(--muted); font-size: .85rem; }
+    .stat.next { border-left: 4px solid var(--gold); }
+
+    .update { border-top: 1px solid var(--line); padding-top: .8rem; margin-top: .8rem; }
+    .update:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+    .update .date { color: var(--muted); font-size: .82rem; }
+    .update p { margin: .3rem 0; }
+    .comments { margin-top: .5rem; display: grid; gap: .35rem; }
+    .comment { background: var(--cream); border-radius: 8px; padding: .4rem .6rem; font-size: .88rem; }
+    .comment b { color: var(--ink); }
+    .comment-form { display: flex; gap: .4rem; margin-top: .4rem; }
+    .comment-form input { flex: 1; min-width: 0; padding: .45rem .6rem; border: 1px solid var(--line); border-radius: 8px; font-size: .9rem; }
+
+    button.btn { background: var(--gold); color: #fff; border: none; border-radius: 8px; padding: .45rem .9rem; cursor: pointer; font-size: .9rem; }
+    button.btn.dark { background: var(--ink); }
+    button.link { background: none; border: none; color: #8a6d2f; cursor: pointer; padding: 0; font-size: .85rem; text-decoration: underline; }
+
+    ul.todos { list-style: none; margin: 0; padding: 0; }
+    ul.todos li { display: flex; gap: .6rem; align-items: flex-start; padding: .55rem 0; border-top: 1px solid var(--line); }
+    ul.todos li:first-child { border-top: none; }
+    ul.todos input[type="checkbox"] { width: 1.15rem; height: 1.15rem; margin-top: .15rem; accent-color: var(--gold); flex: 0 0 auto; }
+    ul.todos .what { flex: 1; }
+    ul.todos .done .what span.t { text-decoration: line-through; color: var(--muted); }
+    .due { font-size: .8rem; color: var(--muted); white-space: nowrap; }
+    .due.soon { color: var(--warn); font-weight: 600; }
+    .dot { width: .7rem; height: .7rem; border-radius: 50%; background: var(--gold-soft); margin-top: .35rem; flex: 0 0 auto; }
+    .dot.done { background: var(--ok); }
+    .progress { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin: .2rem 0 .6rem; }
+    .progress div { height: 100%; background: var(--gold); }
+
+    details.note { border-top: 1px solid var(--line); padding: .6rem 0; }
+    details.note:first-of-type { border-top: none; }
+    details.note summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+    details.note summary .muted { font-weight: 400; }
+    details.note ul { margin: .5rem 0 .2rem 1.1rem; padding: 0; }
+
+    .vendor { display: grid; gap: .15rem; padding: .7rem 0; border-top: 1px solid var(--line); }
+    .vendor:first-child { border-top: none; }
+    .vendor .role { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: #8a6d2f; }
+    .vendor .name { font-weight: 600; color: var(--ink); }
+    .contact-links { display: flex; gap: .8rem; flex-wrap: wrap; font-size: .88rem; }
+
+    .day h3 { margin-top: .2rem; }
+    .stop { display: grid; grid-template-columns: 4.6rem 1fr; gap: .6rem; padding: .45rem 0; border-top: 1px dashed var(--line); }
+    .stop:first-of-type { border-top: none; }
+    .stop .time { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .tag { display: inline-block; font-size: .72rem; border-radius: 10px; padding: 0 .45rem; margin-left: .3rem; vertical-align: middle; }
+    .tag.tbc { background: var(--warn-wash); color: var(--warn); }
+    .tag.paid { background: var(--ok-wash); color: var(--ok); }
+    .tag.due { background: var(--warn-wash); color: var(--warn); }
+
+    .file { display: flex; justify-content: space-between; gap: .6rem; align-items: center; padding: .55rem 0; border-top: 1px solid var(--line); }
+    .file:first-child { border-top: none; }
+    .file .ico { font-size: 1.2rem; margin-right: .4rem; }
+    .dropzone { border: 2px dashed var(--gold); border-radius: 12px; padding: 1.2rem; text-align: center; background: var(--gold-wash); cursor: pointer; }
+    .dropzone.over { background: #f6e7c8; }
+
+    table.pay { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    table.pay th, table.pay td { text-align: left; padding: .45rem .3rem; border-top: 1px solid var(--line); }
+    table.pay th { color: var(--muted); font-weight: 600; font-size: .8rem; border-top: none; }
+    table.pay td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+    .planner { display: flex; gap: .8rem; align-items: center; }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--gold); color: #fff; display: grid; place-items: center; font-weight: 700; flex: 0 0 auto; }
+
+    .toast { position: fixed; left: 50%; bottom: 1rem; transform: translateX(-50%); background: var(--ink); color: #fff; padding: .55rem 1rem; border-radius: 8px; font-size: .9rem; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 2rem); }
+    .toast.show { opacity: 1; }
+
+    footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 1.5rem 1rem 2rem; }
+
+    @media (max-width: 520px) {
+      main { padding: .75rem; }
+      .card { padding: .9rem; }
+      .stat .big { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-banner">
+    <strong>Demo:</strong> a mock-up of a client portal, using a made-up couple. Ticks, comments and uploads stay in this browser only.
+    <button type="button" id="resetDemo">Reset demo</button>
+  </div>
+
+  <header>
+    <div class="head-inner">
+      <div class="brand"><img src="sbe-logo.png" alt="" /> Simply Beeutiful Events</div>
+      <h1 class="couple">Olivia &amp; James</h1>
+      <p class="event-line">Saturday, June 12, 2027 · Willow Brook Barn, Maple Hollow NH</p>
+      <nav class="tabs" role="tablist" aria-label="Portal sections">
+        <button role="tab" data-tab="home">Home</button>
+        <button role="tab" data-tab="updates">Updates</button>
+        <button role="tab" data-tab="todos">To-dos <span class="count" id="todoCount"></span></button>
+        <button role="tab" data-tab="notes">Meeting notes</button>
+        <button role="tab" data-tab="vendors">Vendors &amp; contacts</button>
+        <button role="tab" data-tab="timeline">Timeline</button>
+        <button role="tab" data-tab="files">Files</button>
+        <button role="tab" data-tab="payments">Payments</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Home -->
+    <section role="tabpanel" id="tab-home">
+      <div class="hero">
+        <div class="stat"><div class="big" id="daysLeft">–</div><div class="label">days until the wedding</div></div>
+        <div class="stat next"><div class="label">Your next to-do</div><div id="nextTodo" style="font-weight:600;margin-top:.2rem"></div></div>
+        <div class="stat"><div class="label">Your to-dos done</div><div class="big" id="doneStat">–</div><div class="progress"><div id="doneBar" style="width:0"></div></div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h2>Latest update</h2>
+          <div id="latestUpdate"></div>
+          <button class="link" data-go="updates">See all updates</button>
+        </div>
+        <div class="card">
+          <h2>Your planner</h2>
+          <div class="planner">
+            <div class="avatar">SBE</div>
+            <div>
+              <div style="font-weight:600">Your SBE planner</div>
+              <div class="contact-links"><a href="#" data-demo-link>✉ Email</a><a href="#" data-demo-link>☎ (603) 555-0142</a></div>
+              <div class="muted">Replies within one business day.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Coming up</h2>
+        <ul class="todos" id="comingUp"></ul>
+      </div>
+    </section>
+
+    <!-- Updates -->
+    <section role="tabpanel" id="tab-updates" hidden>
+      <div class="card" id="updatesList"></div>
+    </section>
+
+    <!-- To-dos -->
+    <section role="tabpanel" id="tab-todos" hidden>
+      <div class="grid-2">
+        <div class="card">
+          <h2>Your to-dos</h2>
+          <p class="muted" style="margin-top:-.3rem">Tick them off as you go. Your planner sees it right away.</p>
+          <ul class="todos" id="clientTodos"></ul>
+        </div>
+        <div class="card">
+          <h2>What SBE is working on</h2>
+          <p class="muted" style="margin-top:-.3rem">So you know what's in hand.</p>
+          <ul class="todos" id="sbeTodos"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meeting notes -->
+    <section role="tabpanel" id="tab-notes" hidden>
+      <div class="card" id="notesList"></div>
+    </section>
+
+    <!-- Vendors -->
+    <section role="tabpanel" id="tab-vendors" hidden>
+      <div class="grid-2">
+        <div class="card">
+          <h2>Your vendor team</h2>
+          <div id="vendorList"></div>
+        </div>
+        <div style="display:grid;gap:1rem;align-content:start">
+          <div class="card">
+            <h2>Key places</h2>
+            <div id="placeList"></div>
+          </div>
+          <div class="card">
+            <h2>Borrowing from SBE</h2>
+            <p class="muted" style="margin-top:-.3rem">Reserved for your weekend from SBE's inventory.</p>
+            <div id="borrowList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section role="tabpanel" id="tab-timeline" hidden>
+      <div class="card">
+        <h2>Your wedding weekend</h2>
+        <p class="muted" style="margin-top:-.3rem">Draft schedule. Times marked <span class="tag tbc">being confirmed</span> may still change. Your planner will send the final version a month out.</p>
+      </div>
+      <div id="timelineDays" style="display:grid;gap:1rem"></div>
+    </section>
+
+    <!-- Files -->
+    <section role="tabpanel" id="tab-files" hidden>
+      <div class="grid-2">
+        <div class="card">
+          <h2>Shared with you</h2>
+          <div id="fileList"></div>
+        </div>
+        <div class="card">
+          <h2>Send us files</h2>
+          <label class="dropzone" id="dropzone">
+            <input type="file" id="fileInput" multiple hidden />
+            <div style="font-size:1.6rem">📎</div>
+            <div><strong>Tap to choose files</strong> or drop them here</div>
+            <div class="muted">Inspiration photos, signed forms, your guest list…</div>
+          </label>
+          <div id="uploadList" style="margin-top:.6rem"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Payments -->
+    <section role="tabpanel" id="tab-payments" hidden>
+      <div class="card">
+        <h2>Payment schedule</h2>
+        <p class="muted" style="margin-top:-.3rem">Upcoming payments to your vendors. Optional section: the planner decides whether a couple sees it.</p>
+        <div style="overflow-x:auto"><table class="pay" id="payTable"></table></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Simply Beeutiful Events · Private page for Olivia &amp; James · Made-up demo data</footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  (function () {
+    // ---- Demo data (fictional; mirrors tests/demo_event) ----------------------------
+    const WEDDING = new Date(2027, 5, 12);
+
+    const UPDATES = [
+      { id: 'u3', date: '2026-10-08', title: 'Photographer booked!',
+        body: 'Juniper Lane Photography is officially on the team, and your deposit is in. Priya will reach out in the spring to plan your shot list.' },
+      { id: 'u2', date: '2026-09-24', title: 'Venue walk-through recap',
+        body: 'Great walk-through at Willow Brook Barn. The Meadow Lawn is confirmed for the ceremony, with the barn as the rain plan. Notes are in Meeting notes.' },
+      { id: 'u1', date: '2026-09-10', title: 'Welcome to your portal',
+        body: 'This is your home base for planning. Check here for updates, your to-do list, vendor contacts and the weekend schedule.' }
+    ];
+
+    const SEED_COMMENTS = {
+      u2: [{ who: 'Olivia', text: 'Love the rain plan, thank you!' }]
+    };
+
+    const CLIENT_TODOS = [
+      { id: 'c1', text: 'Choose your invitation suite', due: '2026-09-30', done: true },
+      { id: 'c2', text: 'Send the first draft of your guest list', due: '2026-10-25' },
+      { id: 'c3', text: 'Pick a date for the hair and makeup trial', due: '2026-11-15' },
+      { id: 'c4', text: 'Book the hotel room block at Birchwood Inn', due: '2026-12-01' },
+      { id: 'c5', text: 'Mail the invitations', due: '2027-03-12' },
+      { id: 'c6', text: 'Get your marriage license', due: '2027-05-01' },
+      { id: 'c7', text: 'Final guest count and menu choices to SBE', due: '2027-05-05', note: 'The caterer needs them by May 12' },
+      { id: 'c8', text: 'Song requests for the band', due: '2027-05-12' }
+    ];
+
+    const SBE_TODOS = [
+      { text: 'Book the photographer', done: true },
+      { text: 'Floral proposal from Bluebell Blooms' },
+      { text: 'Confirm the ceremony start time with the band' },
+      { text: 'Shuttle schedule with Summit Coach Lines' },
+      { text: 'Schedule your cake tasting' },
+      { text: 'Tent and rentals order with Ridgeline' }
+    ];
+
+    const NOTES = [
+      { date: '2026-09-24', title: 'Venue walk-through, Willow Brook Barn', points: [
+        'Ceremony on the Meadow Lawn; the barn is the rain plan (decide by 10 AM on the day).',
+        'Vendors can load in from 10 AM. Amplified music must end at 10 PM (town rule).',
+        'Cocktail hour on the patio; family-style dinner in the barn for 120.',
+        'Next: the floral consult, and a cake tasting date.'
+      ]},
+      { date: '2026-08-14', title: 'Vendor shortlist call', points: [
+        'Favourites: Juniper Lane (photo), Midnight Owls (band), Bluebell Blooms (florals).',
+        'Shuttles from Birchwood Inn: two 28-seat buses.',
+        'Welcome party at Copper Kettle Brewing on Friday night, about 60 guests.'
+      ]},
+      { date: '2026-01-20', title: 'Kick-off meeting', points: [
+        'Date set: Saturday, June 12, 2027.',
+        'Style: relaxed, garden and barn, warm golds and greens.',
+        'Farewell brunch on Sunday, hosted by the Bennett family.'
+      ]}
+    ];
+
+    const VENDORS = [
+      { role: 'Venue', name: 'Willow Brook Barn', who: 'Dana Whitfield, Events Manager', email: 'events@willowbrookbarn.example.com' },
+      { role: 'Photographer', name: 'Juniper Lane Photography', who: 'Priya Nair', email: 'priya@juniperlane.example.com' },
+      { role: 'Catering', name: 'Hearth & Table Catering', who: 'Tom Alvarez', email: 'orders@hearthandtable.example.com' },
+      { role: 'Florist', name: 'Bluebell Blooms', who: 'Sadie Morgan', email: 'sadie@bluebellblooms.example.com' },
+      { role: 'Hair & makeup', name: 'Glow Studio', who: 'Alina Park', email: 'book@glowstudio.example.com' },
+      { role: 'Band', name: 'The Midnight Owls', who: 'Ben Carter', email: 'bookings@midnightowls.example.com' },
+      { role: 'Shuttles', name: 'Summit Coach Lines', who: 'Jess Romano', email: 'dispatch@summitcoach.example.com' },
+      { role: 'Tent & rentals', name: 'Ridgeline Tent & Rental', who: 'Luis Ortega', email: 'rentals@ridgelinetent.example.com' },
+      { role: 'Welcome party', name: 'Copper Kettle Brewing', who: 'Marcus Lee', email: 'hello@copperkettle.example.com' }
+    ];
+
+    const PLACES = [
+      { name: 'Willow Brook Barn', what: 'Ceremony and reception', where: 'Maple Hollow, NH' },
+      { name: 'Birchwood Inn', what: 'Getting ready (Suite 4), room block, farewell brunch', where: 'Birchwood, NH' },
+      { name: 'Copper Kettle Brewing', what: 'Friday welcome party', where: 'Pinebrook, NH' }
+    ];
+
+    const BORROWED = [
+      { item: 'Glass votives with candles', qty: 60 },
+      { item: 'Gold table numbers', qty: 14 },
+      { item: 'Welcome sign easel', qty: 1 },
+      { item: 'Pop-up tent (vendor tables)', qty: 2 }
+    ];
+
+    // Client-facing timeline: vendor-only stops (load-in, deliveries) are left out.
+    const DAYS = [
+      { date: '2027-06-11', title: 'Friday · Rehearsal & welcome party', stops: [
+        { t: '3:00 PM', what: 'Ceremony rehearsal', detail: 'Meadow Lawn, Willow Brook Barn' },
+        { t: '6:00 PM', what: 'Welcome party', detail: 'Copper Kettle Brewing, Tap Room. Taco bar, until 9 PM.' }
+      ]},
+      { date: '2027-06-12', title: 'Saturday · Wedding day', stops: [
+        { t: '9:30 AM', what: 'Hair and makeup begins', detail: 'Birchwood Inn, Suite 4. Bride + 5 attendants.' },
+        { t: '1:30 PM', what: 'Hair and makeup done', detail: '' },
+        { t: '2:00 PM', what: 'Photographer arrives', detail: 'Getting-ready photos and details' },
+        { t: '2:45 PM', what: 'First look and couple portraits', detail: '', tbc: true },
+        { t: '3:15 PM', what: 'Guest shuttles leave Birchwood Inn', detail: '' },
+        { t: '4:00 PM', what: 'Ceremony', detail: 'Meadow Lawn', tbc: true },
+        { t: '4:30 PM', what: 'Cocktail hour', detail: 'Patio. Family and wedding party photos.' },
+        { t: '5:45 PM', what: 'Grand entrance and first dance', detail: '' },
+        { t: '6:00 PM', what: 'Dinner', detail: 'Family-style, in the barn' },
+        { t: '7:30 PM', what: 'Toasts and parent dances', detail: '' },
+        { t: '8:00 PM', what: 'Cake cutting', detail: '' },
+        { t: '9:30 PM', what: 'Last dance', detail: '' },
+        { t: '10:00 PM', what: 'Music ends · first return shuttle', detail: 'Final shuttle leaves at 10:45 PM' }
+      ]},
+      { date: '2027-06-13', title: 'Sunday · Farewell brunch', stops: [
+        { t: '10:00 AM', what: 'Farewell brunch', detail: 'Birchwood Inn, hosted by the Bennett family' }
+      ]}
+    ];
+
+    const FILES = [
+      { icon: '📄', name: 'Venue agreement – Willow Brook Barn', kind: 'PDF', date: '2026-02-03' },
+      { icon: '🌸', name: 'Floral proposal – Bluebell Blooms', kind: 'PDF', date: '2026-10-02' },
+      { icon: '🗓️', name: 'Wedding weekend timeline (draft)', kind: 'PDF', date: '2026-10-05' },
+      { icon: '🍽️', name: 'Catering menu options', kind: 'Google Doc', date: '2026-09-18' }
+    ];
+
+    const PAYMENTS = [
+      { to: 'Willow Brook Barn', what: 'Deposit', amount: 4750, due: '2026-02-01', paid: true },
+      { to: 'Juniper Lane Photography', what: 'Deposit', amount: 1600, due: '2026-10-01', paid: true },
+      { to: 'Copper Kettle Brewing', what: 'Balance', amount: 900, due: '2027-05-11' },
+      { to: 'Hearth & Table Catering', what: 'Balance', amount: 4940, due: '2027-05-12' },
+      { to: 'Juniper Lane Photography', what: 'Balance', amount: 1600, due: '2027-05-28' },
+      { to: 'Willow Brook Barn', what: 'Balance', amount: 4750, due: '2027-05-28' },
+      { to: 'Glow Studio', what: 'Balance (on the day)', amount: 1150, due: '2027-06-12' }
+    ];
+
+    // ---- Local demo state (this browser only) --------------------------------------
+    const KEY = 'sbe-portal-demo-v1';
+    function load() {
+      try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
+    }
+    let state = load();
+    state.done = state.done || {};
+    state.comments = state.comments || {};
+    state.uploads = state.uploads || [];
+    function save() {
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* demo only */ }
+    }
+
+    // ---- Helpers -------------------------------------------------------------------
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const parse = (iso) => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d); };
+    const fmt = (iso, opts) => parse(iso).toLocaleDateString('en-US', opts || { month: 'short', day: 'numeric', year: 'numeric' });
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const daysUntil = (iso) => Math.round((parse(iso) - today) / 86400000);
+    const money = (n) => '$' + n.toLocaleString('en-US');
+    function toast(msg) {
+      const t = $('toast'); t.textContent = msg; t.classList.add('show');
+      clearTimeout(toast.timer); toast.timer = setTimeout(() => t.classList.remove('show'), 2600);
+    }
+    const isDone = (t) => (t.id in state.done ? state.done[t.id] : !!t.done);
+    function dueLabel(iso) {
+      const n = daysUntil(iso);
+      const soon = n >= 0 && n <= 21;
+      const txt = n < 0 ? 'Was due ' + fmt(iso) : 'Due ' + fmt(iso);
+      return '<span class="due' + (soon || n < 0 ? ' soon' : '') + '">' + txt + '</span>';
+    }
+
+    // ---- Renderers -----------------------------------------------------------------
+    function renderTodos() {
+      const open = CLIENT_TODOS.filter((t) => !isDone(t));
+      $('todoCount').textContent = open.length || '';
+      $('clientTodos').innerHTML = CLIENT_TODOS.map((t) => {
+        const d = isDone(t);
+        return '<li class="' + (d ? 'done' : '') + '"><input type="checkbox" id="td-' + t.id + '" data-todo="' + t.id + '"' + (d ? ' checked' : '') + ' />' +
+          '<label class="what" for="td-' + t.id + '"><span class="t">' + esc(t.text) + '</span>' +
+          (t.note ? '<br><span class="muted small">' + esc(t.note) + '</span>' : '') + '</label>' +
+          (d ? '<span class="tag paid">done</span>' : dueLabel(t.due)) + '</li>';
+      }).join('');
+      $('sbeTodos').innerHTML = SBE_TODOS.map((t) =>
+        '<li class="' + (t.done ? 'done' : '') + '"><span class="dot' + (t.done ? ' done' : '') + '"></span><span class="what"><span class="t">' + esc(t.text) + '</span>' +
+        (t.done ? ' <span class="tag paid">done</span>' : '') + '</span></li>').join('');
+
+      const doneN = CLIENT_TODOS.length - open.length;
+      $('doneStat').textContent = doneN + ' of ' + CLIENT_TODOS.length;
+      $('doneBar').style.width = Math.round(100 * doneN / CLIENT_TODOS.length) + '%';
+      const next = open.slice().sort((a, b) => a.due.localeCompare(b.due))[0];
+      $('nextTodo').innerHTML = next ? esc(next.text) + '<br>' + dueLabel(next.due) : 'All done 🎉';
+      $('comingUp').innerHTML = open.slice().sort((a, b) => a.due.localeCompare(b.due)).slice(0, 3).map((t) =>
+        '<li><input type="checkbox" id="cu-' + t.id + '" data-todo="' + t.id + '" /><label class="what" for="cu-' + t.id + '"><span class="t">' + esc(t.text) + '</span></label>' + dueLabel(t.due) + '</li>'
+      ).join('') || '<li class="muted">Nothing due. Enjoy the planning!</li>';
+    }
+
+    function commentsHtml(u) {
+      const list = (SEED_COMMENTS[u.id] || []).concat(state.comments[u.id] || []);
+      return '<div class="comments">' + list.map((c) => '<div class="comment"><b>' + esc(c.who) + ':</b> ' + esc(c.text) + '</div>').join('') + '</div>' +
+        '<form class="comment-form" data-update="' + u.id + '"><input type="text" placeholder="Write a comment…" aria-label="Comment" maxlength="400" /><button class="btn" type="submit">Post</button></form>';
+    }
+
+    function renderUpdates() {
+      $('updatesList').innerHTML = '<h2>Updates from your planner</h2>' + UPDATES.map((u) =>
+        '<div class="update"><div class="date">' + fmt(u.date, { weekday: 'short', month: 'long', day: 'numeric' }) + '</div><h3>' + esc(u.title) + '</h3><p>' + esc(u.body) + '</p>' + commentsHtml(u) + '</div>'
+      ).join('');
+      const u = UPDATES[0];
+      $('latestUpdate').innerHTML = '<div class="update"><div class="date">' + fmt(u.date, { month: 'long', day: 'numeric' }) + '</div><h3>' + esc(u.title) + '</h3><p>' + esc(u.body) + '</p></div>';
+    }
+
+    function renderNotes() {
+      $('notesList').innerHTML = '<h2>Meeting notes</h2>' + NOTES.map((n, i) =>
+        '<details class="note"' + (i === 0 ? ' open' : '') + '><summary>' + esc(n.title) + ' <span class="muted">· ' + fmt(n.date) + '</span></summary><ul>' +
+        n.points.map((p) => '<li>' + esc(p) + '</li>').join('') + '</ul></details>'
+      ).join('');
+    }
+
+    function renderVendors() {
+      $('vendorList').innerHTML = VENDORS.map((v) =>
+        '<div class="vendor"><span class="role">' + esc(v.role) + '</span><span class="name">' + esc(v.name) + '</span><span class="muted">' + esc(v.who) + '</span>' +
+        '<div class="contact-links"><a href="mailto:' + esc(v.email) + '">✉ ' + esc(v.email) + '</a></div></div>'
+      ).join('');
+      $('placeList').innerHTML = PLACES.map((p) =>
+        '<div class="vendor"><span class="name">' + esc(p.name) + '</span><span class="muted">' + esc(p.what) + '</span><span class="small">📍 ' + esc(p.where) + '</span></div>'
+      ).join('');
+      $('borrowList').innerHTML = BORROWED.map((b) =>
+        '<div class="file"><span>' + esc(b.item) + '</span><span class="muted">× ' + b.qty + '</span></div>'
+      ).join('');
+    }
+
+    function renderTimeline() {
+      $('timelineDays').innerHTML = DAYS.map((d) =>
+        '<div class="card day"><h3>' + esc(d.title) + '</h3><div class="muted small">' + fmt(d.date, { month: 'long', day: 'numeric', year: 'numeric' }) + '</div>' +
+        d.stops.map((s) => '<div class="stop"><span class="time">' + s.t + '</span><span><strong>' + esc(s.what) + '</strong>' +
+          (s.tbc ? '<span class="tag tbc">being confirmed</span>' : '') +
+          (s.detail ? '<br><span class="muted small">' + esc(s.detail) + '</span>' : '') + '</span></div>').join('') + '</div>'
+      ).join('');
+    }
+
+    function renderFiles() {
+      $('fileList').innerHTML = FILES.map((f) =>
+        '<div class="file"><span><span class="ico">' + f.icon + '</span>' + esc(f.name) + '<br><span class="muted small">' + f.kind + ' · added ' + fmt(f.date, { month: 'short', day: 'numeric' }) + '</span></span>' +
+        '<button class="btn dark" type="button" data-demo-link>Open</button></div>'
+      ).join('');
+      $('uploadList').innerHTML = state.uploads.length
+        ? '<div class="muted small" style="margin-bottom:.2rem">You sent:</div>' + state.uploads.map((u) =>
+            '<div class="file"><span>📎 ' + esc(u.name) + '</span><span class="muted small">' + fmt(u.date, { month: 'short', day: 'numeric' }) + '</span></div>').join('')
+        : '';
+    }
+
+    function renderPayments() {
+      const rows = PAYMENTS.slice().sort((a, b) => a.due.localeCompare(b.due));
+      const dueTotal = rows.filter((p) => !p.paid).reduce((s, p) => s + p.amount, 0);
+      $('payTable').innerHTML = '<thead><tr><th>Vendor</th><th>What</th><th>Due</th><th class="num">Amount</th><th></th></tr></thead><tbody>' +
+        rows.map((p) => '<tr><td>' + esc(p.to) + '</td><td>' + esc(p.what) + '</td><td>' + fmt(p.due) + '</td><td class="num">' + money(p.amount) + '</td><td>' +
+          (p.paid ? '<span class="tag paid">paid</span>' : '<span class="tag due">upcoming</span>') + '</td></tr>').join('') +
+        '</tbody><tfoot><tr><td colspan="3"><strong>Still to pay</strong></td><td class="num"><strong>' + money(dueTotal) + '</strong></td><td></td></tr></tfoot>';
+    }
+
+    function renderAll() {
+      const n = Math.round((WEDDING - today) / 86400000);
+      $('daysLeft').textContent = n > 0 ? n : (n === 0 ? 'Today!' : '🎉');
+      renderTodos(); renderUpdates(); renderNotes(); renderVendors(); renderTimeline(); renderFiles(); renderPayments();
+    }
+
+    // ---- Tabs ----------------------------------------------------------------------
+    const tabs = Array.from(document.querySelectorAll('nav.tabs button'));
+    function show(name) {
+      if (!document.getElementById('tab-' + name)) name = 'home';
+      tabs.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+      document.querySelectorAll('section[role="tabpanel"]').forEach((s) => { s.hidden = s.id !== 'tab-' + name; });
+      const active = tabs.find((b) => b.dataset.tab === name);
+      if (active) active.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+    tabs.forEach((b) => b.addEventListener('click', () => { history.replaceState(null, '', '#' + b.dataset.tab); show(b.dataset.tab); window.scrollTo(0, 0); }));
+    window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+
+    // ---- Actions -------------------------------------------------------------------
+    document.addEventListener('change', (e) => {
+      const id = e.target.dataset && e.target.dataset.todo;
+      if (!id) return;
+      state.done[id] = e.target.checked; save(); renderTodos();
+      toast(e.target.checked ? 'Nice! Your planner will see this is done.' : 'Marked as not done.');
+    });
+
+    document.addEventListener('submit', (e) => {
+      const form = e.target.closest('form.comment-form');
+      if (!form) return;
+      e.preventDefault();
+      const input = form.querySelector('input');
+      const text = input.value.trim();
+      if (!text) return;
+      const id = form.dataset.update;
+      (state.comments[id] = state.comments[id] || []).push({ who: 'You', text });
+      save(); renderUpdates();
+      toast('Comment posted. Your planner gets a notification.');
+    });
+
+    document.addEventListener('click', (e) => {
+      const go = e.target.closest('[data-go]');
+      if (go) { e.preventDefault(); location.hash = go.dataset.go; return; }
+      if (e.target.closest('[data-demo-link]')) { e.preventDefault(); toast('In the real portal, this opens the file or contact.'); }
+    });
+
+    function addUploads(files) {
+      const list = Array.from(files || []);
+      if (!list.length) return;
+      const now = new Date();
+      const iso = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+      list.forEach((f) => state.uploads.unshift({ name: f.name, date: iso }));
+      save(); renderFiles();
+      toast(list.length === 1 ? 'Sent! (Demo: the file stays on your device.)' : list.length + ' files sent! (Demo: they stay on your device.)');
+    }
+    $('fileInput').addEventListener('change', (e) => { addUploads(e.target.files); e.target.value = ''; });
+    const dz = $('dropzone');
+    ['dragenter', 'dragover'].forEach((ev) => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.add('over'); }));
+    ['dragleave', 'drop'].forEach((ev) => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.remove('over'); }));
+    dz.addEventListener('drop', (e) => addUploads(e.dataTransfer && e.dataTransfer.files));
+
+    $('resetDemo').addEventListener('click', () => {
+      state = { done: {}, comments: {}, uploads: [] };
+      try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ }
+      renderAll(); toast('Demo reset.');
+    });
+
+    renderAll();
+    show(location.hash.slice(1) || 'home');
+  })();
+  </script>
+</body>
+</html>
