@@ -177,6 +177,12 @@ Fits with the existing app: budget tracking, per-vendor contract and payment sta
 
 ## To do
 
+- [ ] **Finish the shared "SBE App Data" setup** (started October 12, 2026). Nicole signed in to the app with her simplybeeutifulevents account and picked an events folder, but when Erik looked in her Google Drive he couldn't find "Client Files". So it isn't confirmed that she picked the same folder Erik uses, or that "SBE App Data" was created inside it. Still to do:
+  1. Find where "Client Files" lives in her account (My Drive, *Shared with me*, or another of her Google accounts) and confirm she owns it. Right-click → *Share* shows the owner.
+  2. If she picked a different folder, she clicks **Change folder** in the app and picks "Client Files".
+  3. She shares the "SBE App Data" folder inside "Client Files" with erik.follensbee@gmail.com as **Editor**.
+  4. Erik clicks **Check again** on the Inventory page, then saves one test item with a photo. This is the first test of saving and photo uploads against real Google Drive.
+  - Note: a one-off "Failed to fetch" message right after her sign-in went away after a page refresh.
 - [ ] **Public website (simplybeeutifulevents.com):** see the *Next steps* checklist in `WEBSITE.md` (local only, git-ignored) (StackCP access from the developer, adding an `info@` email address, opening SBE's own Hostinger account and moving the draft new site into it, WordPress access, Squarespace billing, Claude in Chrome setup).
 - [ ] **Purge client files from Git history.** As of September 2026 `events/` and the real reports in `docs/reports/` are untracked and git-ignored (the published site now shows a fictional demo event), but every contract, budget, photo, and generated report committed before then can still be recovered from past commits (and from any existing clone or fork). Fixing it means rewriting history with `git filter-repo --invert-paths --path events --path doc-reader/reports --path-glob 'docs/reports/6-6-26-*'` (or BFG), force-pushing `main`, and asking anyone with a clone to re-clone. Deferred for now; do it before the repo gets more collaborators or clients. Note that GitHub may still serve old commits by SHA until cached views expire; contact GitHub Support if a full purge is required.
 
