@@ -297,6 +297,7 @@ button.inv-photo { cursor:zoom-in; background:#f3ecdc; }
 .inv-nophoto { color:#9a8d72; font-size:.85rem; font-style:italic; }
 .inv-body { padding:.5rem .6rem .2rem; display:grid; gap:.1rem; flex:1; }
 .inv-body small { color:#6b5a2e; }
+.inv-body .inv-qty { color:#555; }
 .inv-acts { display:flex; flex-wrap:wrap; gap:.3rem; align-items:center; padding:.3rem .6rem .6rem; }
 .inv-confirm { font-size:.85rem; color:#b3261e; font-weight:600; flex-basis:100%; }
 button.mini.danger { background:#b3261e; color:#fff; border-color:#b3261e; }

@@ -6,7 +6,7 @@ import { useTransport } from '../../docs/js/drive.js';
 import { forgetAppData, useEventsFolder, sharedAccess } from '../../docs/js/appdata.js';
 import {
   emptyInventory, normalizeInventory, upsertItem, removeItem, checkItem, categoryChoices, subcategoryChoices,
-  filterItems, groupByCategory, photoName, loadInventory, changeInventory, uploadPhoto, deletePhoto, photoBlob,
+  filterItems, groupByCategory, photoName, parseQuantity, loadInventory, changeInventory, uploadPhoto, deletePhoto, photoBlob,
   INVENTORY_FILE, PHOTOS_FOLDER, STARTER_CATEGORIES,
 } from '../../docs/js/inventory.js';
 
@@ -26,6 +26,7 @@ test('adding, editing and deleting items', () => {
   assert.equal(item.name, 'White linen', 'extra spaces are tidied');
   assert.ok(item.id);
   assert.deepEqual(item.photoIds, [], 'photos are optional');
+  assert.equal(item.quantity, 1, 'quantity starts at 1');
 
   inv = upsertItem(inv, { id: item.id, name: 'White linen 90x132', category: 'Linens', subcategory: 'Rectangle', photoIds: ['p1', 'p2'] }, '2026-10-13T00:00:00.000Z');
   assert.equal(inv.items.length, 1, 'edited, not duplicated');
@@ -35,15 +36,25 @@ test('adding, editing and deleting items', () => {
   assert.deepEqual(inv.items[0].photoIds, ['p1', 'p2'], 'editing without touching the photos keeps them');
   inv = upsertItem(inv, { id: item.id, name: 'White linen 90x132', photoIds: ['p2'] });
   assert.deepEqual(inv.items[0].photoIds, ['p2'], 'photos can be removed or reordered');
+  inv = upsertItem(inv, { id: item.id, name: 'White linen 90x132', quantity: '24' });
+  assert.equal(inv.items[0].quantity, 24);
+  inv = upsertItem(inv, { id: item.id, name: 'White linen 90x132' });
+  assert.equal(inv.items[0].quantity, 24, 'editing without a quantity keeps it');
 
   assert.equal(removeItem(inv, item.id).items.length, 0);
   assert.deepEqual(checkItem({ name: '  ' }), ['Give the item a name.']);
   assert.deepEqual(checkItem({ name: 'Arch' }), []);
+  assert.deepEqual(checkItem({ name: 'Arch', quantity: '2.5' }), ['Quantity must be a whole number, like 1 or 24.']);
+});
+
+test('quantity is a whole number; blank means 1', () => {
+  assert.deepEqual(['', ' 12 ', '1,200', '0', '-3', '2.5', 'abc'].map(parseQuantity), [1, 12, 1200, 0, null, null, null]);
 });
 
 test('saved data is cleaned up when read', () => {
   assert.deepEqual(normalizeInventory(null), emptyInventory());
   const inv = normalizeInventory({ items: [{ id: 'x', name: 'Arch' }, { id: 'y', name: '' }, null, { name: 'no id' }, { id: 'z', name: 'Old', photoId: 'p9' }] });
+  assert.deepEqual(inv.items.map(i => i.quantity), [1, 1], 'items saved before quantity existed count as 1');
   assert.deepEqual(inv.items.map(i => [i.id, i.category, i.photoIds]), [['x', '', []], ['z', '', ['p9']]], 'a single photo saved before several were allowed is kept');
 });
 

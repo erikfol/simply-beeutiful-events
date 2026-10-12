@@ -1,4 +1,4 @@
-// SBE's supplies inventory: items with a name, category, subcategory and photos (optional; the first is the main one).
+// SBE's supplies inventory: items with a name, category, subcategory, quantity and photos (optional; the first is the main one).
 // Saved as inventory.json in the shared "SBE App Data" folder; photos go in its "Inventory Photos" folder.
 // Each change re-reads the saved list first, so two planners editing at once don't erase each other's work.
 import { readData, writeData, appSubfolderId } from './appdata.js';
@@ -14,6 +14,14 @@ export const STARTER_CATEGORIES = [
 
 const clean = (s) => String(s ?? '').replace(/\s+/g, ' ').trim();
 
+// How many SBE owns: a whole number, 0 or more. Blank means 1; null means it isn't a valid number.
+export function parseQuantity(v) {
+  const s = clean(v).replace(/,/g, '');
+  if (!s) return 1;
+  return /^\d{1,6}$/.test(s) ? Number(s) : null;
+}
+const quantityOf = (v) => (Number.isInteger(v) && v >= 0 ? v : parseQuantity(v) ?? 1);
+
 export const emptyInventory = () => ({ updated: null, items: [] });
 
 export function normalizeInventory(data) {
@@ -21,7 +29,7 @@ export function normalizeInventory(data) {
   return {
     updated: (data && data.updated) || null,
     items: items.filter(i => i && i.id && clean(i.name)).map(i => ({
-      id: String(i.id), name: clean(i.name), category: clean(i.category), subcategory: clean(i.subcategory),
+      id: String(i.id), name: clean(i.name), category: clean(i.category), subcategory: clean(i.subcategory), quantity: quantityOf(i.quantity),
       photoIds: photoIdsOf(i), created: i.created || null, updated: i.updated || null,
     })),
   };
@@ -37,7 +45,9 @@ export const newItemId = () => `i${Date.now().toString(36)}${Math.random().toStr
 
 // Problems with a filled-in form, as messages ([] = fine to save).
 export function checkItem(fields) {
-  return clean(fields.name) ? [] : ['Give the item a name.'];
+  const problems = clean(fields.name) ? [] : ['Give the item a name.'];
+  if (parseQuantity(fields.quantity) === null) problems.push('Quantity must be a whole number, like 1 or 24.');
+  return problems;
 }
 
 // Add a new item, or change one (matched by id). Returns a new inventory; the old one is untouched.
@@ -46,6 +56,7 @@ export function upsertItem(inv, fields, now = new Date().toISOString()) {
   const item = {
     id: fields.id || newItemId(),
     name: clean(fields.name), category: clean(fields.category), subcategory: clean(fields.subcategory),
+    quantity: fields.quantity === undefined ? (existing ? existing.quantity : 1) : quantityOf(fields.quantity),
     photoIds: fields.photoIds === undefined ? (existing ? existing.photoIds : []) : [...fields.photoIds],
     created: existing ? existing.created : now, updated: now,
   };

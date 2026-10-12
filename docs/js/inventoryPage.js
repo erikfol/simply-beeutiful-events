@@ -119,7 +119,7 @@ function itemCard(i, canSave) {
     ? `<span class="inv-confirm">Delete this item?</span><button type="button" class="mini danger" data-act="delete" data-id="${esc(i.id)}">Delete</button><button type="button" class="mini" data-act="keep">Keep</button>`
     : `<button type="button" class="mini" data-act="edit" data-id="${esc(i.id)}">Edit</button><button type="button" class="mini" data-act="askdelete" data-id="${esc(i.id)}">Delete</button>`;
   return `<article class="inv-item">${photo}
-    <div class="inv-body"><strong>${esc(i.name)}</strong>${i.subcategory ? `<small>${esc(i.subcategory)}</small>` : ''}</div>
+    <div class="inv-body"><strong>${esc(i.name)}</strong>${i.subcategory ? `<small>${esc(i.subcategory)}</small>` : ''}<small class="inv-qty">Quantity: ${i.quantity}</small></div>
     ${acts ? `<div class="inv-acts">${acts}</div>` : ''}</article>`;
 }
 
@@ -127,7 +127,7 @@ function renderPanel() {
   const panel = $('invPanel');
   if (!form) { panel.hidden = true; panel.innerHTML = ''; return; }
   if (panel.dataset.formId === form.id && !panel.hidden) return; // keep what's being typed
-  const item = inv.items.find(i => i.id === form.id) || { name: '', category: '', subcategory: '' };
+  const item = inv.items.find(i => i.id === form.id) || { name: '', category: '', subcategory: '', quantity: 1 };
   panel.dataset.formId = form.id;
   panel.hidden = false;
   panel.innerHTML = `<form id="invForm" novalidate>
@@ -136,6 +136,7 @@ function renderPanel() {
       <label class="f">Name <input name="name" value="${esc(item.name)}" required autocomplete="off" placeholder="e.g. Gold mercury glass votive" /></label>
       <label class="f">Category <input name="category" value="${esc(item.category)}" list="invCatList" autocomplete="off" placeholder="e.g. Candles & votives" /></label>
       <label class="f">Subcategory <input name="subcategory" value="${esc(item.subcategory)}" list="invSubList" autocomplete="off" placeholder="e.g. Votive holders" /></label>
+      <label class="f">Quantity <input name="quantity" value="${item.quantity}" inputmode="numeric" autocomplete="off" placeholder="1" /></label>
     </div>
     <datalist id="invCatList">${categoryChoices(inv.items).map(c => `<option value="${esc(c)}"></option>`).join('')}</datalist>
     <datalist id="invSubList"></datalist>
@@ -215,9 +216,9 @@ function closeForm() {
 }
 
 async function saveForm(f) {
-  const fields = { id: form.id, name: f.elements.name.value, category: f.elements.category.value, subcategory: f.elements.subcategory.value };
+  const fields = { id: form.id, name: f.elements.name.value, category: f.elements.category.value, subcategory: f.elements.subcategory.value, quantity: f.elements.quantity.value };
   const problems = checkItem(fields);
-  if (problems.length) { showError(problems.join(' ')); f.elements.name.focus(); return; }
+  if (problems.length) { showError(problems.join(' ')); (f.elements.name.value.trim() ? f.elements.quantity : f.elements.name).focus(); return; }
   const submit = f.querySelector('button[type="submit"]');
   const target = form;
   busy = true; submit.disabled = true; showError('');
@@ -280,7 +281,7 @@ async function zoom(id, n = 0) {
   zoomed = { item, n };
   const dlg = $('invZoom');
   const many = item.photoIds.length > 1;
-  dlg.querySelector('figcaption').textContent = [item.name, item.category, item.subcategory].filter(Boolean).join(' · ') + (many ? ` (photo ${n + 1} of ${item.photoIds.length})` : '');
+  dlg.querySelector('figcaption').textContent = [item.name, item.category, item.subcategory, `Quantity: ${item.quantity}`].filter(Boolean).join(' · ') + (many ? ` (photo ${n + 1} of ${item.photoIds.length})` : '');
   for (const b of dlg.querySelectorAll('.inv-arrow')) b.hidden = !many;
   const img = dlg.querySelector('img');
   img.alt = item.name;
