@@ -139,7 +139,18 @@ export async function uploadAsGoogleDoc(name, parentId, bytes, contentType) {
   return (await request('PUT', location, { body: bytes, headers: { 'Content-Type': contentType } })).json();
 }
 
-// Only ever used on files this app created (the temporary converted copies).
+// Upload bytes as an ordinary file (inventory photos), the same two-step resumable way.
+export async function uploadFile(name, parentId, bytes, contentType) {
+  const start = await request('POST', `${UPLOAD}/files?uploadType=resumable&fields=${FILE_FIELDS}`, {
+    body: JSON.stringify({ name, mimeType: contentType, parents: [parentId] }),
+    headers: { 'Content-Type': 'application/json; charset=UTF-8', 'X-Upload-Content-Type': contentType },
+  });
+  const location = start.headers.get('Location');
+  if (!location) throw new Error('Google Drive did not accept the file.');
+  return (await request('PUT', location, { body: bytes, headers: { 'Content-Type': contentType } })).json();
+}
+
+// Only ever used on files this app created (temporary converted copies, replaced inventory photos).
 export async function deleteFile(id) {
   await request('DELETE', `${API}/files/${encodeURIComponent(id)}`);
 }

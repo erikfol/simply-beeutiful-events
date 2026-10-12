@@ -121,9 +121,9 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize, convert 
     // resumable upload, step 2: the bytes -> the new (converted) file
     if (method === 'PUT' && path === '/files' && uploads.has(u.searchParams.get('upload_id'))) {
       const { meta } = uploads.get(u.searchParams.get('upload_id'));
-      const bytes = body instanceof Uint8Array ? body : new Uint8Array(body);
+      const bytes = body instanceof Uint8Array ? body : body instanceof Blob ? new Uint8Array(await body.arrayBuffer()) : new Uint8Array(body);
       const text = meta.mimeType === 'application/vnd.google-apps.document' ? convert(bytes, meta.name) : null;
-      const id = add({ name: meta.name, mimeType: meta.mimeType, parent: meta.parents[0], owner: who, exports: text === null ? null : { 'text/plain': text } });
+      const id = add({ name: meta.name, mimeType: meta.mimeType, parent: meta.parents[0], owner: who, content: text === null ? bytes : null, exports: text === null ? null : { 'text/plain': text } });
       return json(200, pub(files.get(id)));
     }
 

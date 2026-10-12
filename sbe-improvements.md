@@ -144,6 +144,12 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 
 **First step (no code):** take the inventory count into the Sheet, starting with the most-borrowed items (tents, votives, candles, florals).
 
+**Started October 12, 2026: Inventory page** (`docs/inventory.html`, linked from the top of the Event Manager). Instead of a Sheet, the list is kept by the app:
+- Add, edit and delete items in the page: **name, category, subcategory, photo**. Categories and subcategories are typed freely with suggestions; the list is grouped by category, with search and a category filter. Click a photo to see it larger. Works on a phone (photos can be taken with the camera).
+- Needs Google sign-in. Saved as `inventory.json` in the shared "SBE App Data" folder; photos are shrunk to at most 1600 px and saved in its **"Inventory Photos"** folder. Nothing is visible on the public site without signing in.
+- Each change re-reads the saved list first, so two planners adding items at once don't erase each other's.
+- Not yet: quantity owned, reusable vs. used up, storage location, condition, notes, and the claiming/reservations above.
+
 ### Billing and invoicing reference: HoneyBook
 
 SBE will use **HoneyBook** (https://www.honeybook.com/) as the reference for billing, invoicing, and related features, the way Timeline Genius is the reference for timelines. Noted September 27, 2026 from HoneyBook's home page:

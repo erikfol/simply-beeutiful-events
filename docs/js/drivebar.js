@@ -23,6 +23,9 @@ let movedCount = 0;     // items moved into the shared folder at the last check 
 let eventCount = 0;
 let onEvents = () => {};
 
+// For pages that only need the shared folder (Inventory): who is signed in and whether saving works.
+export const driveStatus = () => ({ signedIn: !!user && !expired, folder, canSave: !!user && !expired && !!access && access.state === 'ready', access });
+
 export function initDriveBar(onDriveEvents) {
   onEvents = onDriveEvents;
   if (!isConfigured()) { $('driveBar').hidden = true; return; }

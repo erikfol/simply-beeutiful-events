@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SBE Inventory</title>
+  <!-- release-importmap:start -->
+  <script type="importmap">
+{
+  "imports": {
+    "./js/appdata.js": "./js/appdata.js?v=202610120813",
+    "./js/checks.js": "./js/checks.js?v=202610120813",
+    "./js/config.js": "./js/config.js?v=202610120813",
+    "./js/corrections.js": "./js/corrections.js?v=202610120813",
+    "./js/details.js": "./js/details.js?v=202610120813",
+    "./js/docs.js": "./js/docs.js?v=202610120813",
+    "./js/dom.js": "./js/dom.js?v=202610120813",
+    "./js/draft.js": "./js/draft.js?v=202610120813",
+    "./js/drive.js": "./js/drive.js?v=202610120813",
+    "./js/driveEvents.js": "./js/driveEvents.js?v=202610120813",
+    "./js/drivebar.js": "./js/drivebar.js?v=202610120813",
+    "./js/events.js": "./js/events.js?v=202610120813",
+    "./js/extract.js": "./js/extract.js?v=202610120813",
+    "./js/google.js": "./js/google.js?v=202610120813",
+    "./js/inventory.js": "./js/inventory.js?v=202610120813",
+    "./js/inventoryPage.js": "./js/inventoryPage.js?v=202610120813",
+    "./js/main.js": "./js/main.js?v=202610120813",
+    "./js/overview.js": "./js/overview.js?v=202610120813",
+    "./js/panel.js": "./js/panel.js?v=202610120813",
+    "./js/print.js": "./js/print.js?v=202610120813",
+    "./js/reader.js": "./js/reader.js?v=202610120813",
+    "./js/roles.js": "./js/roles.js?v=202610120813",
+    "./js/scan.js": "./js/scan.js?v=202610120813",
+    "./js/state.js": "./js/state.js?v=202610120813",
+    "./js/status.js": "./js/status.js?v=202610120813",
+    "./js/storage.js": "./js/storage.js?v=202610120813",
+    "./js/suggestions.js": "./js/suggestions.js?v=202610120813",
+    "./js/timeline.js": "./js/timeline.js?v=202610120813",
+    "./js/util.js": "./js/util.js?v=202610120813"
+  }
+}
+  </script>
+  <!-- release-importmap:end -->
+  <link rel="stylesheet" href="styles.css?v=202610120813" />
+</head>
+<body>
+  <header>
+    <a class="navlink" href="./">← Event Manager</a>
+    <span class="version">v0.6</span>
+    <div class="brand-row">
+      <img src="sbe-logo.png" alt="Simply Beeutiful Events logo" class="brand-logo" />
+      <div>
+        <h1>Simply Beeutiful Events</h1>
+        <p>Inventory</p>
+      </div>
+    </div>
+    <p class="tagline">Every decor and supply item SBE owns, with a photo.</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <div id="driveBar" class="drivebar" hidden></div>
+      <div id="invTools" class="row toolbar inv-tools" hidden>
+        <button id="btnAddItem" class="primary">+ Add item</button>
+        <input id="invSearch" type="search" placeholder="Search items" aria-label="Search items" />
+        <select id="invCategory" aria-label="Category"></select>
+        <span id="invCount"></span>
+      </div>
+      <div id="invPanel" class="panel" hidden></div>
+      <div class="row"><span id="status"></span></div>
+      <div id="invList"></div>
+    </section>
+  </main>
+
+  <dialog id="invZoom" class="inv-zoom">
+    <figure><img alt="" /><figcaption></figcaption></figure>
+    <p class="hint">Click anywhere to close.</p>
+  </dialog>
+
+  <footer>
+    <small>Sign in with Google to see the inventory · Items and photos are saved privately in the shared “SBE App Data” folder</small>
+  </footer>
+
+  <script type="module" src="js/inventoryPage.js?v=202610120813"></script>
+</body>
+</html>

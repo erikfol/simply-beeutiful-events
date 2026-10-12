@@ -31,16 +31,17 @@ let eventsFolderId = null;
 let sharedId = null;
 let sharedCreating = null;
 const fileIds = new Map(); // "<folder>/<name>" -> Drive file id, so saves update instead of duplicating
+const subfolders = new Map(); // name -> pending folder id inside the shared folder (e.g. "Inventory Photos")
 
 export function forgetAppData() {
   personalId = null; personalCreating = null;
   eventsFolderId = null; sharedId = null; sharedCreating = null;
-  fileIds.clear();
+  fileIds.clear(); subfolders.clear();
 }
 
 // Everything shared is stored next to the events: call when an events folder is chosen.
 export function useEventsFolder(id) {
-  if (id !== eventsFolderId) { eventsFolderId = id; sharedId = null; sharedCreating = null; fileIds.clear(); }
+  if (id !== eventsFolderId) { eventsFolderId = id; sharedId = null; sharedCreating = null; fileIds.clear(); subfolders.clear(); }
 }
 
 async function sharedFolder({ create }) {
@@ -117,6 +118,20 @@ export async function appFolderId() {
   const id = await sharedFolder({ create: false });
   if (!id) throw new Error('The shared "SBE App Data" folder isn\'t set up yet, so scanned files can\'t be converted.');
   return id;
+}
+
+// A folder inside the shared folder (created on first use), e.g. "Inventory Photos".
+export function appSubfolderId(name) {
+  if (!subfolders.has(name)) {
+    const pending = (async () => {
+      const parent = await appFolderId();
+      const found = await listFiles(`name = ${quote(name)} and mimeType = ${quote(FOLDER_MIME)} and ${quote(parent)} in parents and trashed = false`, { orderBy: 'createdTime' });
+      return found.length ? found[0].id : (await createFolder(name, parent)).id;
+    })();
+    pending.catch(() => subfolders.delete(name)); // try again next time
+    subfolders.set(name, pending);
+  }
+  return subfolders.get(name);
 }
 
 export const readEventData = (driveId, kind) => readData(appDataName(driveId, kind));
