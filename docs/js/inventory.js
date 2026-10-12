@@ -1,4 +1,4 @@
-// SBE's supplies inventory: items with a name, category, subcategory and photo.
+// SBE's supplies inventory: items with a name, category, subcategory and photos (optional; the first is the main one).
 // Saved as inventory.json in the shared "SBE App Data" folder; photos go in its "Inventory Photos" folder.
 // Each change re-reads the saved list first, so two planners editing at once don't erase each other's work.
 import { readData, writeData, appSubfolderId } from './appdata.js';
@@ -22,9 +22,15 @@ export function normalizeInventory(data) {
     updated: (data && data.updated) || null,
     items: items.filter(i => i && i.id && clean(i.name)).map(i => ({
       id: String(i.id), name: clean(i.name), category: clean(i.category), subcategory: clean(i.subcategory),
-      photoId: i.photoId || null, created: i.created || null, updated: i.updated || null,
+      photoIds: photoIdsOf(i), created: i.created || null, updated: i.updated || null,
     })),
   };
+}
+
+// Photo ids of a saved item; items saved before several photos were allowed had one "photoId".
+function photoIdsOf(i) {
+  if (Array.isArray(i.photoIds)) return i.photoIds.filter(Boolean).map(String);
+  return i.photoId ? [String(i.photoId)] : [];
 }
 
 export const newItemId = () => `i${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
@@ -40,7 +46,7 @@ export function upsertItem(inv, fields, now = new Date().toISOString()) {
   const item = {
     id: fields.id || newItemId(),
     name: clean(fields.name), category: clean(fields.category), subcategory: clean(fields.subcategory),
-    photoId: fields.photoId === undefined ? (existing ? existing.photoId : null) : fields.photoId,
+    photoIds: fields.photoIds === undefined ? (existing ? existing.photoIds : []) : [...fields.photoIds],
     created: existing ? existing.created : now, updated: now,
   };
   const items = existing ? inv.items.map(i => (i.id === item.id ? item : i)) : [...inv.items, item];
@@ -91,10 +97,10 @@ export function groupByCategory(items) {
   return [...groups.values()].sort((a, b) => (!a.category) - (!b.category) || byName(a.category, b.category));
 }
 
-// File name for a photo in Drive, readable when browsing the folder: "white-votive-holder-i1ab2c.jpg".
-export function photoName(item, ext = 'jpg') {
+// File name for a photo in Drive, readable when browsing the folder: "white-votive-holder-i1ab2c-2.jpg".
+export function photoName(item, n = 1, ext = 'jpg') {
   const slug = item.name.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 50) || 'item';
-  return `${slug}-${item.id}.${ext}`;
+  return `${slug}-${item.id}-${n}.${ext}`;
 }
 
 // ---------- saving to Drive ----------
@@ -110,8 +116,8 @@ export async function changeInventory(change) {
   return next;
 }
 
-export async function uploadPhoto(item, blob) {
-  const file = await uploadFile(photoName(item), await appSubfolderId(PHOTOS_FOLDER), blob, blob.type || 'image/jpeg');
+export async function uploadPhoto(item, blob, n = 1) {
+  const file = await uploadFile(photoName(item, n), await appSubfolderId(PHOTOS_FOLDER), blob, blob.type || 'image/jpeg');
   return file.id;
 }
 

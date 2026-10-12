@@ -13,7 +13,9 @@ let inv = emptyInventory();
 let loaded = false;
 let busy = false;
 let filter = { text: '', category: '' };
-let form = null;       // the open add/edit form: {id, isNew, photoId, newPhoto: Blob|null, removePhoto}
+// The open add/edit form: photos in order (first = main), each {id} (saved in Drive) or {blob, url} (new);
+// removed = saved photo ids to delete once the item is saved; pending = photos still being prepared.
+let form = null;
 let confirmId = null;  // item waiting for "Delete?" confirmation
 const photoUrls = new Map(); // Drive photo id -> Promise<object URL>
 let observer = null;
@@ -109,8 +111,9 @@ function render() {
 }
 
 function itemCard(i, canSave) {
-  const photo = i.photoId
-    ? `<button type="button" class="inv-photo" data-act="zoom" data-id="${esc(i.id)}" data-photo="${esc(i.photoId)}" data-alt="${esc(i.name)}" aria-label="Show a larger photo of ${esc(i.name)}"><span class="inv-nophoto">Loading photo…</span></button>`
+  const n = i.photoIds.length;
+  const photo = n
+    ? `<div class="inv-cover"><button type="button" class="inv-photo" data-act="zoom" data-id="${esc(i.id)}" data-photo="${esc(i.photoIds[0])}" data-alt="${esc(i.name)}" aria-label="Show the photos of ${esc(i.name)}"><span class="inv-nophoto">Loading photo…</span></button>${n > 1 ? `<span class="inv-count">${n} photos</span>` : ''}</div>`
     : '<div class="inv-photo"><span class="inv-nophoto">No photo</span></div>';
   const acts = !canSave ? '' : confirmId === i.id
     ? `<span class="inv-confirm">Delete this item?</span><button type="button" class="mini danger" data-act="delete" data-id="${esc(i.id)}">Delete</button><button type="button" class="mini" data-act="keep">Keep</button>`
@@ -136,18 +139,14 @@ function renderPanel() {
     </div>
     <datalist id="invCatList">${categoryChoices(inv.items).map(c => `<option value="${esc(c)}"></option>`).join('')}</datalist>
     <datalist id="invSubList"></datalist>
-    <div class="inv-photoedit">
-      <div class="inv-photo" id="invPreview"></div>
-      <div class="panel-actions">
-        <label class="btn inv-pick">Choose photo<input type="file" name="photo" accept="image/*" hidden /></label>
-        <button type="button" class="mini" data-act="removephoto">Remove photo</button>
-      </div>
-    </div>
+    <fieldset class="inv-photoedit"><legend>Photos <span class="hint">(optional · the first one shows in the list)</span></legend>
+      <div class="inv-thumbs" id="invThumbs"></div>
+    </fieldset>
     <p class="panel-error" id="invError" hidden></p>
     <div class="panel-actions"><button type="submit" class="primary">${form.isNew ? 'Add item' : 'Save changes'}</button><button type="button" data-act="cancel">Cancel</button></div>
   </form>`;
   updateSubList();
-  renderPreview();
+  renderThumbs();
 }
 
 function updateSubList() {
@@ -155,26 +154,20 @@ function updateSubList() {
   if (f) $('invSubList').innerHTML = subcategoryChoices(inv.items, f.elements.category.value).map(s => `<option value="${esc(s)}"></option>`).join('');
 }
 
-let previewUrl = null;
-function renderPreview() {
-  const el = $('invPreview');
+function renderThumbs() {
+  const el = $('invThumbs');
   if (!el) return;
-  if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = null; }
-  el.removeAttribute('data-shown');
-  el.removeAttribute('data-photo');
-  if (form.newPhoto) {
-    previewUrl = URL.createObjectURL(form.newPhoto);
-    el.innerHTML = `<img src="${esc(previewUrl)}" alt="New photo" />`;
-  } else if (form.photoId && !form.removePhoto) {
-    el.dataset.photo = form.photoId; el.dataset.alt = 'Current photo';
-    el.innerHTML = '<span class="inv-nophoto">Loading photo…</span>';
-    showPhoto(el);
-  } else {
-    el.innerHTML = '<span class="inv-nophoto">No photo</span>';
-  }
-  const removeBtn = $('invPanel').querySelector('[data-act="removephoto"]');
-  if (removeBtn) removeBtn.hidden = !form.newPhoto && (!form.photoId || form.removePhoto);
+  el.innerHTML = form.photos.map((p, n) => `<div class="inv-thumb">
+      <div class="inv-photo"${p.id ? ` data-photo="${esc(p.id)}" data-alt="Photo ${n + 1}"` : ''}>${p.url ? `<img src="${esc(p.url)}" alt="Photo ${n + 1}" />` : '<span class="inv-nophoto">Loading…</span>'}</div>
+      ${n === 0 ? '<span class="inv-main">Main photo</span>' : `<button type="button" class="mini" data-act="mainphoto" data-n="${n}">Make main</button>`}
+      <button type="button" class="mini" data-act="removephoto" data-n="${n}" aria-label="Remove photo ${n + 1}">Remove</button>
+    </div>`).join('')
+    + (form.pending ? `<div class="inv-thumb"><div class="inv-photo"><span class="inv-nophoto">Preparing ${form.pending > 1 ? `${form.pending} photos` : 'photo'}…</span></div></div>` : '')
+    + `<label class="inv-thumb inv-add"><span>+ ${form.photos.length ? 'Add more photos' : 'Add photos'}</span><input type="file" name="photo" accept="image/*" multiple hidden /></label>`;
+  watchPhotos(el);
 }
+
+const forgetUrls = (photos) => { for (const p of photos) if (p.url) URL.revokeObjectURL(p.url); };
 
 function showError(msg) {
   const el = $('invError');
@@ -204,9 +197,10 @@ async function reload() {
 
 function openForm(id) {
   const item = id && inv.items.find(i => i.id === id);
-  form = item
-    ? { id: item.id, isNew: false, photoId: item.photoId, newPhoto: null, removePhoto: false }
-    : { id: newItemId(), isNew: true, photoId: null, newPhoto: null, removePhoto: false };
+  form = {
+    id: item ? item.id : newItemId(), isNew: !item,
+    photos: item ? item.photoIds.map(id => ({ id })) : [], removed: [], pending: 0, ready: Promise.resolve(),
+  };
   confirmId = null;
   $('invPanel').dataset.formId = '';
   render();
@@ -215,8 +209,8 @@ function openForm(id) {
 }
 
 function closeForm() {
+  if (form) forgetUrls(form.photos);
   form = null;
-  if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = null; }
   render();
 }
 
@@ -225,24 +219,31 @@ async function saveForm(f) {
   const problems = checkItem(fields);
   if (problems.length) { showError(problems.join(' ')); f.elements.name.focus(); return; }
   const submit = f.querySelector('button[type="submit"]');
+  const target = form;
   busy = true; submit.disabled = true; showError('');
-  if (form.photoPending) { setStatus('Preparing the photo…'); await form.photoPending; }
-  const { isNew, photoId: oldPhoto, newPhoto, removePhoto } = form;
-  let uploaded = null;
+  if (target.pending) { setStatus('Preparing the photos…'); await target.ready; }
+  const uploaded = [];
   try {
-    setStatus(newPhoto ? 'Uploading the photo…' : 'Saving…');
-    if (newPhoto) uploaded = await uploadPhoto({ ...fields, name: fields.name.trim() }, newPhoto);
-    const photoId = uploaded || (removePhoto ? null : oldPhoto);
+    const item = { ...fields, name: fields.name.trim() };
+    const photoIds = [];
+    const toUpload = target.photos.filter(p => !p.id).length;
+    for (const [n, p] of target.photos.entries()) {
+      if (p.id) { photoIds.push(p.id); continue; }
+      setStatus(toUpload > 1 ? `Uploading photo ${uploaded.length + 1} of ${toUpload}…` : 'Uploading the photo…');
+      const id = await uploadPhoto(item, p.blob, `${n + 1}${Date.now().toString(36).slice(-4)}`);
+      uploaded.push(id); photoIds.push(id);
+    }
     setStatus('Saving…');
     inv = await changeInventory(latest => {
-      if (!isNew && !latest.items.some(i => i.id === fields.id)) throw new Error('Someone else deleted this item while you were editing it. Close this form and add it again if it\'s still needed.');
-      return upsertItem(latest, { ...fields, photoId });
+      if (!target.isNew && !latest.items.some(i => i.id === fields.id)) throw new Error('Someone else deleted this item while you were editing it. Close this form and add it again if it\'s still needed.');
+      return upsertItem(latest, { ...fields, photoIds });
     });
-    if (oldPhoto && oldPhoto !== photoId) await deletePhoto(oldPhoto).catch(() => {}); // old photo no longer used
-    setStatus(`${isNew ? 'Added' : 'Saved'} "${fields.name.trim()}".`);
-    form = null;
+    for (const id of target.removed) await deletePhoto(id).catch(() => {}); // no longer used
+    setStatus(`${target.isNew ? 'Added' : 'Saved'} "${item.name}".`);
+    forgetUrls(target.photos);
+    if (form === target) form = null;
   } catch (e) {
-    if (uploaded) deletePhoto(uploaded).catch(() => {}); // don't leave an unused photo behind
+    for (const id of uploaded) deletePhoto(id).catch(() => {}); // don't leave unused photos behind
     if (e.name === 'NeedsSignIn') needSignIn();
     showError(e.message);
     setStatus('Not saved.');
@@ -260,7 +261,7 @@ async function deleteItem(id) {
     setStatus(`Deleting "${item.name}"…`);
     let gone = null;
     inv = await changeInventory(latest => { gone = latest.items.find(i => i.id === id); return removeItem(latest, id); });
-    if (gone && gone.photoId) await deletePhoto(gone.photoId).catch(() => {});
+    for (const photoId of (gone ? gone.photoIds : [])) await deletePhoto(photoId).catch(() => {});
     if (form && form.id === id) form = null;
     setStatus(`Deleted "${item.name}".`);
   } catch (e) {
@@ -270,14 +271,32 @@ async function deleteItem(id) {
   render();
 }
 
-async function zoom(id) {
+// The enlarged view: one photo at a time, with arrows when the item has several.
+let zoomed = null; // {item, n}
+async function zoom(id, n = 0) {
   const item = inv.items.find(i => i.id === id);
-  if (!item || !item.photoId) return;
+  if (!item || !item.photoIds.length) return;
+  n = (n + item.photoIds.length) % item.photoIds.length;
+  zoomed = { item, n };
   const dlg = $('invZoom');
-  dlg.querySelector('figcaption').textContent = [item.name, item.category, item.subcategory].filter(Boolean).join(' · ');
+  const many = item.photoIds.length > 1;
+  dlg.querySelector('figcaption').textContent = [item.name, item.category, item.subcategory].filter(Boolean).join(' · ') + (many ? ` (photo ${n + 1} of ${item.photoIds.length})` : '');
+  for (const b of dlg.querySelectorAll('.inv-arrow')) b.hidden = !many;
   const img = dlg.querySelector('img');
   img.alt = item.name;
-  try { img.src = await photoUrl(item.photoId); dlg.showModal(); } catch (e) { setStatus(e.message); }
+  try {
+    img.src = await photoUrl(item.photoIds[n]);
+    if (!dlg.open) dlg.showModal();
+  } catch (e) {
+    if (e.name === 'NeedsSignIn') needSignIn();
+    setStatus(e.message);
+  }
+}
+
+function onZoomClick(ev) {
+  const b = ev.target.closest('[data-step]');
+  if (b && zoomed) zoom(zoomed.item.id, zoomed.n + Number(b.dataset.step));
+  else $('invZoom').close();
 }
 
 function onClick(ev) {
@@ -290,26 +309,37 @@ function onClick(ev) {
   else if (act === 'delete') deleteItem(id);
   else if (act === 'zoom') zoom(id);
   else if (act === 'cancel') closeForm();
-  else if (act === 'removephoto') { form.newPhoto = null; form.removePhoto = true; renderPreview(); }
+  else if (act === 'removephoto' || act === 'mainphoto') {
+    const [p] = form.photos.splice(Number(b.dataset.n), 1);
+    if (act === 'mainphoto') form.photos.unshift(p);
+    else if (p.id) form.removed.push(p.id);
+    else if (p.url) URL.revokeObjectURL(p.url);
+    renderThumbs();
+  }
 }
 
-async function onChange(ev) {
-  if (ev.target.name === 'photo' && ev.target.files[0]) {
-    const target = form;
-    const file = ev.target.files[0];
-    ev.target.value = '';
-    showError('');
-    $('invPreview').innerHTML = '<span class="inv-nophoto">Preparing photo…</span>';
-    // Saving waits for this, so a quick tap on Add item doesn't lose a photo that's still being prepared.
-    target.photoPending = shrinkPhoto(file).then(blob => {
-      target.newPhoto = blob; target.removePhoto = false;
-    }).catch(e => {
-      if (form === target) showError(e.message);
-    }).finally(() => {
-      target.photoPending = null;
-      if (form === target) renderPreview();
-    });
-  }
+// Photos chosen in the form are shrunk one after another and added in the order picked. Saving waits for
+// them, so a quick tap on Add item doesn't lose a photo that's still being prepared.
+function onChange(ev) {
+  if (ev.target.name !== 'photo' || !ev.target.files.length) return;
+  const target = form;
+  const files = [...ev.target.files];
+  ev.target.value = '';
+  showError('');
+  target.pending += files.length;
+  target.ready = target.ready.then(async () => {
+    const failed = [];
+    for (const file of files) {
+      try {
+        const blob = await shrinkPhoto(file);
+        target.photos.push({ blob, url: URL.createObjectURL(blob) });
+      } catch { failed.push(file.name); }
+      target.pending--;
+      if (form === target) renderThumbs();
+    }
+    if (failed.length && form === target) showError(`Couldn't open ${failed.join(', ')}. Try JPG or PNG photos.`);
+  });
+  renderThumbs();
 }
 
 function init() {
@@ -322,7 +352,10 @@ function init() {
   $('invPanel').addEventListener('input', (e) => { if (e.target.name === 'category') updateSubList(); });
   $('invPanel').addEventListener('submit', (e) => { e.preventDefault(); if (!busy) saveForm(e.target); });
   $('invList').addEventListener('click', onClick);
-  $('invZoom').addEventListener('click', () => $('invZoom').close());
+  $('invZoom').addEventListener('click', onZoomClick);
+  $('invZoom').addEventListener('keydown', (e) => {
+    if (zoomed && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) zoom(zoomed.item.id, zoomed.n + (e.key === 'ArrowLeft' ? -1 : 1));
+  });
   // The Google bar calls this after sign-in, choosing a folder, Refresh and sign-out.
   initDriveBar(() => reload());
 }

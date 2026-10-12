@@ -25,14 +25,16 @@ test('adding, editing and deleting items', () => {
   const [item] = inv.items;
   assert.equal(item.name, 'White linen', 'extra spaces are tidied');
   assert.ok(item.id);
-  assert.equal(item.photoId, null);
+  assert.deepEqual(item.photoIds, [], 'photos are optional');
 
-  inv = upsertItem(inv, { id: item.id, name: 'White linen 90x132', category: 'Linens', subcategory: 'Rectangle', photoId: 'p1' }, '2026-10-13T00:00:00.000Z');
+  inv = upsertItem(inv, { id: item.id, name: 'White linen 90x132', category: 'Linens', subcategory: 'Rectangle', photoIds: ['p1', 'p2'] }, '2026-10-13T00:00:00.000Z');
   assert.equal(inv.items.length, 1, 'edited, not duplicated');
-  assert.deepEqual([inv.items[0].name, inv.items[0].subcategory, inv.items[0].photoId, inv.items[0].created], ['White linen 90x132', 'Rectangle', 'p1', T]);
+  assert.deepEqual([inv.items[0].name, inv.items[0].subcategory, inv.items[0].photoIds, inv.items[0].created], ['White linen 90x132', 'Rectangle', ['p1', 'p2'], T]);
 
   inv = upsertItem(inv, { id: item.id, name: 'White linen 90x132', category: 'Linens', subcategory: 'Rectangle' });
-  assert.equal(inv.items[0].photoId, 'p1', 'editing without touching the photo keeps it');
+  assert.deepEqual(inv.items[0].photoIds, ['p1', 'p2'], 'editing without touching the photos keeps them');
+  inv = upsertItem(inv, { id: item.id, name: 'White linen 90x132', photoIds: ['p2'] });
+  assert.deepEqual(inv.items[0].photoIds, ['p2'], 'photos can be removed or reordered');
 
   assert.equal(removeItem(inv, item.id).items.length, 0);
   assert.deepEqual(checkItem({ name: '  ' }), ['Give the item a name.']);
@@ -41,8 +43,8 @@ test('adding, editing and deleting items', () => {
 
 test('saved data is cleaned up when read', () => {
   assert.deepEqual(normalizeInventory(null), emptyInventory());
-  const inv = normalizeInventory({ items: [{ id: 'x', name: 'Arch' }, { id: 'y', name: '' }, null, { name: 'no id' }] });
-  assert.deepEqual(inv.items.map(i => [i.id, i.category, i.photoId]), [['x', '', null]]);
+  const inv = normalizeInventory({ items: [{ id: 'x', name: 'Arch' }, { id: 'y', name: '' }, null, { name: 'no id' }, { id: 'z', name: 'Old', photoId: 'p9' }] });
+  assert.deepEqual(inv.items.map(i => [i.id, i.category, i.photoIds]), [['x', '', []], ['z', '', ['p9']]], 'a single photo saved before several were allowed is kept');
 });
 
 test('categories ignore capitals, include the starters, and subcategories follow the category', () => {
@@ -69,8 +71,8 @@ test('groups by category (no category last), then subcategory and name', () => {
 });
 
 test('photo file names are readable', () => {
-  assert.equal(photoName({ id: 'i1', name: 'Gold Mercury-Glass Votive (set of 12)!' }), 'gold-mercury-glass-votive-set-of-12-i1.jpg');
-  assert.equal(photoName({ id: 'i2', name: '***' }), 'item-i2.jpg');
+  assert.equal(photoName({ id: 'i1', name: 'Gold Mercury-Glass Votive (set of 12)!' }), 'gold-mercury-glass-votive-set-of-12-i1-1.jpg');
+  assert.equal(photoName({ id: 'i2', name: '***' }, 3), 'item-i2-3.jpg');
 });
 
 // ---------- saving to Drive ----------
@@ -99,7 +101,9 @@ test('the inventory and its photos save in the shared "SBE App Data" folder', as
 
   const bytes = new Uint8Array([0xff, 0xd8, 0xff, 1, 2, 3]);
   const photoId = await uploadPhoto({ id: 'i1', name: 'Gold votive' }, new Blob([bytes], { type: 'image/jpeg' }));
-  await changeInventory(inv => upsertItem(inv, { id: 'i1', name: 'Gold votive', category: 'Candles & votives', subcategory: '', photoId }));
+  const second = await uploadPhoto({ id: 'i1', name: 'Gold votive' }, new Blob([bytes], { type: 'image/jpeg' }), 2);
+  await changeInventory(inv => upsertItem(inv, { id: 'i1', name: 'Gold votive', category: 'Candles & votives', subcategory: '', photoIds: [photoId, second] }));
+  assert.deepEqual((await loadInventory()).items[0].photoIds, [photoId, second]);
 
   const appData = named('SBE App Data')[0];
   const [file] = named(INVENTORY_FILE);
@@ -107,7 +111,7 @@ test('the inventory and its photos save in the shared "SBE App Data" folder', as
   const [photos] = named(PHOTOS_FOLDER);
   assert.deepEqual(photos.parents, [appData.id]);
   assert.deepEqual(drive.files.get(photoId).parents, [photos.id]);
-  assert.equal(drive.files.get(photoId).name, 'gold-votive-i1.jpg');
+  assert.equal(drive.files.get(photoId).name, 'gold-votive-i1-1.jpg');
   assert.deepEqual([...new Uint8Array(await (await photoBlob(photoId)).arrayBuffer())], [...bytes]);
 
   await uploadPhoto({ id: 'i2', name: 'Tent' }, new Blob([bytes], { type: 'image/jpeg' }));
