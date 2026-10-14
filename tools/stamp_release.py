@@ -1,4 +1,4 @@
-"""Stamp one release version on the app pages (docs/index.html, docs/inventory.html) so browsers fetch fresh copies of every file.
+"""Stamp one release version on the app pages (docs/index.html, docs/events.html, docs/inventory.html) so browsers fetch fresh copies of every file.
 
 GitHub Pages lets browsers cache files for ~10 minutes. Without this, a browser can mix a new
 index.html with old copies of the JavaScript modules. The import map sends every module import
@@ -20,7 +20,7 @@ START, END = "<!-- release-importmap:start -->", "<!-- release-importmap:end -->
 
 
 # Each app page and its entry script.
-PAGES = {"index.html": "main.js", "inventory.html": "inventoryPage.js"}
+PAGES = {"index.html": "home.js", "events.html": "main.js", "inventory.html": "inventoryPage.js"}
 
 
 def stamp(version: str) -> None:

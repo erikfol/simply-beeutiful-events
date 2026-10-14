@@ -100,6 +100,24 @@ header p {
   color: var(--muted);
   font-size: 1.05rem;
 }
+
+/* Page menu in every header (like the website's top menu) */
+.sitenav { display:flex; justify-content:center; flex-wrap:wrap; gap:.2rem 1.6rem; margin-top:.9rem; }
+.sitenav a { font-family:var(--font-ui); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); text-decoration:none; padding:.3rem 0; border-bottom:2px solid transparent; }
+.sitenav a:hover { color:var(--olive); }
+.sitenav a[aria-current="page"] { border-bottom-color:var(--blue); }
+
+/* Landing page: one big tile per page */
+.apptiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; }
+.apptile { display:grid; gap:.35rem; align-content:start; background:#fff; border-radius:14px; padding:1.6rem 1.5rem; box-shadow:0 2px 14px rgba(38,38,38,.06); border-top:5px solid var(--blue); color:var(--ink); text-decoration:none; transition:box-shadow .15s, transform .15s; }
+.apptile:nth-child(2) { border-top-color:var(--honey); }
+.apptile[href]:hover { box-shadow:0 12px 26px -10px rgba(38,38,38,.25); transform:translateY(-2px); color:var(--ink); }
+.apptile.locked { opacity:.55; cursor:not-allowed; }
+.apptile-icon { font-size:1.8rem; }
+.apptile-name { font-family:var(--font-head); font-size:1.35rem; text-transform:uppercase; letter-spacing:.05em; }
+.apptile-text { color:var(--muted); }
+.apptile-meta { font-family:var(--font-ui); font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--olive-deep); }
+.tiles-hint { text-align:center; }
 main {
   max-width: 1000px;
   margin: 0 auto;
@@ -330,8 +348,6 @@ table.grid.vendors a { word-break:break-all; }
 .db-warn button { margin-left:.3rem; }
 
 /* ---------- Inventory page ---------- */
-.navlink { position:absolute; top:.7rem; left:.9rem; font-family:var(--font-ui); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink); text-decoration:none; }
-.navlink:hover { color:var(--blue); }
 .inv-tools input, .inv-tools select { padding:.45rem; border-radius:8px; border:1px solid #ccc; font-size:.95rem; min-width:0; }
 .inv-tools input { flex:1 1 180px; }
 #invCount { color:#666; font-size:.9rem; }

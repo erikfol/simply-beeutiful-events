@@ -1,7 +1,7 @@
 // Google bar above the event picker: sign in, choose the SBE events folder, see whether you can save to
 // the shared "SBE App Data" folder, refresh, sign out.
 import { $, setStatus } from './dom.js';
-import { isConfigured, isReady, prepare, signIn, signOut, canReadDrive } from './google.js';
+import { isConfigured, isReady, isSignedIn, prepare, signIn, signOut, canReadDrive } from './google.js';
 import { listChildren, listSharedFolders, listMyTopFolders, searchFolders, getFile, whoAmI } from './drive.js';
 import { readData, writeData, readSettings, writeSettings, forgetAppData, useEventsFolder, sharedAccess, migratePersonalData } from './appdata.js';
 import { FOLDER_MIME, folderToEvent, sortEvents, parseFolderId } from './driveEvents.js';
@@ -22,18 +22,31 @@ let skipped = [];       // subfolders without a date in their name
 let movedCount = 0;     // items moved into the shared folder at the last check (shown once)
 let eventCount = 0;
 let onEvents = () => {};
+let isHome = false;     // the landing page (index.html) is where people sign in and choose the folder
 
-// For pages that only need the shared folder (Inventory): who is signed in and whether saving works.
-export const driveStatus = () => ({ signedIn: !!user && !expired, folder, canSave: !!user && !expired && !!access && access.state === 'ready', access });
+// Pages the landing page may send people back to after signing in.
+export const APP_PAGES = ['events.html', 'inventory.html'];
 
-export function initDriveBar(onDriveEvents) {
+// For pages that only need the shared folder (Inventory, the landing page): who is signed in and whether saving works.
+export const driveStatus = () => ({ signedIn: !!user && !expired, user, folder, eventCount, canSave: !!user && !expired && !!access && access.state === 'ready', access });
+
+// home: true on the landing page. The other pages send signed-out visitors there (and come back after).
+export function initDriveBar(onDriveEvents, { home = false } = {}) {
   onEvents = onDriveEvents;
+  isHome = home;
   if (!isConfigured()) { $('driveBar').hidden = true; return; }
+  if (!home && !isSignedIn()) {
+    const page = location.pathname.split('/').pop();
+    location.replace(APP_PAGES.includes(page) ? `./?next=${page}` : './');
+    return;
+  }
   $('driveBar').hidden = false;
   $('driveBar').addEventListener('click', onClick);
   $('driveBar').addEventListener('submit', onSubmit);
   window.addEventListener('sbe:needs-signin', () => { expired = true; render(); });
-  render();
+  // Signed in on an earlier page in this tab: carry on without asking again.
+  if (isSignedIn()) run('Opening your Google Drive…', afterSignIn);
+  else render();
   prepare().then(render).catch(e => { busy = ''; render(); setStatus(e.message); });
 }
 
@@ -66,7 +79,7 @@ function render() {
     html = `<span class="db-busy">${esc(busy)}</span>`;
   } else if (!user) {
     html = `<button type="button" class="primary" data-act="signin"${isReady() ? '' : ' disabled'}>Sign in with Google</button>
-      <span class="db-note">SBE staff: open your events straight from Google Drive.</span>`;
+      <span class="db-note">SBE staff: sign in once to use the Event Manager and Inventory.</span>`;
   } else if (!canReadDrive()) {
     html = `<span>Signed in as <strong>${esc(user.emailAddress || '')}</strong>, but Google didn't give the app permission to use your <strong>Google Drive files</strong>, so it can't see the SBE events folder.</span>
       <button type="button" class="primary" data-act="askagain">Ask for permission again</button>
@@ -136,9 +149,10 @@ function onClick(ev) {
   } else if (act === 'signout') {
     signOut(); forgetAppData();
     user = null; folder = null; access = null; results = null; choices = null; expired = false; skipped = []; eventCount = 0;
+    if (!isHome) { location.href = './'; return; }
     onEvents([]);
     render();
-    setStatus('Signed out of Google. Drive events are hidden until you sign in again.');
+    setStatus('Signed out of Google.');
   }
 }
 

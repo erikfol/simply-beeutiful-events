@@ -1,4 +1,6 @@
-// Google sign-in in the browser (Google Identity Services, token flow). Tokens live in memory only.
+// Google sign-in in the browser (Google Identity Services, token flow). The token is kept in this tab's
+// sessionStorage so moving between the app's pages doesn't ask again; closing the tab or browser forgets it,
+// and Google's tokens stop working after about an hour anyway.
 // Who may sign in is controlled in Google Cloud: while the app is in "Testing", only listed test users can.
 import { GOOGLE_CLIENT_ID } from './config.js';
 
@@ -18,6 +20,25 @@ let expiresAt = 0;
 let tokenClient = null;
 let fake = false;
 let granted = ''; // scopes the person actually allowed (Google lets them untick some)
+
+const SESSION_KEY = 'sbe.google';
+
+function remember() {
+  try {
+    if (token && !fake) sessionStorage.setItem(SESSION_KEY, JSON.stringify({ token, expiresAt, granted }));
+    else sessionStorage.removeItem(SESSION_KEY);
+  } catch { /* storage blocked: sign in on each page instead */ }
+}
+
+// Pick up the sign-in from an earlier page in this tab (if it hasn't run out).
+function restore() {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
+    if (saved && saved.token && Date.now() < saved.expiresAt) ({ token, expiresAt, granted } = saved);
+    else sessionStorage.removeItem(SESSION_KEY);
+  } catch { /* no storage (tests) or blocked */ }
+}
+restore();
 
 // Tests and the offline smoke test use a pretend sign-in (paired with drive.useTransport).
 export function useFakeAuth() { fake = true; }
@@ -67,6 +88,7 @@ export function signIn({ askAgain = false } = {}) {
       token = resp.access_token;
       granted = resp.scope || '';
       expiresAt = Date.now() + (Number(resp.expires_in) - 60) * 1000;
+      remember();
       resolve();
     };
     tokenClient.error_callback = (err) => reject(new Error(err.type === 'popup_closed' ? 'Sign-in window was closed.' : (err.message || 'Sign-in failed.')));
@@ -77,4 +99,5 @@ export function signIn({ askAgain = false } = {}) {
 export function signOut() {
   if (token && !fake && window.google) window.google.accounts.oauth2.revoke(token, () => {});
   token = null; expiresAt = 0; granted = '';
+  remember();
 }

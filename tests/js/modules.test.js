@@ -20,7 +20,7 @@ test('every named import resolves to an export', async () => {
 });
 
 // Entry points of the app pages (they start drawing the page as soon as they load).
-const PAGES = { 'index.html': 'main.js', 'inventory.html': 'inventoryPage.js' };
+const PAGES = { 'index.html': 'home.js', 'events.html': 'main.js', 'inventory.html': 'inventoryPage.js' };
 
 test('every module except the page entry points loads without a browser', async () => {
   for (const file of files.filter(f => !Object.values(PAGES).includes(f))) {

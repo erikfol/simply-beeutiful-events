@@ -4,7 +4,7 @@ Live app: https://erikfol.github.io/simply-beeutiful-events/
 
 This folder is the app and the published site (GitHub Pages serves `main` → `/docs`). There is no separate copy to sync — edit files here directly.
 
-Sign in with Google, pick an event, and the Overview opens. All in the browser, no upload. **The page shows no events until someone signs in**: events come only from SBE's Google Drive.
+The app has three pages: the **landing page** (`index.html`), where you sign in with Google once and choose the SBE events folder; the **Event Manager** (`events.html`); and the **Inventory** (`inventory.html`). The sign-in is kept for the browser tab (sessionStorage), so moving between pages doesn't ask again; closing the tab forgets it, and Google's sign-in runs out after about an hour (each page then offers *Sign in again*, keeping unsaved edits). Opening the Event Manager or Inventory while signed out goes to the landing page first and comes back after sign-in. In the Event Manager, pick an event and the Overview opens. All in the browser, no upload. **The page shows no events until someone signs in**: events come only from SBE's Google Drive.
 
 ## Google Drive events
 When Google sign-in is set up (see [`../GOOGLE_SETUP.md`](../GOOGLE_SETUP.md)), a bar above the event picker offers **Sign in with Google**:
@@ -37,7 +37,7 @@ Everything the app saves goes to the shared "SBE App Data" folder inside the SBE
 Create a folder for it inside the SBE events folder in Google Drive, named with the date first (`10.3.26 Alyssa & Mick`), then click **Refresh** in the Google bar.
 
 ## Code layout
-Plain ES modules, no build step. `index.html` loads `js/main.js`.
+Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` loads `js/main.js`, `inventory.html` loads `js/inventoryPage.js`.
 
 | File | Job |
 |---|---|
@@ -73,4 +73,4 @@ Keep anything without DOM access in the pure files so `npm test` can cover it. T
 From the repo root: `python -m http.server`, then open http://localhost:8000/docs/. Modules don't load from `file://`.
 
 ## Releasing
-Before committing app changes, run `python tools/stamp_release.py`. It stamps one version on the stylesheet and, through the import map in `index.html`, on every module, so browsers never mix new and cached files (GitHub Pages lets them cache for ~10 minutes). `npm test` fails if a module is missing from the import map.
+Before committing app changes, run `python tools/stamp_release.py`. It stamps one version on the stylesheet and, through the import map in each page, on every module, so browsers never mix new and cached files (GitHub Pages lets them cache for ~10 minutes). `npm test` fails if a module is missing from the import map.
