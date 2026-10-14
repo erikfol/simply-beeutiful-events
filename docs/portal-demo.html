@@ -5,47 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
   <title>Client Portal (Demo)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Manrope:wght@400;500;600;700&family=PT+Sans+Caption:wght@400;700&family=Raleway:wght@400;500;600;700&display=swap" />
   <style>
     :root {
-      --ink: #2d2a26;
-      --cream: #faf7f2;
-      --gold: #b89b5e;
-      --gold-soft: #f2d9a4;
-      --gold-wash: #fbf4e6;
-      --text: #333;
-      --muted: #6b655c;
-      --line: #e8e1d5;
+      /* colors and fonts match simplybeeutifulevents.com */
+      --ink: #262626;
+      --cream: #f9f7f7;
+      --gold: #9bbad6;       /* brand dusty blue */
+      --gold-soft: #d3e2e7;
+      --gold-wash: #eef4f7;
+      --olive: #7e8566;
+      --olive-deep: #555b44;
+      --honey: #f3bf74;
+      --text: #262626;
+      --muted: #5f6468;
+      --line: #dfe6ea;
       --ok: #4f7a52;
       --ok-wash: #e9f2e7;
       --warn: #a5672a;
       --warn-wash: #fbeee0;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: system-ui, Arial, sans-serif; background: var(--cream); color: var(--text); line-height: 1.45; }
-    a { color: #8a6d2f; }
+    body { margin: 0; font-family: 'Raleway', system-ui, Arial, sans-serif; background: var(--cream); color: var(--text); line-height: 1.5; }
+    h2, h3 { font-family: 'PT Sans Caption', 'Raleway', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .04em; }
+    a { color: var(--olive-deep); }
 
     .demo-banner { background: var(--gold-wash); border-bottom: 1px solid var(--gold-soft); color: var(--ink); font-size: .85rem; padding: .5rem 1rem; text-align: center; }
-    .demo-banner button { font-size: .8rem; padding: .15rem .6rem; margin-left: .4rem; background: transparent; color: #8a6d2f; border: 1px solid var(--gold); }
+    .demo-banner button { font-size: .8rem; padding: .15rem .6rem; margin-left: .4rem; background: transparent; color: var(--olive-deep); border: 1px solid var(--gold); }
 
-    header { background: var(--ink); color: var(--gold-soft); padding: 1.1rem 1rem 0; }
+    header { background: #fff; color: var(--muted); padding: 1.1rem 1rem 0; border-bottom: 4px solid var(--gold-soft); }
     .head-inner { max-width: 960px; margin: 0 auto; }
-    .brand { display: flex; align-items: center; gap: .6rem; font-size: .9rem; opacity: .9; }
-    .brand img { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,.08); padding: .15rem; object-fit: contain; }
-    .couple { margin: .8rem 0 .1rem; font-size: clamp(1.6rem, 5vw, 2.3rem); color: #fff; font-weight: 600; letter-spacing: .01em; }
-    .event-line { margin: 0; color: var(--gold-soft); font-size: .95rem; }
+    .brand { display: flex; align-items: center; gap: .6rem; font-family: 'Manrope', sans-serif; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; color: var(--ink); }
+    .brand img { width: 36px; height: 36px; object-fit: contain; }
+    .couple { margin: .8rem 0 .1rem; font-family: 'GFS Didot', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); color: var(--ink); font-weight: 400; letter-spacing: .01em; }
+    .event-line { margin: 0; color: var(--muted); font-size: .95rem; }
 
     nav.tabs { display: flex; gap: .25rem; overflow-x: auto; margin-top: 1rem; scrollbar-width: none; }
     nav.tabs::-webkit-scrollbar { display: none; }
-    nav.tabs button { flex: 0 0 auto; background: transparent; color: var(--gold-soft); border: none; border-bottom: 3px solid transparent; padding: .6rem .8rem; font-size: .95rem; cursor: pointer; border-radius: 0; }
-    nav.tabs button[aria-selected="true"] { color: #fff; border-bottom-color: var(--gold); }
-    nav.tabs .count { display: inline-block; background: var(--gold); color: #fff; border-radius: 10px; font-size: .72rem; padding: 0 .4rem; margin-left: .25rem; }
+    nav.tabs button { flex: 0 0 auto; background: transparent; color: var(--muted); border: none; border-bottom: 3px solid transparent; padding: .7rem .8rem; font-family: 'Manrope', sans-serif; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; border-radius: 0; }
+    nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--gold); }
+    nav.tabs button:hover { color: var(--olive); }
+    nav.tabs .count { display: inline-block; background: var(--honey); color: var(--ink); letter-spacing: 0; border-radius: 10px; font-size: .72rem; padding: 0 .4rem; margin-left: .25rem; }
 
     main { max-width: 960px; margin: 0 auto; padding: 1rem; }
     section[role="tabpanel"] { display: grid; gap: 1rem; }
     section[hidden] { display: none; }
     .grid-2 { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 
-    .card { background: #fff; border-radius: 12px; padding: 1rem 1.1rem; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .card { background: #fff; border-radius: 14px; padding: 1.1rem 1.3rem; box-shadow: 0 2px 14px rgba(38,38,38,.06); }
     .card h2 { margin: 0 0 .6rem; font-size: 1.1rem; color: var(--ink); }
     .card h3 { margin: 0 0 .25rem; font-size: 1rem; color: var(--ink); }
     .muted { color: var(--muted); font-size: .88rem; }
@@ -67,9 +76,10 @@
     .comment-form { display: flex; gap: .4rem; margin-top: .4rem; }
     .comment-form input { flex: 1; min-width: 0; padding: .45rem .6rem; border: 1px solid var(--line); border-radius: 8px; font-size: .9rem; }
 
-    button.btn { background: var(--gold); color: #fff; border: none; border-radius: 8px; padding: .45rem .9rem; cursor: pointer; font-size: .9rem; }
-    button.btn.dark { background: var(--ink); }
-    button.link { background: none; border: none; color: #8a6d2f; cursor: pointer; padding: 0; font-size: .85rem; text-decoration: underline; }
+    button.btn { background: var(--gold); color: var(--ink); border: none; border-radius: 999px; padding: .5rem 1.1rem; cursor: pointer; font-family: 'Manrope', sans-serif; font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; transition: background-color .15s, color .15s; }
+    button.btn.dark { background: var(--olive-deep); color: #fff; }
+    button.btn:hover { background: var(--olive); color: #fff; }
+    button.link { background: none; border: none; color: var(--olive-deep); cursor: pointer; padding: 0; font-size: .85rem; text-decoration: underline; }
 
     ul.todos { list-style: none; margin: 0; padding: 0; }
     ul.todos li { display: flex; gap: .6rem; align-items: flex-start; padding: .55rem 0; border-top: 1px solid var(--line); }
@@ -92,7 +102,7 @@
 
     .vendor { display: grid; gap: .15rem; padding: .7rem 0; border-top: 1px solid var(--line); }
     .vendor:first-child { border-top: none; }
-    .vendor .role { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: #8a6d2f; }
+    .vendor .role { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--olive-deep); font-family: 'Manrope', sans-serif; }
     .vendor .name { font-weight: 600; color: var(--ink); }
     .contact-links { display: flex; gap: .8rem; flex-wrap: wrap; font-size: .88rem; }
 
@@ -117,7 +127,7 @@
     table.pay td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
     .planner { display: flex; gap: .8rem; align-items: center; }
-    .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--gold); color: #fff; display: grid; place-items: center; font-weight: 700; flex: 0 0 auto; }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--gold); color: var(--ink); display: grid; place-items: center; font-weight: 700; flex: 0 0 auto; }
 
     .toast { position: fixed; left: 50%; bottom: 1rem; transform: translateX(-50%); background: var(--ink); color: #fff; padding: .55rem 1rem; border-radius: 8px; font-size: .9rem; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 2rem); }
     .toast.show { opacity: 1; }
