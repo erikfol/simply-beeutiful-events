@@ -6,6 +6,9 @@ This folder is the app and the published site (GitHub Pages serves `main` → `/
 
 The app has three pages: the **landing page** (`index.html`), where you sign in with Google once and choose the SBE events folder; the **Event Manager** (`events.html`); and the **Inventory** (`inventory.html`). The sign-in is kept for the browser tab (sessionStorage), so moving between pages doesn't ask again; closing the tab forgets it, and Google's sign-in runs out after about an hour (each page then offers *Sign in again*, keeping unsaved edits). Opening the Event Manager or Inventory while signed out goes to the landing page first and comes back after sign-in. In the Event Manager, pick an event and the Overview opens. All in the browser, no upload. **The page shows no events until someone signs in**: events come only from SBE's Google Drive.
 
+## Booking page (for clients)
+`calendar.html` is a **public page** where clients book a meeting with the SBE owner: no sign-in, no app code. It shows her free times from Google Calendar's own booking page (an *appointment schedule* in her Google Calendar), embedded in SBE's look. Google checks her calendar so busy times never show, puts the booking on her calendar, and emails both sides. Until the booking page's address is pasted into `BOOKING_PAGE` at the bottom of `calendar.html`, the page says "Online booking opens soon" and links to the website's contact page. The landing page has a **Booking page** tile (always open) so staff can find and share the link. The page is self-contained, so it can also be copied to the public website.
+
 ## Google Drive events
 When Google sign-in is set up (see [`../GOOGLE_SETUP.md`](../GOOGLE_SETUP.md)), a bar above the event picker offers **Sign in with Google**:
 - Choose the SBE events folder once (from a dropdown of folders shared with you and your own top-level folders, by name, or by pasting its Drive link). Every subfolder whose name starts with a date (`6.12.27 Harper-Bennett Wedding`) becomes an event in the dropdown; other folders are skipped and listed. Signing out empties the dropdown again.
@@ -37,7 +40,7 @@ Everything the app saves goes to the shared "SBE App Data" folder inside the SBE
 Create a folder for it inside the SBE events folder in Google Drive, named with the date first (`10.3.26 Alyssa & Mick`), then click **Refresh** in the Google bar.
 
 ## Code layout
-Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` loads `js/main.js`, `inventory.html` loads `js/inventoryPage.js`.
+Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` loads `js/main.js`, `inventory.html` loads `js/inventoryPage.js`. `calendar.html` and `portal-demo.html` are standalone pages (their own styles and a small inline script, outside the import map).
 
 | File | Job |
 |---|---|

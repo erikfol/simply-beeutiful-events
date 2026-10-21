@@ -10,7 +10,7 @@ const next = new URLSearchParams(location.search).get('next');
 function render() {
   const s = driveStatus();
   const ready = !isConfigured() || (s.signedIn && !!s.folder);
-  for (const tile of document.querySelectorAll('.apptile')) {
+  for (const tile of document.querySelectorAll('.apptile[data-href]')) { // the public booking page never locks
     tile.classList.toggle('locked', !ready);
     if (ready) { tile.href = tile.dataset.href; tile.removeAttribute('aria-disabled'); }
     else { tile.removeAttribute('href'); tile.setAttribute('aria-disabled', 'true'); }

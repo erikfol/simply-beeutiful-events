@@ -111,6 +111,7 @@ header p {
 .apptiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; }
 .apptile { display:grid; gap:.35rem; align-content:start; background:#fff; border-radius:14px; padding:1.6rem 1.5rem; box-shadow:0 2px 14px rgba(38,38,38,.06); border-top:5px solid var(--blue); color:var(--ink); text-decoration:none; transition:box-shadow .15s, transform .15s; }
 .apptile:nth-child(2) { border-top-color:var(--honey); }
+.apptile:nth-child(3) { border-top-color:var(--olive); }
 .apptile[href]:hover { box-shadow:0 12px 26px -10px rgba(38,38,38,.25); transform:translateY(-2px); color:var(--ink); }
 .apptile.locked { opacity:.55; cursor:not-allowed; }
 .apptile-icon { font-size:1.8rem; }

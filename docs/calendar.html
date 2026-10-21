@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Book a Meeting · Simply Beeutiful Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Manrope:wght@400;500;600;700&family=PT+Sans+Caption:wght@400;700&family=Raleway:wght@400;500;600;700&display=swap" />
+  <!-- Public page for clients: no sign-in, no app code. Self-contained (like portal-demo.html) so it can be
+       copied to the website as is. The calendar itself is the SBE owner's Google Calendar booking page. -->
+  <style>
+    :root {
+      /* colors and fonts match simplybeeutifulevents.com (same as styles.css) */
+      --ink: #262626;
+      --muted: #5f6468;
+      --bg: #f9f7f7;
+      --blue: #9bbad6;
+      --blue-soft: #d3e2e7;
+      --blue-wash: #eef4f7;
+      --olive: #7e8566;
+      --olive-deep: #555b44;
+      --honey: #f3bf74;
+      --line: #dfe6ea;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Raleway', system-ui, Arial, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5; }
+    h2, h3 { font-family: 'PT Sans Caption', 'Raleway', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .04em; margin: 0; }
+    a { color: var(--olive-deep); }
+    a:hover { color: var(--olive); }
+
+    header { background: #fff; padding: 1.6rem 1rem 1.2rem; text-align: center; border-bottom: 4px solid var(--blue-soft); }
+    .brand-row { display: flex; align-items: center; justify-content: center; gap: 1rem; }
+    .brand-row img { width: 72px; height: 72px; object-fit: contain; }
+    .brand-row h1 { margin: 0; font-size: clamp(1.4rem, 3.2vw, 2.4rem); font-weight: 400; letter-spacing: .08em; line-height: 1.2; text-transform: uppercase; }
+    .brand-row p { margin: .1rem 0 0; font-family: 'Manrope', sans-serif; font-size: .8rem; letter-spacing: .25em; text-transform: uppercase; color: var(--olive); }
+    nav { display: flex; justify-content: center; flex-wrap: wrap; gap: .2rem 1.6rem; margin-top: .9rem; }
+    nav a { font-family: 'Manrope', sans-serif; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); text-decoration: none; padding: .3rem 0; border-bottom: 2px solid transparent; }
+    nav a:hover { color: var(--olive); }
+    nav a[aria-current="page"] { border-bottom-color: var(--blue); }
+
+    main { max-width: 1000px; margin: 0 auto; padding: 1.5rem 1rem; display: grid; gap: 1.2rem; }
+    .intro { text-align: center; }
+    .intro h2 { font-size: clamp(1.5rem, 4vw, 2rem); }
+    .intro .lead { font-family: 'GFS Didot', Georgia, serif; font-size: 1.15rem; color: var(--muted); max-width: 36rem; margin: .5rem auto 0; }
+
+    .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); counter-reset: step; }
+    .steps li { background: #fff; border-radius: 14px; padding: 1rem 1.2rem; box-shadow: 0 2px 14px rgba(38,38,38,.06); border-top: 4px solid var(--blue); counter-increment: step; }
+    .steps li:nth-child(2) { border-top-color: var(--honey); }
+    .steps li:nth-child(3) { border-top-color: var(--olive); }
+    .steps b { display: block; font-family: 'Manrope', sans-serif; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; }
+    .steps b::before { content: counter(step) ". "; color: var(--olive-deep); }
+    .steps span { color: var(--muted); font-size: .92rem; }
+
+    .card { background: #fff; border-radius: 14px; box-shadow: 0 2px 14px rgba(38,38,38,.06); }
+    .booking { overflow: hidden; }
+    /* Google's booking page fills the frame; it needs more height once its columns stack on a phone. */
+    .booking iframe { display: block; width: 100%; height: 760px; border: 0; }
+    @media (max-width: 700px) { .booking iframe { height: 1150px; } }
+    .booking .hint { margin: 0; padding: .7rem 1.2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; text-align: center; }
+
+    .soon { padding: 1.4rem 1.5rem; text-align: center; border-top: 5px solid var(--honey); }
+    .soon h3 { font-size: 1.2rem; margin-bottom: .4rem; }
+    .soon p { margin: 0 auto; max-width: 34rem; color: var(--muted); }
+    .btn { display: inline-block; margin-top: 1rem; background: var(--blue); color: var(--ink); border-radius: 999px; padding: .6rem 1.4rem; font-family: 'Manrope', sans-serif; font-size: .8rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; transition: background-color .15s, color .15s; }
+    .btn:hover { background: var(--olive); color: #fff; }
+
+    [hidden] { display: none !important; }
+    footer { text-align: center; color: var(--muted); font-size: .82rem; padding: 1rem 1rem 2rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand-row">
+      <img src="sbe-logo.png" alt="Simply Beeutiful Events logo" />
+      <div>
+        <h1>Simply Beeutiful Events</h1>
+        <p>Wedding &amp; event planning</p>
+      </div>
+    </div>
+    <nav aria-label="Pages">
+      <a href="https://www.simplybeeutifulevents.com/">Home</a>
+      <a href="calendar.html" aria-current="page">Book a meeting</a>
+      <a href="https://www.simplybeeutifulevents.com/contact/">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Book a meeting</h2>
+      <p class="lead">Pick a day and time that suits you. You'll only see times when we're free, and your booking is confirmed straight away.</p>
+    </section>
+
+    <ol class="steps">
+      <li><b>Choose a time</b><span>Times are shown in your own time zone.</span></li>
+      <li><b>Add your details</b><span>Your name and email, so we know who's coming.</span></li>
+      <li><b>You're booked</b><span>A confirmation and calendar invite arrive by email.</span></li>
+    </ol>
+
+    <section class="card booking" id="booking" hidden>
+      <iframe id="bookingFrame" title="Choose a meeting time"></iframe>
+      <p class="hint">Calendar not showing? <a id="bookingLink" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
+    </section>
+
+    <section class="card soon" id="soon">
+      <h3>Online booking opens soon</h3>
+      <p>Until then, tell us a little about your event and we'll find a time to meet together.</p>
+      <a class="btn" href="https://www.simplybeeutifulevents.com/contact/">Get in touch</a>
+    </section>
+  </main>
+
+  <footer>Simply Beeutiful Events · <a href="https://www.simplybeeutifulevents.com/">simplybeeutifulevents.com</a></footer>
+
+  <script>
+    // The SBE owner's Google Calendar booking page. To set it: in Google Calendar, under "Booking pages",
+    // Options → Sharing options → Website embed → Inline booking page → Copy code, and paste the address
+    // inside src="…" here. Empty = the page shows "Online booking opens soon" instead of the calendar.
+    const BOOKING_PAGE = '';
+
+    if (BOOKING_PAGE) {
+      const url = new URL(BOOKING_PAGE);
+      url.searchParams.delete('gv');                    // gv=true is Google's "embedded" layout
+      document.getElementById('bookingLink').href = url;
+      url.searchParams.set('gv', 'true');
+      document.getElementById('bookingFrame').src = url;
+      document.getElementById('booking').hidden = false;
+      document.getElementById('soon').hidden = true;
+    }
+  </script>
+</body>
+</html>
