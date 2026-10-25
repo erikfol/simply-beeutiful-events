@@ -104,9 +104,9 @@ It's best built **after Phase 4 (action center)**, because the portal's to-do li
 
 ## Status
 
-Brainstorm only (2026-10-09). No app changes, roadmap edits, or commits. Possible later steps, only when the project lead says so:
-- Add the portal to the roadmap in `sbe-improvements.md`.
-- Make a clickable mockup with a fictional couple for the SBE owner to react to.
+- 2026-10-09: brainstorm written.
+- 2026-10-10: **approved mockup**, `docs/portal-demo.html` (live at https://erikfol.github.io/simply-beeutiful-events/portal-demo.html), using the fictional demo couple. Ticks, comments and uploads stay in the browser only. **Use it as the design template when building the real portal.**
+- Not scheduled yet. Next, when the project lead says so: add the portal to the roadmap in `sbe-improvements.md`.
 
 ## How we'd test it (when built)
 
