@@ -25,9 +25,9 @@ let onEvents = () => {};
 let isHome = false;     // the landing page (index.html) is where people sign in and choose the folder
 
 // Pages the landing page may send people back to after signing in.
-export const APP_PAGES = ['events.html', 'inventory.html'];
+export const APP_PAGES = ['events.html', 'inventory.html', 'todo.html'];
 
-// For pages that only need the shared folder (Inventory, the landing page): who is signed in and whether saving works.
+// For pages that only need the shared folder (Inventory, To Do, the landing page): who is signed in and whether saving works.
 export const driveStatus = () => ({ signedIn: !!user && !expired, user, folder, eventCount, canSave: !!user && !expired && !!access && access.state === 'ready', access });
 
 // home: true on the landing page. The other pages send signed-out visitors there (and come back after).
@@ -79,7 +79,7 @@ function render() {
     html = `<span class="db-busy">${esc(busy)}</span>`;
   } else if (!user) {
     html = `<button type="button" class="primary" data-act="signin"${isReady() ? '' : ' disabled'}>Sign in with Google</button>
-      <span class="db-note">SBE staff: sign in once to use the Event Manager and Inventory.</span>`;
+      <span class="db-note">SBE staff: sign in once to use the Event Manager, Inventory and To Do list.</span>`;
   } else if (!canReadDrive()) {
     html = `<span>Signed in as <strong>${esc(user.emailAddress || '')}</strong>, but Google didn't give the app permission to use your <strong>Google Drive files</strong>, so it can't see the SBE events folder.</span>
       <button type="button" class="primary" data-act="askagain">Ask for permission again</button>

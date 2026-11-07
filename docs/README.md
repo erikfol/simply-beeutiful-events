@@ -4,7 +4,10 @@ Live app: https://erikfol.github.io/simply-beeutiful-events/
 
 This folder is the app and the published site (GitHub Pages serves `main` → `/docs`). There is no separate copy to sync — edit files here directly.
 
-The app has three pages: the **landing page** (`index.html`), where you sign in with Google once and choose the SBE events folder; the **Event Manager** (`events.html`); and the **Inventory** (`inventory.html`). The sign-in is kept for the browser tab (sessionStorage), so moving between pages doesn't ask again; closing the tab forgets it, and Google's sign-in runs out after about an hour (each page then offers *Sign in again*, keeping unsaved edits). Opening the Event Manager or Inventory while signed out goes to the landing page first and comes back after sign-in. In the Event Manager, pick an event and the Overview opens. All in the browser, no upload. **The page shows no events until someone signs in**: events come only from SBE's Google Drive.
+The app has four pages: the **landing page** (`index.html`), where you sign in with Google once and choose the SBE events folder; the **Event Manager** (`events.html`); the **Inventory** (`inventory.html`); and the **To Do** list (`todo.html`). The sign-in is kept for the browser tab (sessionStorage), so moving between pages doesn't ask again; closing the tab forgets it, and Google's sign-in runs out after about an hour (each page then offers *Sign in again*, keeping unsaved edits). Opening the Event Manager, Inventory or To Do while signed out goes to the landing page first and comes back after sign-in. In the Event Manager, pick an event and the Overview opens. All in the browser, no upload. **The page shows no events until someone signs in**: events come only from SBE's Google Drive.
+
+## To Do
+`todo.html` is a shared list of things that need doing. Type a to-do and click **Add**; each one has three status buttons (**Not started**, **In progress**, **Done**), and the list is grouped that way: in progress first, then not started, with done ones folded away under **Done** (click to open). **Add a note** under any to-do keeps a running log, each note stamped with the date, time and who wrote it; the latest note shows on the to-do when its notes are hidden. **Edit** changes the wording, and **Delete** removes a to-do or a single note (both ask first). Search looks in the to-dos and their notes. Changes show at once and save in the background; if a save fails (e.g. the sign-in ran out) the page says *Not saved* and goes back to what's in Drive, keeping a typed note in its box. Saved as `todos.json` in the shared "SBE App Data" folder, so every planner with Editor access sees and changes the same list; without Editor access it's view-only.
 
 ## Booking page (for clients)
 `calendar.html` is a **public page** where clients book a meeting with the SBE owner: no sign-in, no app code. It shows her free times from Google Calendar's own booking page (an *appointment schedule* in her Google Calendar), embedded in SBE's look. Google checks her calendar so busy times never show, puts the booking on her calendar, and emails both sides. Until the booking page's address is pasted into `BOOKING_PAGE` at the bottom of `calendar.html`, the page says "Online booking opens soon" and links to the website's contact page. The landing page has a **Booking page** tile (always open) so staff can find and share the link. The page is self-contained, so it can also be copied to the public website.
@@ -40,7 +43,7 @@ Everything the app saves goes to the shared "SBE App Data" folder inside the SBE
 Create a folder for it inside the SBE events folder in Google Drive, named with the date first (`10.3.26 Alyssa & Mick`), then click **Refresh** in the Google bar.
 
 ## Code layout
-Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` loads `js/main.js`, `inventory.html` loads `js/inventoryPage.js`. `calendar.html` and `portal-demo.html` are standalone pages (their own styles and a small inline script, outside the import map).
+Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` loads `js/main.js`, `inventory.html` loads `js/inventoryPage.js`, `todo.html` loads `js/todoPage.js`. `calendar.html` and `portal-demo.html` are standalone pages (their own styles and a small inline script, outside the import map).
 
 | File | Job |
 |---|---|
@@ -68,6 +71,9 @@ Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` 
 | `js/suggestions.js` | Pure: document times turned into suggested stops (tested) |
 | `js/checks.js` | Pure validation rules: conflicts, missing items, due dates (tested) |
 | `js/util.js` | Pure helpers: formatting, time parsing (tested) |
+| `js/inventory.js`, `js/inventoryPage.js` | Inventory: items, categories, photos (pure parts tested); the page |
+| `js/todo.js` | Pure to-do rules: add, reword, status, notes, search, grouping; saving `todos.json` (tested) |
+| `js/todoPage.js` | To Do page: the list, status buttons, notes, edit and delete |
 | `js/dom.js`, `js/storage.js` | DOM helpers; browser-saved edits and saved templates |
 
 Keep anything without DOM access in the pure files so `npm test` can cover it. Third-party libraries live in `vendor/` (see `vendor/README.md`); when a scanning rule changes, bump `SCANNER_VERSION` in `js/scan.js` so cached results are re-read. `tests/js/fakeDrive.js` is an in-memory Google Drive used by the Drive tests.

@@ -150,6 +150,16 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 - Each change re-reads the saved list first, so two planners adding items at once don't erase each other's.
 - Not yet: reusable vs. used up, storage location, condition, notes, and the claiming/reservations above.
 
+### To Do page (built November 7, 2026)
+
+`docs/todo.html`, in every page's menu and as a tile on the landing page. A shared list of things that need doing:
+- Type a to-do and click **Add**. Each has three status buttons: **Not started**, **In progress**, **Done**. The list is grouped in progress → not started → done (done ones folded away; click **Done** to open). Done ones are crossed out and show the date they were finished.
+- **Notes:** a running log on each to-do, each note stamped with date, time and who wrote it. The latest note shows on the to-do when its notes are hidden. Notes keep line breaks; Ctrl+Enter adds one.
+- **Edit** changes the wording; **Delete** removes a to-do (with its notes) or a single note, after an "are you sure".
+- Search looks in the to-dos and their notes.
+- Needs Google sign-in. Saved as `todos.json` in the shared "SBE App Data" folder, so the owner and planners with Editor access share one list. Changes show at once and save in the background, each re-reading the saved list first so two people's changes don't erase each other's. Tested with the fake Drive (10 new tests) and in the browser, including a slow connection and an expired sign-in; not yet against real Google Drive (needs the shared-folder setup in *To do* below).
+- Not yet (ideas): due dates, linking a to-do to an event, assigning to a person, reordering by hand, editing a note after it's added. Phase 4's action center could later show these alongside the dates found in the documents.
+
 ### Billing and invoicing reference: HoneyBook
 
 SBE will use **HoneyBook** (https://www.honeybook.com/) as the reference for billing, invoicing, and related features, the way Timeline Genius is the reference for timelines. Noted September 27, 2026 from HoneyBook's home page:
@@ -181,7 +191,7 @@ Fits with the existing app: budget tracking, per-vendor contract and payment sta
   1. Find where "Client Files" lives in her account (My Drive, *Shared with me*, or another of her Google accounts) and confirm she owns it. Right-click → *Share* shows the owner.
   2. If she picked a different folder, she clicks **Change folder** in the app and picks "Client Files".
   3. She shares the "SBE App Data" folder inside "Client Files" with erik.follensbee@gmail.com as **Editor**.
-  4. Erik clicks **Check again** on the Inventory page, then saves one test item with a photo. This is the first test of saving and photo uploads against real Google Drive.
+  4. Erik clicks **Check again** on the Inventory page, then saves one test item with a photo. This is the first test of saving and photo uploads against real Google Drive. Then adds one to-do on the To Do page (same folder).
   - Note: a one-off "Failed to fetch" message right after her sign-in went away after a page refresh.
 - [ ] **Turn on the client booking page** (`docs/calendar.html`, built October 20, 2026). Clients pick a meeting time from the SBE owner's real availability, so she doesn't have to arrange meetings herself. It uses Google Calendar's free *appointment schedules* (a personal Google account gets one booking page with unlimited bookings; automatic reminder emails and several meeting types need a paid Google plan). Steps:
   1. Nicole, in Google Calendar on a computer: **Create → Appointment schedule**. Set the meeting name (e.g. "Consultation"), length, the weekly hours she's open, a buffer between meetings, how far ahead people can book, and where it happens (Google Meet, phone, or in person).
