@@ -106,3 +106,9 @@ test('the vendor sheet and multi-vendor notes never pile contacts onto one vendo
   assert.ok(rows.some(r => r.vendor === 'Planner Notes'), 'a document naming many vendors gets its own row');
   assert.ok(!rows.some(r => r.vendor === 'Olivia & James Vendor Options'), 'the vendor sheet is not a row of its own');
 });
+
+test('a contract found only in the documents is labeled with its vendor role, not the people it involves', async () => {
+  const { vendorRows } = await import('../../docs/js/details.js');
+  const rows = vendorRows({ contacts: [{ kind: 'contract', vendor: 'Glow Studio', source: 'Glow Studio - Hair & Makeup Agreement', emails: ['hello@glowstudio.example'], phones: [] }] });
+  assert.equal(rows[0].role, 'Hair & makeup');
+});

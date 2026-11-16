@@ -26,7 +26,7 @@ let onEvents = () => {};
 let isHome = false;     // the landing page (index.html) is where people sign in and choose the folder
 
 // Pages the landing page may send people back to after signing in.
-export const APP_PAGES = ['events.html', 'inventory.html', 'todo.html'];
+export const APP_PAGES = ['events.html', 'inventory.html', 'todo.html', 'vendors.html'];
 
 // For pages that only need the shared folder (Inventory, To Do, the landing page): who is signed in and whether saving works.
 export const driveStatus = () => ({ signedIn: !!user && !expired, user, folder, eventCount, canSave: !!user && !expired && !!access && access.state === 'ready', access });

@@ -16,6 +16,9 @@ import { esc } from './util.js';
 
 const EVENT_BUTTONS = ['btnOverview', 'btnTimeline', 'btnStatus', 'btnDocs', 'btnTime'];
 
+// events.html?event=<id> opens that event first (links from the Vendors page).
+const wantedEvent = new URLSearchParams(location.search).get('event');
+
 // Event dropdown: the events found in Google Drive. Empty (with a hint) until someone signs in.
 function renderPicker(selectedId) {
   const sel = $('eventSelect');
@@ -51,7 +54,8 @@ function onDriveEvents(events, openFirst) {
   setDriveEvents(events);
   if (!events.length) { closePanel(); clearEvent(); renderPicker(''); return; }
   let pick;
-  if (openFirst || !events.some(e => e.id === current)) pick = events[0].id;
+  if (openFirst && wantedEvent && events.some(e => e.id === wantedEvent)) pick = wantedEvent;
+  else if (openFirst || !events.some(e => e.id === current)) pick = events[0].id;
   else pick = current; // Refresh: stay on the open event and reload it so new files show up
   renderPicker(pick);
   openEvent(pick);

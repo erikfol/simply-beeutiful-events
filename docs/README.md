@@ -43,7 +43,7 @@ Everything the app saves goes to the shared "SBE App Data" folder inside the SBE
 Create a folder for it inside the SBE events folder in Google Drive, named with the date first (`10.3.26 Alyssa & Mick`), then click **Refresh** in the Google bar.
 
 ## Code layout
-Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` loads `js/main.js`, `inventory.html` loads `js/inventoryPage.js`, `todo.html` loads `js/todoPage.js`. `calendar.html` and `portal-demo.html` are standalone pages (their own styles and a small inline script, outside the import map).
+Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` loads `js/main.js`, `inventory.html` loads `js/inventoryPage.js`, `todo.html` loads `js/todoPage.js`, `vendors.html` loads `js/vendorsPage.js`. `calendar.html` and `portal-demo.html` are standalone pages (their own styles and a small inline script, outside the import map).
 
 | File | Job |
 |---|---|
@@ -78,6 +78,8 @@ Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` 
 | `js/teamPanel.js` | Team section on the home page, with the "Add a team member" steps |
 | `js/timelog.js` | Time log rules: reading "1:30" / "1.5" / "45 min", entries, totals by person and type, the timer; saving `event-<id>.time.json` (tested) |
 | `js/timeView.js` | Time view of an event: the form, the timer, the entries and totals |
+| `js/vendors.js` | Vendor book rules: tidy contacts, match a vendor by name or email, add an event's vendors, insurance warnings, search and grouping; saving `vendors.json` (tested) |
+| `js/vendorsPage.js` | Vendors page: the shared vendor and contact book (add, edit, delete, search) |
 | `js/dom.js`, `js/storage.js` | DOM helpers; browser-saved edits and saved templates |
 
 Keep anything without DOM access in the pure files so `npm test` can cover it. Third-party libraries live in `vendor/` (see `vendor/README.md`); when a scanning rule changes, bump `SCANNER_VERSION` in `js/scan.js` so cached results are re-read. `tests/js/fakeDrive.js` is an in-memory Google Drive used by the Drive tests.

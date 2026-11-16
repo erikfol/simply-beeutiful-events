@@ -108,9 +108,12 @@ export function eventDetails({ meta, report, curated, saved = {} }) {
 
 // ---------- Vendors and contacts: one table ----------
 
+// Roles that are people at the event rather than vendors.
+export const PEOPLE_ROLES = ['couple', 'party', 'family', 'guests'];
+
 // "The Midnight Owls Band, LLC" -> "midnight owls band"
 const normName = (s) => (s || '').toLowerCase().replace(/&/g, ' and ').replace(/\b(the|llc|inc|co|company|and)\b/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim();
-const sameVendor = (a, b) => {
+export const sameVendor = (a, b) => {
   const x = normName(a), y = normName(b);
   if (!x || !y) return false;
   if (x === y || x.includes(y) || y.includes(x)) return true;
@@ -144,9 +147,11 @@ export function vendorRows(report) {
       for (const p of c.phones) if (!row.phones.includes(p)) row.phones.push(p);
       row.sources.push({ file: c.source, link: c.link });
     } else {
+      // A contract is from a vendor: prefer a vendor role ("Hair & makeup") over the people it involves ("Couple").
       const roles = inferRoles({ title: c.vendor, source: c.source }).filter(r => r !== 'planner');
+      const role = roles.find(r => !PEOPLE_ROLES.includes(r)) || roles[0];
       rows.push({
-        vendor: c.vendor, role: roles.length ? roleLabel(roles[0]) : '', contact: '', location: '', cost: '',
+        vendor: c.vendor, role: role ? roleLabel(role) : '', contact: '', location: '', cost: '',
         emails: [...c.emails], phones: [...c.phones], sources: [{ file: c.source, link: c.link }], fromSheet: false,
       });
     }

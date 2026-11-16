@@ -6,11 +6,65 @@ import { deriveActions } from './scan.js';
 import { saveCorrections, saveDetails } from './corrections.js';
 import { eventDetails, vendorRows } from './details.js';
 import { rebuildReport, isDriveEvent } from './events.js';
+import { loadBook, changeBook, matchVendor, addFromEvent, eventRef } from './vendors.js';
+import { driveStatus } from './drivebar.js';
 import { esc, fmtDate, fmt$, fmt12, todayISO, daysBetween } from './util.js';
 
 let fixing = null; // id of the fact whose Fix form is open
 let editingDetails = false;
 let shownFor = null; // the event the open forms belong to
+// The shared vendor book, to mark which of this event's vendors are already in it.
+let book = null;
+let bookState = 'idle'; // idle | loading | ready | failed
+let bookBusy = false;
+
+// Load the vendor book once per page; the Overview redraws when it arrives.
+function ensureBook() {
+  if (bookState !== 'idle' || !isDriveEvent() || !driveStatus().signedIn) return;
+  bookState = 'loading';
+  loadBook()
+    .then(b => { book = b; bookState = 'ready'; })
+    .catch(e => { bookState = 'failed'; if (e.name === 'NeedsSignIn') needSignIn(); })
+    .finally(() => renderOverview());
+}
+
+// The book entry for a vendor row, and whether it already lists this event.
+function inBook(row, meta) {
+  const v = book && matchVendor(book.vendors, row.vendor, row.emails);
+  return v ? { vendor: v, linked: v.events.some(e => e.driveId === meta.driveId) } : null;
+}
+
+function bookCell(row, i, meta, canSave) {
+  if (bookState !== 'ready') return bookState === 'loading' ? '<small>…</small>' : '—';
+  const hit = inBook(row, meta);
+  const link = hit ? `<a href="vendors.html#v-${esc(hit.vendor.id)}">In the book</a>` : '';
+  if (hit && hit.linked) return `${link} ✓`;
+  if (!canSave) return hit ? link : '<small>Not in the book</small>';
+  return `${link}${hit ? '<br>' : ''}<button type="button" class="mini" data-act="addvendor" data-row="${i}"${bookBusy ? ' disabled' : ''}>${hit ? 'Add this event' : 'Add to book'}</button>`;
+}
+
+// Add vendors from this event to the book (new ones), or add this event to the ones already there.
+async function addToBook(rows) {
+  const meta = state.currentMeta;
+  const at = new Date().toISOString();
+  const u = driveStatus().user || {};
+  let result = null;
+  bookBusy = true; renderOverview();
+  setStatus('Saving the vendor book…');
+  try {
+    book = await changeBook(b => (result = addFromEvent(b, rows, eventRef(meta), at, u.displayName || u.emailAddress || '')).book);
+    bookState = 'ready';
+    const parts = [];
+    if (result.added.length) parts.push(`added ${result.added.length} new vendor${result.added.length === 1 ? '' : 's'}`);
+    if (result.linked.length) parts.push(`noted this event for ${result.linked.length} already there`);
+    setStatus(`Vendor book: ${parts.join(', ') || 'nothing to add'}.`);
+  } catch (e) {
+    setStatus(`Not saved. ${e.message}`);
+    if (e.name === 'NeedsSignIn') needSignIn();
+  } finally {
+    bookBusy = false; renderOverview();
+  }
+}
 
 // Event details: couple, venue, date, guests, getting ready, hotel, other days, notes.
 function detailsHtml(meta, report) {
@@ -108,6 +162,7 @@ export function showOverview() {
   showSection('overviewSection');
   $('overviewTitle').textContent = state.currentMeta.name;
   if (shownFor !== state.currentMeta) { editingDetails = false; fixing = null; shownFor = state.currentMeta; }
+  ensureBook();
   renderOverview();
 }
 
@@ -176,14 +231,18 @@ export function renderOverview() {
       const name = esc((s.file || '').split('/').pop());
       return s.link && /^https:\/\//.test(s.link) ? `<a href="${esc(s.link)}" target="_blank" rel="noopener">${name}</a>` : name;
     }).join('<br>');
-    html += `<div class="tablewrap"><table class="grid vendors cards"><tr class="head"><th>Vendor</th><th>For</th><th>Contact</th><th>Email</th><th>Phone</th><th>Cost</th><th>Source</th></tr>${vrows.map(v => `<tr>
+    const canSave = drive && driveStatus().canSave;
+    const missing = bookState === 'ready' ? vrows.filter(v => { const hit = inBook(v, meta); return !hit || !hit.linked; }).length : 0;
+    if (canSave && missing) html += `<p class="row"><button type="button" class="mini" data-act="addallvendors"${bookBusy ? ' disabled' : ''}>Add all to the vendor book</button> <span class="hint">${missing} of these ${missing === 1 ? 'is' : 'are'} not yet in the <a href="vendors.html">vendor book</a> for this event.</span></p>`;
+    html += `<div class="tablewrap"><table class="grid vendors cards"><tr class="head"><th>Vendor</th><th>For</th><th>Contact</th><th>Email</th><th>Phone</th><th>Cost</th><th>Source</th><th>Vendor book</th></tr>${vrows.map((v, i) => `<tr>
       <td data-label="Vendor"><strong>${esc(v.vendor)}</strong>${v.location ? `<br><small>${esc(v.location)}</small>` : ''}</td>
       <td data-label="For">${esc(v.role) || '—'}</td>
       <td data-label="Contact">${esc(v.contact) || '—'}</td>
       <td data-label="Email">${v.emails.length ? lines(v.emails, e => `<a href="mailto:${esc(e)}">${esc(e)}</a>`) : '—'}</td>
       <td data-label="Phone" class="nowrap">${v.phones.length ? lines(v.phones, p => `<a href="tel:${esc(p.replace(/[^\d+]/g, ''))}">${esc(p)}</a>`) : '—'}</td>
       <td data-label="Cost"><small>${esc(v.cost) || '—'}</small></td>
-      <td data-label="Source"><small>${sourceLinks(v.sources) || '—'}</small></td></tr>`).join('')}</table></div>`;
+      <td data-label="Source"><small>${sourceLinks(v.sources) || '—'}</small></td>
+      <td data-label="Vendor book">${drive ? bookCell(v, i, meta, canSave) : '—'}</td></tr>`).join('')}</table></div>`;
     html += `<p class="hint">Vendors from the vendor sheet (tab "Booked") come first, with phones and emails from their contracts added; the rest were found in the event's documents.</p>`;
   } else {
     html += `<p class="empty">${state.reading ? 'Still reading…' : 'No vendor list or contacts found yet.'}</p>`;
@@ -223,6 +282,14 @@ export function onOverviewClick(ev) {
   else if (b.dataset.act === 'canceldetails') { editingDetails = false; renderOverview(); }
   else if (b.dataset.act === 'fix') { fixing = id; renderOverview(); }
   else if (b.dataset.act === 'cancelfix') { fixing = null; renderOverview(); }
+  else if (b.dataset.act === 'addvendor' || b.dataset.act === 'addallvendors') {
+    if (bookBusy || !state.currentReport) return;
+    const rows = vendorRows(state.currentReport);
+    const meta = state.currentMeta;
+    addToBook(b.dataset.act === 'addvendor'
+      ? [rows[+b.dataset.row]].filter(Boolean)
+      : rows.filter(r => { const hit = inBook(r, meta); return !hit || !hit.linked; }));
+  }
 }
 
 // Save only what differs from the app's own guess, so later document reading can still fill the rest.

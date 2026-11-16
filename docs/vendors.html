@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SBE Vendors</title>
+  <!-- release-importmap:start -->
+  <script type="importmap">
+{
+  "imports": {
+    "./js/appdata.js": "./js/appdata.js?v=202611161808",
+    "./js/checks.js": "./js/checks.js?v=202611161808",
+    "./js/config.js": "./js/config.js?v=202611161808",
+    "./js/corrections.js": "./js/corrections.js?v=202611161808",
+    "./js/details.js": "./js/details.js?v=202611161808",
+    "./js/docs.js": "./js/docs.js?v=202611161808",
+    "./js/dom.js": "./js/dom.js?v=202611161808",
+    "./js/draft.js": "./js/draft.js?v=202611161808",
+    "./js/drive.js": "./js/drive.js?v=202611161808",
+    "./js/driveEvents.js": "./js/driveEvents.js?v=202611161808",
+    "./js/drivebar.js": "./js/drivebar.js?v=202611161808",
+    "./js/events.js": "./js/events.js?v=202611161808",
+    "./js/extract.js": "./js/extract.js?v=202611161808",
+    "./js/google.js": "./js/google.js?v=202611161808",
+    "./js/home.js": "./js/home.js?v=202611161808",
+    "./js/inventory.js": "./js/inventory.js?v=202611161808",
+    "./js/inventoryPage.js": "./js/inventoryPage.js?v=202611161808",
+    "./js/main.js": "./js/main.js?v=202611161808",
+    "./js/overview.js": "./js/overview.js?v=202611161808",
+    "./js/panel.js": "./js/panel.js?v=202611161808",
+    "./js/print.js": "./js/print.js?v=202611161808",
+    "./js/reader.js": "./js/reader.js?v=202611161808",
+    "./js/roles.js": "./js/roles.js?v=202611161808",
+    "./js/scan.js": "./js/scan.js?v=202611161808",
+    "./js/state.js": "./js/state.js?v=202611161808",
+    "./js/status.js": "./js/status.js?v=202611161808",
+    "./js/storage.js": "./js/storage.js?v=202611161808",
+    "./js/suggestions.js": "./js/suggestions.js?v=202611161808",
+    "./js/team.js": "./js/team.js?v=202611161808",
+    "./js/teamPanel.js": "./js/teamPanel.js?v=202611161808",
+    "./js/timeView.js": "./js/timeView.js?v=202611161808",
+    "./js/timeline.js": "./js/timeline.js?v=202611161808",
+    "./js/timelog.js": "./js/timelog.js?v=202611161808",
+    "./js/todo.js": "./js/todo.js?v=202611161808",
+    "./js/todoPage.js": "./js/todoPage.js?v=202611161808",
+    "./js/util.js": "./js/util.js?v=202611161808",
+    "./js/vendors.js": "./js/vendors.js?v=202611161808",
+    "./js/vendorsPage.js": "./js/vendorsPage.js?v=202611161808"
+  }
+}
+  </script>
+  <!-- release-importmap:end -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Manrope:wght@400;500;600;700&family=PT+Sans+Caption:wght@400;700&family=Raleway:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="styles.css?v=202611161808" />
+</head>
+<body>
+  <header>
+    <span class="version">v0.6</span>
+    <div class="brand-row">
+      <img src="sbe-logo.png" alt="Simply Beeutiful Events logo" class="brand-logo" />
+      <div>
+        <h1>Simply Beeutiful Events</h1>
+        <p>Vendors</p>
+      </div>
+    </div>
+    <p class="tagline">Every vendor SBE works with: contacts, insurance, ratings, notes and the events they worked.</p>
+    <nav class="sitenav" aria-label="Pages">
+      <a href="./">Home</a>
+      <a href="events.html">Event Manager</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="todo.html">To Do</a>
+      <a href="vendors.html" aria-current="page">Vendors</a>
+      <a href="calendar.html">Booking page</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="card">
+      <div id="driveBar" class="drivebar" hidden></div>
+      <div id="vendorTools" class="row toolbar inv-tools vendor-tools" hidden>
+        <button type="button" id="vendorAdd" class="primary">+ Add vendor</button>
+        <input id="vendorSearch" type="search" placeholder="Search names, contacts, notes, events" aria-label="Search vendors" />
+        <select id="vendorCategory" aria-label="Category"><option value="">All categories</option></select>
+        <span id="vendorCount"></span>
+      </div>
+      <div class="row"><span id="status"></span></div>
+      <div id="vendorList"></div>
+    </section>
+  </main>
+
+  <footer>
+    <small>The vendor book is saved privately in the shared “SBE App Data” folder</small>
+  </footer>
+
+  <script type="module" src="js/vendorsPage.js?v=202611161808"></script>
+</body>
+</html>
