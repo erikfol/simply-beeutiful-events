@@ -38,7 +38,29 @@ export function daysBetween(from, to) {
   return Math.round((new Date(to + 'T12:00:00') - new Date(from + 'T12:00:00')) / 86400000);
 }
 
-export function sortDay(day) { day.items.sort((a, b) => (a.time || '99').localeCompare(b.time || '99')); }
+// ---------- Order of stops in a day, including after midnight ----------
+const hhmmMin = (hhmm) => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };
+
+// A day with any stop from noon on runs into the night: there, a time before 4 a.m. is after midnight.
+export const isLateDay = (items) => (items || []).some(it => it && it.time && hhmmMin(it.time) >= 12 * 60);
+
+// Minutes from the day's midnight; after-midnight times on a late day count past 24:00 (00:15 -> 1455).
+export function nightMinutes(hhmm, late) {
+  const m = hhmmMin(hhmm);
+  return late && m < 4 * 60 ? m + 1440 : m;
+}
+
+// Sort stops by time (a 12:15 a.m. shuttle after an 11:30 p.m. load-out on a late day), untimed last.
+export function sortStops(items) {
+  const late = isLateDay(items);
+  const key = (it) => (it.time ? nightMinutes(it.time, late) : Infinity);
+  return items.sort((a, b) => {
+    const ka = key(a), kb = key(b);
+    return ka === kb ? 0 : ka < kb ? -1 : 1;
+  });
+}
+
+export function sortDay(day) { sortStops(day.items); }
 
 // ---------- Time extraction (fallback for old reports without times) ----------
 export function to24(raw) {

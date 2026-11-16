@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { esc, fmt12, shiftHHMM, daysBetween, to24, extractTimes, enrichEvent, sortDay } from '../../docs/js/util.js';
+import { esc, fmt12, shiftHHMM, daysBetween, to24, extractTimes, enrichEvent, sortDay, isLateDay, nightMinutes } from '../../docs/js/util.js';
 
 test('shiftHHMM moves forward, backward, and wraps midnight', () => {
   assert.equal(shiftHHMM('16:30', 15), '16:45');
@@ -49,4 +49,24 @@ test('sortDay orders stops by time, untimed last', () => {
   const day = { items: [{ time: '16:00' }, { time: '' }, { time: '09:30' }] };
   sortDay(day);
   assert.deepEqual(day.items.map(i => i.time), ['09:30', '16:00', '']);
+});
+
+test('sortDay puts after-midnight stops at the end of an evening', () => {
+  const day = { items: [{ time: '00:15', title: 'Final shuttle' }, { time: '' }, { time: '23:30' }, { time: '18:00' }, { time: '01:00' }] };
+  sortDay(day);
+  assert.deepEqual(day.items.map(i => i.time), ['18:00', '23:30', '00:15', '01:00', '']);
+});
+
+test('sortDay keeps early-morning stops first on a morning-only day', () => {
+  const day = { items: [{ time: '09:00' }, { time: '03:30' }, { time: '11:00' }] };
+  sortDay(day);
+  assert.deepEqual(day.items.map(i => i.time), ['03:30', '09:00', '11:00']);
+});
+
+test('nightMinutes and isLateDay count a late night past 24:00', () => {
+  assert.equal(isLateDay([{ time: '09:00' }, { time: '12:00' }]), true);
+  assert.equal(isLateDay([{ time: '09:00' }, { title: 'untimed' }]), false);
+  assert.equal(nightMinutes('00:15', true), 1455);
+  assert.equal(nightMinutes('00:15', false), 15);
+  assert.equal(nightMinutes('05:00', true), 300);
 });

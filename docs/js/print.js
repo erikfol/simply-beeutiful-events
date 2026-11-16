@@ -4,6 +4,7 @@ import { state } from './state.js';
 import { $, setStatus } from './dom.js';
 import { itemInView, roleLabel } from './roles.js';
 import { esc, fmtDate, fmt12, todayISO } from './util.js';
+import { fmtLength, stopLength, spanText } from './draft.js';
 
 export function buildPrintSheet() {
   const meta = state.currentMeta;
@@ -17,12 +18,15 @@ export function buildPrintSheet() {
     const items = day.items.filter(it => itemInView(it, role));
     if (!items.length) return '';
     count += items.length;
+    const span = spanText(items);
+    const who = role && role !== 'planner' ? `${esc(roleLabel(role))}:` : 'Day runs';
     return `<section class="ps-day">
       <h2>${esc(fmtDate(day.date))} <span>${esc(day.title)}</span></h2>
-      <table>${items.map(it => `<tr>
-        <td class="ps-time">${esc(fmt12(it.time))}${it.timeEnd ? `<br><span>to ${esc(fmt12(it.timeEnd))}</span>` : ''}</td>
+      ${span ? `<div class="ps-span">${who} ${esc(span)}</div>` : ''}
+      <table>${items.map(it => { const len = fmtLength(stopLength(it)); return `<tr>
+        <td class="ps-time">${esc(fmt12(it.time))}${it.timeEnd ? `<br><span>to ${esc(fmt12(it.timeEnd))}</span>` : ''}${len ? `<br><span>${len}</span>` : ''}</td>
         <td><strong>${esc(it.title)}</strong>${it.confidence === 'confirmed' ? '' : ' <em class="ps-est">estimate</em>'}${it.detail ? `<div>${esc(it.detail)}</div>` : ''}</td>
-      </tr>`).join('')}</table>
+      </tr>`; }).join('')}</table>
     </section>`;
   }).join('');
 

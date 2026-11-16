@@ -8,7 +8,7 @@ import { openShift, openSaveTemplate, closePanel } from './panel.js'; // circula
 import { ROLES, rolesOf, itemInView, roleLabel } from './roles.js';
 import { docSuggestions } from './suggestions.js';
 import { timelineConflicts } from './checks.js';
-import { applyEdit } from './draft.js';
+import { applyEdit, fmtLength, stopLength, spanText } from './draft.js';
 import { esc, fmtDate, fmt12, sortDay } from './util.js';
 
 let timelineObj = null;
@@ -48,6 +48,14 @@ let shownSuggestions = [];
 const roleChips = (it) => rolesOf(it).filter(r => r !== 'planner')
   .map(r => `<span class="rchip">${esc(roleLabel(r))}</span>`).join('');
 
+// "Day runs 10:00 a.m. – 11:30 p.m. · 13 hr 30 min", or one role's part of the day in a "View as" view.
+function spanLine(day, viewRole) {
+  const span = spanText(day.items.filter(it => itemInView(it, viewRole)));
+  if (!span) return '';
+  const who = viewRole && viewRole !== 'planner' ? `${esc(roleLabel(viewRole))}:` : 'Day runs';
+  return `<p class="dayspan">${who} ${esc(span)}</p>`;
+}
+
 export function renderCurated() {
   const { editing, viewRole, currentCurated: curated, currentReport: report } = state;
   const conflicts = timelineConflicts({ timeline: report.timeline, curated, weddingDate: state.currentMeta.weddingDate });
@@ -56,7 +64,7 @@ export function renderCurated() {
   shownSuggestions = [];
   curated.days.forEach((day, di) => {
     html += `<div class="dayhead-row"><h3 class="dayhead">${fmtDate(day.date)} — ${esc(day.title)} <small>${esc(day.date)}</small></h3>
-      <div class="day-actions"><button class="mini" data-act="savetpl" data-day="${di}">Save as template</button><button class="mini" data-act="delday" data-day="${di}">Delete day</button></div></div><div class="spine">`;
+      <div class="day-actions"><button class="mini" data-act="savetpl" data-day="${di}">Save as template</button><button class="mini" data-act="delday" data-day="${di}">Delete day</button></div></div>${spanLine(day, viewRole)}<div class="spine">`;
     let shown = 0;
     day.items.forEach((it, i) => {
       if (!itemInView(it, viewRole)) return;
@@ -65,8 +73,9 @@ export function renderCurated() {
         html += `<div class="slot ${side}"><div class="dot"></div><div class="tcard edit">${itemForm(di, i, it)}</div></div>`;
       } else {
         const range = it.timeEnd ? ` – ${fmt12(it.timeEnd)}` : '';
+        const len = fmtLength(stopLength(it));
         const conf = it.confidence === 'confirmed' ? '<span class="badge okbadge">confirmed</span>' : '<span class="badge estbadge">estimated</span>';
-        html += `<div class="slot ${side}"><div class="dot"></div><div class="tcard"><div class="ttime">${fmt12(it.time)}${range}</div><div class="ttitle">${esc(it.title)}</div><div class="tdetail">${esc(it.detail || '')}</div><div class="troles">${roleChips(it)}</div><div class="tsrc">${conf} <em>${esc(it.source || '')}</em></div><div class="tact"><button data-act="edit" data-day="${di}" data-item="${i}">Edit</button><button data-act="shiftfrom" data-day="${di}" data-item="${i}">Shift from here</button><button data-act="del" data-day="${di}" data-item="${i}" class="danger">Remove</button></div></div></div>`;
+        html += `<div class="slot ${side}"><div class="dot"></div><div class="tcard"><div class="ttime">${fmt12(it.time)}${range}${len ? ` <span class="tlen">· ${len}</span>` : ''}</div><div class="ttitle">${esc(it.title)}</div><div class="tdetail">${esc(it.detail || '')}</div><div class="troles">${roleChips(it)}</div><div class="tsrc">${conf} <em>${esc(it.source || '')}</em></div><div class="tact"><button data-act="edit" data-day="${di}" data-item="${i}">Edit</button><button data-act="shiftfrom" data-day="${di}" data-item="${i}">Shift from here</button><button data-act="del" data-day="${di}" data-item="${i}" class="danger">Remove</button></div></div></div>`;
       }
     });
     if (!shown) html += `<p class="empty">${day.items.length ? 'No stops for this view.' : 'No stops yet.'}</p>`;

@@ -2,8 +2,58 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   normalizeHHMM, generateWeddingDay, applyTemplate, templateFromDay, DAY_TEMPLATES,
-  shiftDay, shiftFrom, rippleLater,
+  shiftDay, shiftFrom, rippleLater, fmtLength, stopLength, daySpan, spanText,
 } from '../../docs/js/draft.js';
+
+test('fmtLength writes minutes and hours plainly', () => {
+  assert.equal(fmtLength(30), '30 min');
+  assert.equal(fmtLength(60), '1 hr');
+  assert.equal(fmtLength(75), '1 hr 15 min');
+  assert.equal(fmtLength(810), '13 hr 30 min');
+  assert.equal(fmtLength(0), '');
+  assert.equal(fmtLength(null), '');
+});
+
+test('stopLength measures start to end, past midnight too', () => {
+  assert.equal(stopLength({ time: '16:30', timeEnd: '17:00' }), 30);
+  assert.equal(stopLength({ time: '23:30', timeEnd: '01:00' }), 90);
+  assert.equal(stopLength({ time: '16:30' }), null);
+  assert.equal(stopLength({ time: '16:30', timeEnd: '16:30' }), null);
+});
+
+test('daySpan runs from the first start to the last finish', () => {
+  const items = [
+    { time: '10:00', timeEnd: '11:30' },
+    { time: '16:30', timeEnd: '17:00' },
+    { time: '22:00', timeEnd: '23:30' },
+    { title: 'no time yet' },
+  ];
+  assert.deepEqual(daySpan(items), { start: '10:00', end: '23:30', minutes: 810 });
+  assert.equal(spanText(items), '10:00 a.m. – 11:30 p.m. · 13 hr 30 min');
+});
+
+test('daySpan counts a load-out ending after midnight and a 12:15 a.m. shuttle as the same night', () => {
+  const items = [
+    { time: '00:15' }, // final shuttle, sorted first by time
+    { time: '13:00', timeEnd: '14:00' },
+    { time: '23:30', timeEnd: '01:00' }, // load-out
+  ];
+  assert.deepEqual(daySpan(items), { start: '13:00', end: '01:00', minutes: 720 });
+  assert.equal(spanText(items), '1:00 p.m. – 1:00 a.m. · 12 hr');
+});
+
+test('daySpan with one untimed-end stop shows just its time, and nothing for no times', () => {
+  assert.equal(spanText([{ time: '09:00' }]), '9:00 a.m.');
+  assert.equal(daySpan([{ title: 'x' }]), null);
+  assert.equal(spanText([]), '');
+});
+
+test('a generated wedding day has a length on the ceremony and a full-day span', () => {
+  const day = generateWeddingDay({ ceremony: '16:30', ceremonyLength: 30 });
+  assert.equal(fmtLength(stopLength(day.items.find(i => i.title === 'Ceremony'))), '30 min');
+  const span = daySpan(day.items);
+  assert.ok(span.minutes > 12 * 60, `expected a long day, got ${span.minutes} minutes`);
+});
 
 const at = (day, title) => day.items.find(i => i.title === title);
 
@@ -85,11 +135,11 @@ test('a saved day template round-trips to a new start time', () => {
   assert.equal(templateFromDay({ items: [] }, 'empty'), null);
 });
 
-test('shiftDay moves start and end times and keeps the day sorted', () => {
+test('shiftDay moves start and end times and keeps the day sorted, past midnight last', () => {
   const day = { items: [{ time: '23:30', title: 'late' }, { time: '16:00', timeEnd: '17:00', title: 'cocktails' }] };
   shiftDay(day, 45);
-  assert.deepEqual(day.items.map(i => [i.title, i.time]), [['late', '00:15'], ['cocktails', '16:45']]);
-  assert.equal(day.items[1].timeEnd, '17:45');
+  assert.deepEqual(day.items.map(i => [i.title, i.time]), [['cocktails', '16:45'], ['late', '00:15']]);
+  assert.equal(day.items[0].timeEnd, '17:45');
 });
 
 test('shiftFrom moves a stop and everything after it', () => {
@@ -107,6 +157,21 @@ test('rippleLater carries an edited time change to later stops only', () => {
   assert.equal(moved, 2);
   assert.deepEqual(day.items.map(i => i.time), ['14:00', '16:30', '17:30', '18:30']);
   assert.equal(rippleLater(day, edited, '16:30', '16:30'), 0);
+});
+
+test('rippleLater also moves stops after midnight, and they stay at the end', () => {
+  const edited = { time: '19:30', title: 'Reception' };
+  const day = { items: [{ time: '18:00', title: 'Cocktails' }, edited, { time: '23:30', title: 'Load-out' }, { time: '00:15', title: 'Final shuttle' }] };
+  // the reception moved from 19:00 to 19:30
+  const moved = rippleLater(day, edited, '19:00', '19:30');
+  assert.equal(moved, 2);
+  assert.deepEqual(day.items.map(i => i.time), ['18:00', '19:30', '00:00', '00:45']);
+  assert.deepEqual(day.items.map(i => i.title), ['Cocktails', 'Reception', 'Load-out', 'Final shuttle']);
+});
+
+test('a late welcome party template keeps its after-midnight stop last', () => {
+  const items = applyTemplate({ items: [{ off: 0, endOff: 180, title: 'Party' }, { off: 150, title: 'Late snack' }, { off: -60, title: 'Setup' }] }, '22:00');
+  assert.deepEqual(items.map(i => [i.time, i.title]), [['21:00', 'Setup'], ['22:00', 'Party'], ['00:30', 'Late snack']]);
 });
 
 test('applyEdit keeps a stop\'s length when only its start moves, and can ripple', async () => {

@@ -170,6 +170,8 @@ footer { text-align:center; padding:1rem; color:#888; }
 .slot.left .dot { right:-7px; } .slot.right .dot { left:-7px; }
 .tcard { display:inline-block; text-align:left; background:var(--cream); border:1px solid var(--line); border-radius:10px; padding:.5rem .7rem; max-width:100%; box-shadow:0 1px 4px rgba(0,0,0,.08); }
 .ttime { font-weight:800; } .ttitle { font-weight:600; margin:.15rem 0; }
+.tlen { font-weight:600; color:var(--muted); white-space:nowrap; }
+.dayspan { margin:-.3rem 0 .5rem; color:var(--muted); font-size:.92em; font-variant-numeric:tabular-nums; }
 .tdetail { font-size:.9em; color:#555; } .tsrc { font-size:.8em; color:#777; margin-top:.2rem; }
 .okbadge { background:#e6f4ea; color:#2e7d32; } .estbadge { background:#fff3cd; color:#856404; }
 @media (max-width:640px){ .spine::before{left:10px;} .slot{width:100%;left:0!important;text-align:left!important;padding-left:34px;} .slot .dot{left:4px!important;right:auto!important;} }
@@ -259,6 +261,7 @@ fieldset.rolepick label { font-size:.82rem; }
   .ps-day { break-inside:auto; margin-bottom:12px; }
   .ps-day h2 { font-size:13pt; margin:10px 0 6px; break-after:avoid; }
   .ps-day h2 span { font-weight:400; color:#444; }
+  .ps-span { margin:-2px 0 6px; font-size:9.5pt; color:#444; break-after:avoid; }
   .ps-day table { width:100%; border-collapse:collapse; }
   .ps-day tr { break-inside:avoid; }
   .ps-day td { border-top:1px solid #ddd; padding:5px 6px; vertical-align:top; }

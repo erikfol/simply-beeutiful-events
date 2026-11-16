@@ -1,5 +1,5 @@
 // Pure timeline-building logic (no DOM), shared by the timeline UI and the Node tests.
-import { shiftHHMM, sortDay } from './util.js';
+import { shiftHHMM, sortDay, sortStops, isLateDay, nightMinutes, fmt12 } from './util.js';
 
 export const toMin = (hhmm) => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };
 export const fromMin = (mins) => shiftHHMM('00:00', mins);
@@ -158,13 +158,12 @@ export const DAY_TEMPLATES = {
 // Template {items: [{off, endOff?, title, detail?, roles?}]} placed at a start time.
 export function applyTemplate(template, start, detail = '') {
   const base = toMin(start);
-  return template.items
+  return sortStops(template.items
     .map(t => {
       const o = { time: fromMin(base + t.off), title: t.title, detail: t.detail || detail, source: 'Template — confirm', confidence: 'estimated', roles: ['planner', ...(t.roles || []).filter(r => r !== 'planner')] };
       if (t.endOff != null) o.timeEnd = fromMin(base + t.endOff);
       return o;
-    })
-    .sort((p, q) => p.time.localeCompare(q.time));
+    }));
 }
 
 // Save a day as a reusable template: offsets from its earliest stop.
@@ -204,7 +203,9 @@ export function shiftFrom(day, fromIndex, mins) {
 export function rippleLater(day, editedItem, oldTime, newTime) {
   const delta = toMin(newTime) - toMin(oldTime);
   if (!delta) return 0;
-  const later = day.items.filter(it => it !== editedItem && it.time && it.time > oldTime);
+  const late = isLateDay(day.items);
+  const from = nightMinutes(oldTime, late);
+  const later = day.items.filter(it => it !== editedItem && it.time && nightMinutes(it.time, late) > from);
   later.forEach(it => shiftItem(it, delta));
   sortDay(day);
   return later.length;
@@ -225,4 +226,45 @@ export function applyEdit(day, index, updated, ripple = false) {
   if (ripple && old.time) return rippleLater(day, updated, old.time, updated.time);
   sortDay(day);
   return 0;
+}
+
+// ---------- Lengths ----------
+
+// 45 -> "45 min", 60 -> "1 hr", 75 -> "1 hr 15 min"; '' for no length.
+export function fmtLength(mins) {
+  if (!(mins > 0)) return '';
+  const h = Math.floor(mins / 60), m = mins % 60;
+  if (!h) return `${m} min`;
+  return m ? `${h} hr ${m} min` : `${h} hr`;
+}
+
+// Minutes from a stop's start to its end. An end earlier than the start is after midnight.
+// null when the stop has no end (or ends when it starts).
+export function stopLength(it) {
+  if (!it || !it.time || !it.timeEnd) return null;
+  const d = (toMin(it.timeEnd) - toMin(it.time) + 1440) % 1440;
+  return d || null;
+}
+
+// First start and last finish over some stops, with the minutes between them.
+// On a day that also has stops from noon on, a stop starting before 4 a.m. counts as after midnight.
+export function daySpan(items) {
+  const timed = (items || []).filter(it => it && it.time);
+  if (!timed.length) return null;
+  const late = isLateDay(timed);
+  let start = Infinity, end = -Infinity;
+  for (const it of timed) {
+    const s = nightMinutes(it.time, late);
+    start = Math.min(start, s);
+    end = Math.max(end, s + (stopLength(it) || 0));
+  }
+  return { start: fromMin(start), end: fromMin(end), minutes: end - start };
+}
+
+// "10:00 a.m. – 11:30 p.m. · 13 hr 30 min" for the day header; '' when no stop has a time.
+export function spanText(items) {
+  const s = daySpan(items);
+  if (!s) return '';
+  if (!s.minutes) return fmt12(s.start);
+  return `${fmt12(s.start)} – ${fmt12(s.end)} · ${fmtLength(s.minutes)}`;
 }
