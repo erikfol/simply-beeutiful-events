@@ -35,7 +35,9 @@ The four jobs:
 | Who uses it | ✅ SBE staff only |
 | Sign-in accounts | ✅ The SBE owner's Google account owns all the shared event folders. Sign-in is limited to the Google Cloud test users (the project lead and the SBE owner, as of September 29, 2026); add more under Google Auth Platform → Audience → Test users (see `GOOGLE_SETUP.md`). |
 | Database / sign-in service | ✅ **Google-only for now, no Supabase.** Sign in with Google in the browser; read the event folders with the signed-in person's own Drive access; save the app's own data (timelines, statuses, corrections, details) in **one shared "SBE App Data" folder inside the SBE events folder** (since September 29, 2026, so the owner and other planners share one set of work; planners need Editor access to that folder). This needs Google's full Drive permission; the app still only writes inside "SBE App Data". Cost: $0. Revisit Supabase (free tier; $25/mo Pro for backups and no sleeping) when more people use the app or background features are needed (daily email digest, scheduled sync, server-side chat). |
-| Chatbot privacy option | ⏳ Needed for Phase 5 (options below) |
+| Chatbot privacy option | ⏳ Needed for Phase 10 (options below) |
+| Notion or this app | ✅ **This app** (November 16, 2026). A team member proposed building the planning system in Notion; its ideas are now this roadmap. See `PLANNING_SYSTEM.md` |
+| Contracts, invoices, payments, inquiries, client emails | ✅ **An all-in-one business service** (HoneyBook-style) in SBE's name, decided November 16, 2026; the app never handles money and links to it. Which one: Nicole picks (Step 2 in `PLANNING_SYSTEM.md`) |
 
 ### Phases
 
@@ -45,11 +47,16 @@ The four jobs:
 | 1 | Timeline builder | ✅ Done, v0.4 (commit `2fee2e4`) | 3–4 weeks |
 | 2 | Google sign-in + Drive connection: events listed from the shared folder, document list with Drive links, timelines and statuses saved to the "SBE App Data" Drive folder | ✅ Done, v0.5 (commits `2f1f93d`, `e9bb522`); first real sign-in against the SBE folder worked September 29, 2026 | 2–3 weeks |
 | 3 | Reading the documents: facts with source links, "needs a look" list, planner corrections, event hub page | ✅ Built, v0.6; matches the Python scanner on the demo and on a real event | 2–3 weeks |
-| 4 | Action center: overdue / this week / next 30 days / changed in Drive, date-based checklist, done / snooze / assign | Planned | 2–3 weeks |
-| 5 | Ask SBE: search first; optional private AI chat later | Planned | 1–2 weeks |
-| $ | Billing and invoicing (client invoices, payment schedules, proposals, contracts), using HoneyBook as the reference; see below | Not scheduled | — |
-| 📦 | Inventory and reservations: count of SBE's lendable items, and claiming items for an event date so they can't be double-booked; see *Inventory and reservations* below | Not scheduled (idea, October 9, 2026) | 1–2 weeks |
-| + | Later, if wanted: daily email digest, client/vendor share links, wedding-day texts, time tracking, calendar (.ics) export | Not scheduled | — |
+| 4 | Home dashboard, packages and checklists: action center across all events (overdue / this week / next 30 days / changed in Drive), packages (Bee Blissful, Blossom & Bee, The Queen Bee, Other Event) that set up each event's checklist, tradition checklists, to-do due dates and assignees, calendar view; see `PLANNING_SYSTEM.md` | Planned (expanded November 16, 2026) | 3–4 weeks |
+| 5 | Vendors and money: shared vendor contact book, the couple's vendor bookings and payments with totals, client budgets, scouting; see `PLANNING_SYSTEM.md` | Proposed (November 16, 2026) | about 3 weeks |
+| 6 | Client portal (`CLIENT_PORTAL.md`) plus a payments and contracts tab linking to the all-in-one, and files marked OK to share | Proposed | 3–4 weeks |
+| 7 | People, guests and seating: wedding party, accommodations and transportation, guest list and RSVPs, seating board | Proposed | 3–4 weeks |
+| 8 | From booked client to event: create the event folder and checklist for a client booked in the all-in-one; daily overdue-tasks email (inquiries and client emails live in the all-in-one) | Proposed | about 1 week |
+| 9 | Mood boards and design, stationery tracker | Proposed | 1–2 weeks |
+| 10 | Ask SBE: search first; optional private AI chat later (was Phase 5) | Planned, moved later | 1–2 weeks |
+| $ | Billing and invoicing (client invoices, payment schedules, proposals, contracts), using HoneyBook as the reference; see below. **Decided November 16, 2026: subscribe to an all-in-one** (Step 2 in `PLANNING_SYSTEM.md`), set up outside the app. | Nicole picks which one | — |
+| 📦 | Inventory and reservations: count of SBE's lendable items, and claiming items for an event date so they can't be double-booked; see *Inventory and reservations* below | Page built October 12, 2026; reservations not yet (best after Phase 4) | 1–2 weeks |
+| + | Later, if wanted: wedding-day texts, calendar feed into Google Calendar. Time tracking is now a small item in `PLANNING_SYSTEM.md`. | Not scheduled | — |
 
 Estimates assume part-time work with Claude doing most of the coding. Expected running cost: $0/month with the Google-only approach (no AI).
 
@@ -99,7 +106,9 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 ### Next steps
 
 1. Open the real events in the app and check the Overview: payments, deadlines, budget and the *Needs a look* list. Use Fix / Ignore where it read something wrong, and tell Claude about patterns it misses.
-2. Phase 4: action center across all events (overdue, this week, next 30 days, changed in Drive, date-based checklist).
+2. Nicole picks the all-in-one business service and signs up in SBE's name (Step 2 in `PLANNING_SYSTEM.md`). Gather the package task lists and her Timeline Genius list (inputs 1 and 2).
+3. Replace Timeline Genius (Step 1 in `PLANNING_SYSTEM.md`, also under *To do*).
+4. Phase 4: home dashboard, packages and checklists across all events (overdue, this week, next 30 days, changed in Drive).
 
 ### Inventory and reservations (idea, October 9, 2026)
 
@@ -174,9 +183,9 @@ SBE will use **HoneyBook** (https://www.honeybook.com/) as the reference for bil
 
 Fits with the existing app: budget tracking, per-vendor contract and payment status, and payment due-date alerts (Status Update view) are the starting point.
 
-**Open question for later:** build billing features into the SBE app, or have SBE subscribe to HoneyBook and connect it to the app (it integrates with QuickBooks, Google, and Zapier). Either way, actual card and bank payments should go through an established payment provider, never be handled by the app itself.
+**Decided November 16, 2026:** SBE subscribes to an all-in-one service like HoneyBook rather than building billing into the app (see `PLANNING_SYSTEM.md`, Decision 2). The earlier open question was: build billing features into the SBE app, or have SBE subscribe to HoneyBook and connect it to the app (it integrates with QuickBooks, Google, and Zapier). Either way, actual card and bank payments should go through an established payment provider, never be handled by the app itself.
 
-### Chatbot privacy options (for Phase 5)
+### Chatbot privacy options (for Phase 10)
 
 | Option | Who sees the documents | Trade-off |
 |---|---|---|
@@ -201,7 +210,7 @@ Fits with the existing app: budget tracking, per-vendor contract and payment sta
   4. Book a test meeting from the page with another email address, and check it lands on her calendar and both sides get an email. Then cancel it.
   5. Share the link: https://erikfol.github.io/simply-beeutiful-events/calendar.html (email signature, replies to inquiries), and later add a "Book a meeting" button on the new website (see `WEBSITE.md`).
 - [ ] **Replace Timeline Genius** (added November 12, 2026). Nicole already pays about $500 a year for Timeline Genius (timelinegenius.com) to make her day-of timelines. Goal: the app's own timeline builder (built in Phase 1) does everything she uses Timeline Genius for, so she can cancel it. Steps:
-  1. Sit with Nicole and list what she actually uses in Timeline Genius (for example templates, starter timelines, shifting all the times at once, separate client and vendor versions, PDF or email sharing) and what she'd miss most.
+  1. Sit with Nicole and list what she actually uses in Timeline Genius (for example templates, starter timelines, shifting all the times at once, separate client and vendor versions, PDF or email sharing) and what she'd miss most. (A team member's Notion proposal of November 16, 2026 asks her the same question; one answer serves both. See `PLANNING_SYSTEM.md`, Step 1.)
   2. Compare that list with what the app does now (see *Competitive reference: Timeline Genius* near the end of this file) and build what's missing.
   3. Find her renewal date, and before it, copy or export her upcoming events' timelines out of Timeline Genius.
   4. Use the app for one real event start to finish before she cancels.

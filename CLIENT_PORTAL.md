@@ -106,7 +106,7 @@ It's best built **after Phase 4 (action center)**, because the portal's to-do li
 
 - 2026-10-09: brainstorm written.
 - 2026-10-10: **approved mockup**, `docs/portal-demo.html` (live at https://erikfol.github.io/simply-beeutiful-events/portal-demo.html), using the fictional demo couple. Ticks, comments and uploads stay in the browser only. **Use it as the design template when building the real portal.**
-- Not scheduled yet. Next, when the project lead says so: add the portal to the roadmap in `sbe-improvements.md`.
+- 2026-11-16: added to the roadmap as **Phase 6**. A team member's proposal adds a **business side**: a Payments and contracts tab, and files marked private or OK to share. Contracts, invoices and payments will live in an **all-in-one business service** (decided 2026-11-16), which has its own client pages; the portal's tab links to them instead of rebuilding them. Details in `PLANNING_SYSTEM.md`.
 
 ## How we'd test it (when built)
 
