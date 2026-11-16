@@ -116,12 +116,23 @@ The team member is well placed to write 2–4.
 
 In order: save money first (Timeline Genius), then set up the business side, then what gets used every day (dashboard and checklists), then money tracking, then the portal, then guests, then design. Each step ends with real use on a real event. As before, Erik starts each phase ("start phase N").
 
-### Step 1. Replace Timeline Genius (1–2 weeks): ideas 4, 5
+### Step 1. Replace Timeline Genius (5–7 weeks): ideas 4, 5, plus what Nicole uses a lot
 
-Already in *To do* in `sbe-improvements.md`. The timeline builder covers the proposal's list: a starter timeline from a questionnaire, templates, shifting everything when one time moves, rehearsal to farewell brunch, one vendor's times as a PDF.
+Already in *To do* in `sbe-improvements.md`. **Nicole's checklist (November 16, 2026):** of 19 Timeline Genius features she uses 11 a lot and 8 sometimes, and none not at all. The app already covers four of her "a lot" features: the starter timeline, a version per vendor, files and branding. The other seven are built here, before she cancels, even where this plan had them later. Quick ones first:
 
-- Compare with Nicole's list of what she uses (input 1) and build the gaps. Things to check: each stop's length shown and totaled, a load-out stop, and emailing a vendor their PDF.
-- **Done when:** one real event's timeline is made in the app and sent to its vendors, before the Timeline Genius renewal.
+1. ✅ **Each part's length** (built November 16, 2026): stops with an end time show "30 min" (past midnight too), and each day shows "Day runs 12:00 p.m. – 1:00 a.m. · 13 hr", or one role's span in a **View as** view ("Photographer: 3:30 p.m. – 11:30 p.m. · 8 hr"), on screen and on the PDF. Stops with only a start time show no length. Also fixed: a stop after midnight (a 12:15 a.m. shuttle) now stays at the end of the evening instead of jumping to the top, after edits, shifts and templates too.
+2. **Team members:** make sure everyone who uses Timeline Genius today can sign in and share the same timelines (Google test user plus Editor on "SBE App Data"), with a short "add a team member" guide. A day or two.
+3. **Time tracking:** log hours on each event (date, who, hours, what), with totals. Moved from *Small items*. 2–3 days.
+4. **Vendor and contact book:** one shared list reused for every event, started from the vendors already found in event documents. Moved from Phase 5. About 1–1.5 weeks.
+5. **Event checklist:** a to-do list for each event with due dates and who's responsible (SBE, the couple, a vendor, a team member), shown per role like the timeline. Moved from Phase 4; packages and templates stay there. About 1.5–2 weeks.
+6. **Online timeline for the couple and vendors:** each gets a private link to their own version, always showing the latest times. It uses the Google Apps Script doorway planned for the client portal (Phase 6), built now for timelines only. Nicole approves the script in her Google account once. About 1.5–2 weeks.
+7. **Send from the app:** a **Send** button emails each vendor, and the couple, their link and PDF from Nicole's Gmail, through the same script. About a week.
+
+Used sometimes, already covered: ready-made templates, her own templates, shifting, PDF, phone, and turning old timelines into templates (Erik and Claude do it on request). The AI review is covered without AI: the app reads contract times and warns about conflicts. **Wedding-day text reminders** (used sometimes) stay on the *Later* list; until then, texts from a phone.
+
+- **Still needed from Nicole:** the checklist's last six questions came back blank. Most urgent is the **renewal date and plan**; then how many upcoming events have timelines, how timelines reach people today, who else uses the account, and her must-haves.
+- **If the renewal comes before this is done:** renew for the shortest period Timeline Genius sells (its monthly plan is $54.95) rather than a full year.
+- **Done when:** one real event's timeline, checklist and contacts live in the app, and its vendors get their versions by email from the app. Then copy over the other upcoming events and cancel.
 
 ### Step 2. Set up the all-in-one (outside the app; start soon): ideas 12, 13, 15
 
@@ -142,9 +153,9 @@ This is setup in the service, not app work, so it can run alongside Step 1.
 - **Website:** Jennifer puts its inquiry form on the new site, replacing the Contact form (see *Lead form and CRM* in `WEBSITE.md`).
 - **Done when:** a test inquiry from the website lands in it and gets its thank-you email, and one real client signs and pays a deposit through it.
 
-### Phase 4. Home dashboard, packages and checklists (3–4 weeks): ideas 1, 3, 9, 22
+### Phase 4. Home dashboard, packages and checklists (2–3 weeks): ideas 1, 3, 9, 22
 
-This grows the planned action center.
+This grows the planned action center. The basic event checklist is built in Step 1; this phase adds packages, templates, the dashboard and the calendar on top of it.
 
 - **Event setup:** pick the package (Bee Blissful, Blossom & Bee, The Queen Bee, Other Event). For Blossom & Bee, tick the Queen Bee services the client chose. Pick the ceremony tradition(s), or the event type for non-weddings.
 - **Checklist templates:** each task has a "when" relative to the event date ("10 weeks before"), who does it (SBE or the couple), and which package, service or tradition adds it. Templates are edited in the app, like timeline templates.
@@ -158,19 +169,19 @@ This grows the planned action center.
 
 Already planned in *Inventory and reservations* in `sbe-improvements.md`: storage location, condition and notes; reserve a number of items for an event's dates with a warning before double-booking; a pull list to pack and check items back in. After Phase 4, reservations show on the event's page and overdue returns on the dashboard.
 
-### Phase 5. Vendors and money (about 3 weeks): ideas 6, 7, 8, 20
+### Phase 5. Vendors and money (about 2 weeks): ideas 6, 7, 8, 20
 
 Money between the client and SBE lives in the all-in-one. This phase covers the couple's own vendors and budget.
 
-- **Vendor contact book:** one shared list for all events: name, category, contacts, website, insurance (with an expiry date that warns before it lapses), rating, notes, and the events they worked. It starts from the vendors already found in event documents. Adding a vendor to an event picks from the book, so nothing is typed twice.
+- **Vendor contact book** (built in Step 1; this phase links it to bookings): one shared list for all events: name, category, contacts, website, insurance (with an expiry date that warns before it lapses), rating, notes, and the events they worked. It starts from the vendors already found in event documents. Adding a vendor to an event picks from the book, so nothing is typed twice.
 - **Bookings and payments:** the Status Update table grows. For each booked vendor it adds the total price, deposit, payments made (amount and date), balance owed and due dates. It totals everything and flags anything overdue. Payments found in contracts fill it in to start.
 - **Client budget:** planned vs. actual by category, including things without a vendor (attire, favors, DIY supplies). Today the app reads the client's budget sheet; to decide: keep the budget in that sheet and add a planned column there, or keep it in the app.
 - **Scouting (Queen Bee):** for each category (venue, photographer, ...), a shortlist with tour date, quote, pros and cons, and a status (considering, toured, chosen, passed), shown side by side. **Book this one** moves the choice into bookings and the contact book.
 - **Done when:** one real event's vendors, payments and budget are tracked in the app instead of a separate sheet.
 
-### Phase 6. Client portal (3–4 weeks): ideas 21, 25
+### Phase 6. Client portal (2–3 weeks): ideas 21, 25
 
-Build `CLIENT_PORTAL.md` from the approved mockup, plus:
+Build `CLIENT_PORTAL.md` from the approved mockup. The private links and the Apps Script doorway already exist from Step 1 (for timelines); this phase adds the rest of the portal, plus:
 
 - **Share marking on files:** each document is **Private** (default) or **OK to share**. Shared files show in the portal.
 - **Payments and contracts tab** linking to the all-in-one (see *The business side of the client portal*).
@@ -202,7 +213,7 @@ The all-in-one handles inquiries and client emails (Step 2). The app adds:
 
 ### Small items, any time
 
-- **Time tracking** (idea 23): **Log time** on each event (date, who, hours, what), with totals per event and per package, to show what each package really takes. A few days.
+- **Time tracking** (idea 23): moved into Step 1 (Nicole uses it a lot). Phase 4 adds totals per package.
 - **Pricing guide** (idea 24): not an app feature. A page on the new website, or a branded PDF made in Canva or Google Docs, from Nicole's content (input 4). Belongs with the website work in `WEBSITE.md`.
 - **Booking consult calls** (idea 14): built. Nicole sets up her Google Calendar appointment schedule (*To do* in `sbe-improvements.md`), unless the all-in-one's scheduler replaces it (decision 5).
 
@@ -227,21 +238,22 @@ To record in `sbe-improvements.md` when the matching phase starts:
 
 | Stage | Ideas | Effort |
 |---|---|---|
-| Step 1: replace Timeline Genius | 4, 5 | 1–2 weeks |
+| Step 1: replace Timeline Genius (grew after Nicole's checklist) | 4, 5, and parts of 6, 9, 23, 25 | 5–7 weeks |
 | Step 2: set up the all-in-one | 12, 13, 15 | Setup time in the service, not app work |
-| Phase 4: dashboard, packages, checklists, calendar | 1, 3, 9, 22 | 3–4 weeks |
+| Phase 4: dashboard, packages, checklists, calendar | 1, 3, 9, 22 | 2–3 weeks |
 | Inventory: finish | 10 | 1–2 weeks |
-| Phase 5: vendors and money | 6, 7, 8, 20 | about 3 weeks |
-| Phase 6: client portal | 21, 25 | 3–4 weeks |
+| Phase 5: vendors and money | 6, 7, 8, 20 | about 2 weeks |
+| Phase 6: client portal | 21, 25 | 2–3 weeks |
 | Phase 7: people, guests, seating | 11, 16, 17, 18 | 3–4 weeks |
 | Phase 8: from booked client to event | 12, 15 | about 1 week |
 | Phase 9: mood boards and design | 19 | 1–2 weeks |
 | Small items | 23, 24 | under a week |
 
-App work is part-time with Claude coding. **Total:** roughly 4–5 months. The everyday core (Step 1 and Phases 4–5) takes about 2 months.
+App work is part-time with Claude coding. **Total:** roughly 4–5 months. Nicole's checklist moved work earlier rather than adding much: Step 1 now carries the event checklist, contact book, time tracking and the online links, and the later phases shrink by the same amount. The everyday core (Step 1 and Phases 4–5) takes about 2–3 months.
 
 **Running cost:** the app and the Apps Script are $0 a month. The all-in-one is a subscription (HoneyBook from about $29 a month billed yearly, about $350 a year), plus about 3% per card payment. Cancelling Timeline Genius saves about $500 a year, which roughly covers it.
 
 ## Status
 
 - 2026-11-16: proposal received; ideas and plan written here. Decided the same day: build in this app, and use an all-in-one for the business side. Next: Nicole picks the all-in-one (Step 2); gather inputs 1–2; start Step 1.
+- 2026-11-16: Nicole's Timeline Genius checklist answered (input 1, features only): 11 used a lot, 8 sometimes. Step 1 grew to cover the seven "a lot" features the app lacks. Her renewal date and the other end questions are still missing.
