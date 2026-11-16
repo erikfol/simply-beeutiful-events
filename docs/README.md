@@ -78,6 +78,8 @@ Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` 
 | `js/teamPanel.js` | Team section on the home page, with the "Add a team member" steps |
 | `js/timelog.js` | Time log rules: reading "1:30" / "1.5" / "45 min", entries, totals by person and type, the timer; saving `event-<id>.time.json` (tested) |
 | `js/timeView.js` | Time view of an event: the form, the timer, the entries and totals |
+| `js/checklist.js` | Checklist rules: tasks with due dates and who does them, quick "1 month before" dates, grouping by when due, copying from another event; saving `event-<id>.checklist.json` (tested) |
+| `js/checklistView.js` | Checklist view of an event: add, edit, tick off and delete tasks, "Show for", copy from another event |
 | `js/vendors.js` | Vendor book rules: tidy contacts, match a vendor by name or email, add an event's vendors, insurance warnings, search and grouping; saving `vendors.json` (tested) |
 | `js/vendorsPage.js` | Vendors page: the shared vendor and contact book (add, edit, delete, search) |
 | `js/dom.js`, `js/storage.js` | DOM helpers; browser-saved edits and saved templates |

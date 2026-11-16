@@ -10,11 +10,12 @@ import { showStatus, onStatusChange, onStatusClick, saveStatus, revertStatus, ex
 import { showDocuments } from './docs.js';
 import { showOverview, renderOverview, onOverviewClick, onOverviewSubmit } from './overview.js';
 import { showTime, onTimeClick, onTimeSubmit } from './timeView.js';
+import { showChecklist, onChecklistClick, onChecklistSubmit, onChecklistChange, onChecklistToggle } from './checklistView.js';
 import { initDriveBar } from './drivebar.js';
 import { ROLES } from './roles.js';
 import { esc } from './util.js';
 
-const EVENT_BUTTONS = ['btnOverview', 'btnTimeline', 'btnStatus', 'btnDocs', 'btnTime'];
+const EVENT_BUTTONS = ['btnOverview', 'btnTimeline', 'btnChecklist', 'btnStatus', 'btnDocs', 'btnTime'];
 
 // events.html?event=<id> opens that event first (links from the Vendors page).
 const wantedEvent = new URLSearchParams(location.search).get('event');
@@ -76,6 +77,11 @@ async function init() {
   on('btnStatus', 'click', showStatus);
   on('btnDocs', 'click', showDocuments);
   on('btnTime', 'click', showTime);
+  on('btnChecklist', 'click', showChecklist);
+  on('checklistSection', 'click', onChecklistClick);
+  on('checklistSection', 'submit', onChecklistSubmit);
+  on('checklistSection', 'change', onChecklistChange);
+  $('checklistSection').addEventListener('toggle', onChecklistToggle, true);
   on('timeSection', 'click', onTimeClick);
   on('timeSection', 'submit', onTimeSubmit);
   on('btnSave', 'click', saveTimeline);
