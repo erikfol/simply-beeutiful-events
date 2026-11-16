@@ -3,6 +3,7 @@
 import { $ } from './dom.js';
 import { isConfigured } from './google.js';
 import { initDriveBar, driveStatus, APP_PAGES } from './drivebar.js';
+import { initTeam, showTeam } from './teamPanel.js';
 
 // Where to go after signing in, when another page sent the visitor here (?next=events.html).
 const next = new URLSearchParams(location.search).get('next');
@@ -24,8 +25,10 @@ function render() {
 function onDriveEvents() {
   render();
   const s = driveStatus();
-  if (next && APP_PAGES.includes(next) && s.signedIn && s.folder) location.replace(next);
+  if (next && APP_PAGES.includes(next) && s.signedIn && s.folder) { location.replace(next); return; }
+  showTeam(s);
 }
 
 render();
+initTeam();
 initDriveBar(onDriveEvents, { home: true });

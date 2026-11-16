@@ -65,7 +65,12 @@ Until step 2, other planners can see everything but not save; the app says so an
 ## Adding another person
 
 1. In Google Cloud: **Google Auth Platform → Audience → Test users → Add users**, add their Google email.
-2. In Google Drive: share the SBE events folder with them as **Viewer**, and the **SBE App Data** folder inside it as **Editor**.
+2. In Google Drive: share the SBE events folder with them as **Viewer** (or Editor if they also change documents in Drive), and the **SBE App Data** folder inside it as **Editor**.
+3. They sign in once on the app's home page and choose the events folder.
+
+The **Team** section on the app's home page shows these same steps (under *Add a team member*) and checks the result: everyone with access to the events folder, whether each can save, when they last signed in, and what's still missing for each. It also warns if a folder is open to anyone with the link. Seeing the whole list needs Editor access to the events folder or to "SBE App Data"; the app only reads the sharing, it never changes it.
+
+If someone sees **"Access blocked"** from Google when signing in, they aren't on the test-user list yet (step 1).
 
 ## What to expect the first time you sign in
 

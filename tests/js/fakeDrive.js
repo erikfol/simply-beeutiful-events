@@ -63,6 +63,24 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize, convert 
     return (f) => tests.every(t => t(f));
   }
 
+  // Who has access, the way Drive's permissions list reports it: the item's owner, plus everyone the item or a
+  // folder above it is shared with (the owner of a folder above can edit inside it), and anyone-with-the-link.
+  function permissionsOf(f) {
+    const rank = { owner: 3, writer: 2, reader: 1 };
+    const roles = new Map();
+    const put = (email, role) => { if (!roles.has(email) || rank[role] > rank[roles.get(email)]) roles.set(email, role); };
+    let anyone = null;
+    for (let x = f; x; x = x.parents[0] === 'root' ? null : files.get(x.parents[0])) {
+      x.owners.forEach(e => put(e, x === f ? 'owner' : 'writer'));
+      x.editors.forEach(e => put(e, 'writer'));
+      x.sharedWith.forEach(e => put(e, 'reader'));
+      if (x.anyone && (!anyone || rank[x.anyone] > rank[anyone])) anyone = x.anyone;
+    }
+    const perms = [...roles].map(([email, role], i) => ({ id: `p${i + 1}`, type: 'user', role, emailAddress: email, displayName: person(email).displayName }));
+    if (anyone) perms.push({ id: 'anyoneWithLink', type: 'anyone', role: anyone });
+    return perms;
+  }
+
   const transportFor = (who) => async function transport(method, url, { body } = {}) {
     calls.push(`${method} ${url}`);
     if (expired) return json(401, { error: { message: 'Invalid Credentials' } });
@@ -70,6 +88,15 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize, convert 
     const path = u.pathname.replace(/^\/(upload\/)?drive\/v3/, '');
     const idMatch = /^\/files\/([^/]+)$/.exec(path);
     const exportMatch = /^\/files\/([^/]+)\/export$/.exec(path);
+    const permMatch = /^\/files\/([^/]+)\/permissions$/.exec(path);
+
+    // Only people who can edit an item see its sharing list here (the cautious reading of Drive's rules).
+    if (method === 'GET' && permMatch) {
+      const f = files.get(decodeURIComponent(permMatch[1]));
+      if (!f) return json(404, { error: { message: 'File not found' } });
+      if (!canWrite(f, who)) return denied();
+      return json(200, { permissions: permissionsOf(f) });
+    }
 
     if (method === 'GET' && exportMatch) {
       const f = files.get(decodeURIComponent(exportMatch[1]));
@@ -146,8 +173,11 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize, convert 
     return json(404, { error: { message: `Fake Drive has no handler for ${method} ${path}` } });
   };
 
+  // "Anyone with the link" sharing on a file or folder ('reader' or 'writer').
+  const shareLink = (id, role = 'reader') => { files.get(id).anyone = role; };
+
   return {
-    transport: transportFor(me), as: transportFor, add, share, files, calls, me, deleted,
+    transport: transportFor(me), as: transportFor, add, share, shareLink, files, calls, me, deleted,
     expire: () => { expired = true; }, restore: () => { expired = false; },
   };
 }

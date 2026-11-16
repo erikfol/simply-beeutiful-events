@@ -74,6 +74,8 @@ Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` 
 | `js/inventory.js`, `js/inventoryPage.js` | Inventory: items, categories, photos (pure parts tested); the page |
 | `js/todo.js` | Pure to-do rules: add, reword, status, notes, search, grouping; saving `todos.json` (tested) |
 | `js/todoPage.js` | To Do page: the list, status buttons, notes, edit and delete |
+| `js/team.js` | Team rules: who can open the events folder and save in "SBE App Data", link-sharing warnings, sign-ins noted in `team.json` (tested) |
+| `js/teamPanel.js` | Team section on the home page, with the "Add a team member" steps |
 | `js/dom.js`, `js/storage.js` | DOM helpers; browser-saved edits and saved templates |
 
 Keep anything without DOM access in the pure files so `npm test` can cover it. Third-party libraries live in `vendor/` (see `vendor/README.md`); when a scanning rule changes, bump `SCANNER_VERSION` in `js/scan.js` so cached results are re-read. `tests/js/fakeDrive.js` is an in-memory Google Drive used by the Drive tests.

@@ -77,6 +77,21 @@ export async function getAccess(id) {
   return { id: f.id, name: f.name, link: f.webViewLink, canWrite: !!(f.capabilities && f.capabilities.canAddChildren), owner: (f.owners && f.owners[0]) || {} };
 }
 
+// Who has access to a file or folder (people, groups, a whole domain, anyone with the link), including what it
+// gets from the folders above it. Someone who isn't allowed to see the sharing list gets a 403 error.
+export async function listPermissions(id) {
+  const out = [];
+  let pageToken = '';
+  do {
+    const params = new URLSearchParams({ fields: 'nextPageToken,permissions(id,type,role,emailAddress,displayName,domain,deleted)', supportsAllDrives: 'true', pageSize: '100' });
+    if (pageToken) params.set('pageToken', pageToken);
+    const data = await (await request('GET', `${API}/files/${encodeURIComponent(id)}/permissions?${params}`)).json();
+    out.push(...(data.permissions || []));
+    pageToken = data.nextPageToken || '';
+  } while (pageToken);
+  return out;
+}
+
 // Top-level folders in the person's own Drive (the owner of the events folder won't see it as "shared").
 export const listMyTopFolders = () =>
   listFiles(`mimeType = ${quote(FOLDER_MIME)} and 'root' in parents and 'me' in owners and trashed = false`);

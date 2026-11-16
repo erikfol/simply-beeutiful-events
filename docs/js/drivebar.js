@@ -5,6 +5,7 @@ import { isConfigured, isReady, isSignedIn, prepare, signIn, signOut, canReadDri
 import { listChildren, listSharedFolders, listMyTopFolders, searchFolders, getFile, whoAmI } from './drive.js';
 import { readData, writeData, readSettings, writeSettings, forgetAppData, useEventsFolder, sharedAccess, migratePersonalData } from './appdata.js';
 import { FOLDER_MIME, folderToEvent, sortEvents, parseFolderId } from './driveEvents.js';
+import { recordSeen } from './team.js';
 import { loadTemplates, saveTemplates } from './storage.js';
 import { esc, todayISO } from './util.js';
 import { APP_DATA_FOLDER } from './config.js';
@@ -211,6 +212,7 @@ async function setUpSharedData() {
   if (access.state !== 'ready') return 0;
   const moved = await migratePersonalData();
   await syncTemplates();
+  recordSeen(user, todayISO()).catch(() => {}); // today's sign-in, for the Team list; never holds anything up
   return moved;
 }
 

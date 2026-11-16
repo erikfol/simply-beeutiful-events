@@ -121,6 +121,15 @@ header p {
 .apptile-text { color:var(--muted); }
 .apptile-meta { font-family:var(--font-ui); font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--olive-deep); }
 .tiles-hint { text-align:center; }
+.team { margin-top:1.2rem; display:flex; flex-direction:column; gap:.6rem; }
+.team h2 { margin:0; }
+.team .tablewrap { margin:0; }
+.team-table td { min-width:7rem; overflow-wrap:normal; }
+.team-table td:nth-child(4) { white-space:nowrap; }
+.team-email { display:block; color:var(--muted); font-size:.8rem; white-space:nowrap; }
+.team-actions { display:flex; flex-wrap:wrap; align-items:center; gap:.4rem .8rem; margin:0; }
+.team-steps summary { cursor:pointer; font-weight:600; }
+.team-steps ol { margin:.5rem 0 0; padding-left:1.3rem; display:flex; flex-direction:column; gap:.4rem; max-width:70ch; }
 main {
   max-width: 1000px;
   margin: 0 auto;

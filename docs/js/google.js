@@ -91,7 +91,10 @@ export function signIn({ askAgain = false } = {}) {
       remember();
       resolve();
     };
-    tokenClient.error_callback = (err) => reject(new Error(err.type === 'popup_closed' ? 'Sign-in window was closed.' : (err.message || 'Sign-in failed.')));
+    // A Google account that isn't on the app's test-user list sees "Access blocked" in the popup and closes it.
+    tokenClient.error_callback = (err) => reject(new Error(err.type === 'popup_closed'
+      ? 'The sign-in window was closed. If Google said access is blocked, this Google account isn\'t on the app\'s list yet: ask whoever manages the app to add it (see "Add a team member" on the home page after someone signs in).'
+      : (err.message || 'Sign-in failed.')));
     tokenClient.requestAccessToken({ prompt: askAgain ? 'consent' : '' });
   });
 }
