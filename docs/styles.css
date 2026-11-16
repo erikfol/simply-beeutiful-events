@@ -129,6 +129,14 @@ header p {
 .team-email { display:block; color:var(--muted); font-size:.8rem; white-space:nowrap; }
 .team-actions { display:flex; flex-wrap:wrap; align-items:center; gap:.4rem .8rem; margin:0; }
 .team-steps summary { cursor:pointer; font-weight:600; }
+.time-total { margin:.2rem 0; font-size:1.05rem; }
+.timeview .hint { margin:.1rem 0; }
+.timer { margin:.8rem 0 .2rem; line-height:2.2; }
+.timer button { margin:0 .3rem 0 .2rem; }
+.timeform { grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); }
+.timeform select { padding:.4rem; border-radius:6px; border:1px solid #ccc; font-size:.95rem; font-family:inherit; min-width:0; }
+.time-table td:first-child, .time-table td.num { white-space:nowrap; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 .team-steps ol { margin:.5rem 0 0; padding-left:1.3rem; display:flex; flex-direction:column; gap:.4rem; max-width:70ch; }
 main {
   max-width: 1000px;

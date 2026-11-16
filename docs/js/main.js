@@ -9,11 +9,12 @@ import { buildPrintSheet, printTimeline } from './print.js';
 import { showStatus, onStatusChange, onStatusClick, saveStatus, revertStatus, exportStatus } from './status.js';
 import { showDocuments } from './docs.js';
 import { showOverview, renderOverview, onOverviewClick, onOverviewSubmit } from './overview.js';
+import { showTime, onTimeClick, onTimeSubmit } from './timeView.js';
 import { initDriveBar } from './drivebar.js';
 import { ROLES } from './roles.js';
 import { esc } from './util.js';
 
-const EVENT_BUTTONS = ['btnOverview', 'btnTimeline', 'btnStatus', 'btnDocs'];
+const EVENT_BUTTONS = ['btnOverview', 'btnTimeline', 'btnStatus', 'btnDocs', 'btnTime'];
 
 // Event dropdown: the events found in Google Drive. Empty (with a hint) until someone signs in.
 function renderPicker(selectedId) {
@@ -70,6 +71,9 @@ async function init() {
   on('btnTimeline', 'click', showTimeline);
   on('btnStatus', 'click', showStatus);
   on('btnDocs', 'click', showDocuments);
+  on('btnTime', 'click', showTime);
+  on('timeSection', 'click', onTimeClick);
+  on('timeSection', 'submit', onTimeSubmit);
   on('btnSave', 'click', saveTimeline);
   on('btnRevert', 'click', revertTimeline);
   on('btnExport', 'click', exportTimeline);
