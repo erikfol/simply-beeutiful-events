@@ -495,6 +495,32 @@ Paid planner software ($55/mo, $550/yr, or $195 one-time for 5 events). Reviewed
 - **PDF export / email** — already covered by item 7 above.
 - **Vendor rolodex, file management, text reminders, collaboration, time tracking** — backend territory; revisit with item 1.
 
+**Feature check, November 16, 2026** (for *Replace Timeline Genius* under *To do*). From timelinegenius.com's home and pricing pages: Unlimited $54.95/month or $549.95/year, or $194.95 one-time for 5 events; all features on every plan. A competitor's comparison (WedSites, 2026) also claims AI that checks timelines for gaps, reads contracts for times and drafts messages; Timeline Genius's own pages don't mention it.
+
+| Timeline Genius feature | The app today |
+|---|---|
+| Starter timeline from a few questions | ✅ Generate draft |
+| Preset templates | ✅ Rehearsal, welcome party, brunch; wedding day from the questions |
+| Your own templates | 🟡 Save as template (wording and stops); one fixed PDF design |
+| Template service ($57 each) | ✅ Erik and Claude can convert old timelines |
+| Bulk time-shifting | ✅ Shift day, shift from here, move later stops on edit |
+| Each part's length | 🟡 Start–end shown, no "30 min" or day total (not on their site; asked) |
+| AI gap check / contract reading (competitor's claim) | 🟡 Reads contract times and warns on conflicts, no AI |
+| Tailored version per vendor or client | ✅ View as one of 15 roles |
+| PDF | ✅ Print / Save as PDF, SBE-branded |
+| Email from the program | ❌ Not yet |
+| Online version for clients and vendors | 📋 Clients in the portal (Phase 6); vendors not planned |
+| Wedding-day text reminders | ⏳ Later |
+| Checklists | 📋 Phase 4 |
+| Vendor / contact rolodex | 🟡 Per event from documents; shared book in Phase 5 |
+| File uploads | ✅ Via the event's Drive folder |
+| Branding | ✅ |
+| Time tracking | 📋 Small item |
+| Team members | 🟡 Anyone added as a test user |
+| Phone and tablet | ✅ |
+
+Nicole marks what she uses on a checklist page (a private claude.ai page Erik shares with her; her answers are saved there for Claude to read). Anything she uses a lot that is ❌, 📋 or ⏳ above gets built in Step 1 before she cancels, even if the plan had it later.
+
 ## Suggested implementation order
 
 1. Stop tracking event data in Git and move to Google Drive.
