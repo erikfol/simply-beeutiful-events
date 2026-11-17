@@ -34,11 +34,13 @@ export const dueBefore = (eventDate, days) => (isDate(eventDate) ? addDays(event
 
 export const emptyChecklist = () => ({ updated: null, tasks: [] });
 
+// from: the checklist template task it came from ({tpl, item}); edited: changed by hand since (see packages.js).
 function cleanTask(t) {
   return {
     id: String(t.id), title: clean(t.title), due: isDate(t.due) ? t.due : '', who: clean(t.who), notes: cleanNotes(t.notes),
     done: !!t.done, doneAt: t.done ? (t.doneAt || null) : null, doneBy: t.done ? clean(t.doneBy) : '',
     created: t.created || null, createdBy: clean(t.createdBy),
+    ...(t.from && t.from.tpl && t.from.item ? { from: { tpl: String(t.from.tpl), item: String(t.from.item) }, edited: !!t.edited } : {}),
   };
 }
 
@@ -61,10 +63,16 @@ export function addTask(list, { id = newTaskId(), title, due = '', who = '', not
 }
 
 // Change a task's wording, due date, who or notes (not whether it's done).
+// A task from a template that is changed by hand is marked edited, so the template never moves or removes it.
 export function updateTask(list, id, { title, due, who, notes }, now = iso()) {
   return {
     updated: now,
-    tasks: list.tasks.map(t => (t.id === id ? cleanTask({ ...t, title, due, who, notes }) : t)),
+    tasks: list.tasks.map(t => {
+      if (t.id !== id) return t;
+      const next = cleanTask({ ...t, title, due, who, notes });
+      const changed = ['title', 'due', 'who', 'notes'].some(k => next[k] !== t[k]);
+      return t.from && changed ? { ...next, edited: true } : next;
+    }),
   };
 }
 

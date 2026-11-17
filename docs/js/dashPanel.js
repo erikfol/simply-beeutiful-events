@@ -39,9 +39,9 @@ function body(d) {
   const none = (text) => `<p class="hint">${text}</p>`;
 
   const coming = d.upcoming.length
-    ? `<ul class="dash-list">${d.upcoming.slice(0, 8).map(({ event, days, open, overdue }) => `<li>
+    ? `<ul class="dash-list">${d.upcoming.slice(0, 8).map(({ event, days, open, overdue, pkg }) => `<li>
         <a href="${esc(eventUrl(event))}"><strong>${eventName(event)}</strong></a>
-        <span class="dash-sub">${esc(shortDate(event.weddingDate))} · ${daysText(days)}${open ? ` · ${open} open task${open === 1 ? '' : 's'}` : ''}${overdue ? ` · <span class="ck-late">${overdue} overdue</span>` : ''}</span>
+        <span class="dash-sub">${esc(shortDate(event.weddingDate))} · ${daysText(days)}${pkg ? ` · ${esc(pkg)}` : ` · <a href="${esc(eventUrl(event, 'checklist'))}">choose package</a>`}${open ? ` · ${open} open task${open === 1 ? '' : 's'}` : ''}${overdue ? ` · <span class="ck-late">${overdue} overdue</span>` : ''}</span>
       </li>`).join('')}</ul>${d.upcoming.length > 8 ? none(`And ${d.upcoming.length - 8} more in the Event Manager.`) : ''}`
     : none('No upcoming events in the events folder.');
 

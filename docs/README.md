@@ -80,6 +80,8 @@ Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` 
 | `js/timeView.js` | Time view of an event: the form, the timer, the entries and totals |
 | `js/dashboard.js` | Home dashboard rules: every event's checklist tasks and contract dates (from saved reading results) gathered into overdue / soon lists, insurance to renew, open to-dos (tested) |
 | `js/dashPanel.js` | "At a glance" on the home page |
+| `js/packages.js` | Packages, Queen Bee services and ceremony traditions; checklist templates ("6 weeks before"); which templates apply to an event; adding, removing and moving template tasks on its checklist (tested) |
+| `js/packagesView.js` | The package box and the Templates panel at the top of the Checklist view |
 | `js/checklist.js` | Checklist rules: tasks with due dates and who does them, quick "1 month before" dates, grouping by when due, copying from another event; saving `event-<id>.checklist.json` (tested) |
 | `js/checklistView.js` | Checklist view of an event: add, edit, tick off and delete tasks, "Show for", copy from another event |
 | `js/share.js` | Online timeline links: one person's version of a timeline (no sources, no planner-only stops), saved in "SBE App Data/Shared Timelines" and shared by link; refreshed when the timeline is saved; turned off (tested) |

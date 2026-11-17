@@ -110,7 +110,7 @@ _Updated November 17, 2026._
 1. Open each real event once in the app and check its Overview: payments, deadlines, budget and the *Needs a look* list. Use Fix / Ignore where it read something wrong, and tell Claude about patterns it misses. Opening an event is also what puts its contract dates on the home dashboard.
 2. Finish replacing Timeline Genius. Step 1 in `PLANNING_SYSTEM.md` is built (November 16–17, 2026: lengths, team, time, vendor book, checklist, online links, email). Still to do: the public API key (`GOOGLE_SETUP.md` step 8), one real event run end to end in the app, and Nicole's Timeline Genius renewal date.
 3. Nicole picks the all-in-one business service and signs up in SBE's name (Step 2 in `PLANNING_SYSTEM.md`). Get the package task lists from Grace (input 2).
-4. Phase 4: the home dashboard is built (November 17, 2026). Next: packages and checklist templates, then the calendar and the To Do upgrades.
+4. Phase 4: the home dashboard and packages with checklist templates are built (November 17, 2026). Templates need filling in: from Grace's task lists, or by saving a real event's checklist as a template. Next: the calendar and the To Do upgrades.
 
 ### Inventory and reservations (idea, October 9, 2026)
 

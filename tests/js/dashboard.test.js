@@ -66,7 +66,7 @@ test('the dashboard gathers upcoming events, tasks due soon, and contract dates 
       ],
     }],
     ['l', { checklist: { tasks: [task('x', 'Return rentals', '2026-11-05')] }, actions: [] }],
-    ['u', { checklist: null, actions: null }],
+    ['u', { checklist: null, actions: null, setup: { package: 'queen-bee', traditions: ['sikh'] } }],
   ]);
   const book = { vendors: [
     { id: 'v1', name: 'Bluebell Blooms', insuranceExpires: '2026-10-01' },
@@ -77,6 +77,7 @@ test('the dashboard gathers upcoming events, tasks due soon, and contract dates 
   const d = summarize({ events: [harper, lopez, old, unread], perEvent, book, todos, today: TODAY });
 
   assert.deepEqual(d.upcoming.map(u => [u.event.driveId, u.days, u.open, u.overdue]), [['u', 18, 0, 0], ['h', 207, 4, 1]], 'soonest first; past events are not "coming up"');
+  assert.deepEqual(d.upcoming.map(u => u.pkg), ['The Queen Bee · Sikh', ''], 'each event\'s package, when chosen');
   assert.deepEqual(d.tasks.overdue.map(r => r.task.id), ['x', 'a'], 'overdue tasks from past events still show');
   assert.deepEqual(d.tasks.soon.map(r => r.task.id), ['b']);
   assert.deepEqual(d.tasks.month.map(r => r.task.id), ['c']);

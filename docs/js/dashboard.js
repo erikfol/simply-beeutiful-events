@@ -7,6 +7,7 @@ import { loadChecklist, taskState } from './checklist.js';
 import { loadBook, insuranceState } from './vendors.js';
 import { loadTodos } from './todo.js';
 import { daysBetween } from './util.js';
+import { normalizeSetup, setupText } from './packages.js';
 
 // Events from this many days ago still count (a wedding last week can have open tasks and a final payment).
 export const RECENT_DAYS = 60;
@@ -49,7 +50,7 @@ export function summarize({ events, perEvent, book = null, todos = null, today }
       else if (st === 'soon') tasks.soon.push(row);
       else if (st === 'later' && row.days <= AHEAD_DAYS) tasks.month.push(row);
     }
-    if (days >= 0) upcoming.push({ event: e, days, open: open.length, overdue: open.filter(t => taskState(t, today) === 'overdue').length });
+    if (days >= 0) upcoming.push({ event: e, days, open: open.length, overdue: open.filter(t => taskState(t, today) === 'overdue').length, pkg: setupText(normalizeSetup(data.setup)) });
     if (data.actions === null || data.actions === undefined) { unread.push(e); continue; }
     for (const a of data.actions) {
       const d = daysBetween(today, a.date_iso);
@@ -90,13 +91,14 @@ export async function loadDashboard(events, today) {
   await indexAppData();
   const perEvent = new Map();
   await eachLimited(relevantEvents(events, today), 4, async (e) => {
-    const [checklist, reading, corrections, status] = await Promise.all([
+    const [checklist, reading, corrections, status, setup] = await Promise.all([
       loadChecklist(e.driveId),
       readEventData(e.driveId, 'reading'),
       readEventData(e.driveId, 'corrections'),
       readEventData(e.driveId, 'status'),
+      readEventData(e.driveId, 'setup'),
     ]);
-    perEvent.set(e.driveId, { checklist, actions: eventActions(reading, corrections, status) });
+    perEvent.set(e.driveId, { checklist, setup, actions: eventActions(reading, corrections, status) });
   });
   const [book, todos] = await Promise.all([loadBook().catch(() => null), loadTodos().catch(() => null)]);
   return summarize({ events, perEvent, book, todos, today });

@@ -11,6 +11,7 @@ import { showDocuments } from './docs.js';
 import { showOverview, renderOverview, onOverviewClick, onOverviewSubmit } from './overview.js';
 import { showTime, onTimeClick, onTimeSubmit } from './timeView.js';
 import { showChecklist, onChecklistClick, onChecklistSubmit, onChecklistChange, onChecklistToggle } from './checklistView.js';
+import { onSetupClick, onSetupChange } from './packagesView.js';
 import { toggleShare, onShareClick, onShareSubmit, onShareChange, onShareInput } from './shareView.js';
 import { initDriveBar } from './drivebar.js';
 import { ROLES } from './roles.js';
@@ -91,6 +92,8 @@ async function init() {
   on('checklistSection', 'submit', onChecklistSubmit);
   on('checklistSection', 'change', onChecklistChange);
   $('checklistSection').addEventListener('toggle', onChecklistToggle, true);
+  on('checklistSetup', 'click', onSetupClick);
+  on('checklistSetup', 'change', onSetupChange);
   on('timeSection', 'click', onTimeClick);
   on('timeSection', 'submit', onTimeSubmit);
   on('btnSave', 'click', saveTimeline);

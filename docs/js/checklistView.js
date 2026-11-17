@@ -11,6 +11,7 @@ import {
   taskState, groupTasks, whoChoices, filterTasks, copyTasks, addTasks, loadChecklist, changeChecklist, newTaskId,
 } from './checklist.js';
 import { esc, todayISO, daysBetween } from './util.js';
+import { showSetup } from './packagesView.js';
 
 let list = emptyChecklist(); // what the view shows (includes changes still being saved)
 let shownFor = null;         // the event the view belongs to
@@ -34,6 +35,8 @@ export async function showChecklist() {
   if (!meta) { setStatus('Pick an event first.'); return; }
   showSection('checklistSection');
   $('checklistTitle').textContent = meta.name;
+  // the package box above the checklist: it reads the tasks and saves through the same queue
+  showSetup(meta, { tasks: () => (shownFor === meta ? list.tasks : []), save: (change, done) => save(change, done) });
   if (!isDriveEvent(meta)) { $('checklistBody').innerHTML = '<p class="empty">Checklists are kept for events from Google Drive.</p>'; return; }
   if (shownFor !== meta) {
     shownFor = meta; list = emptyChecklist(); form = null; problems = []; confirmId = null; showFor = ''; copyOpen = false;
