@@ -4,6 +4,7 @@ import { $ } from './dom.js';
 import { isConfigured } from './google.js';
 import { initDriveBar, driveStatus, APP_PAGES } from './drivebar.js';
 import { initTeam, showTeam } from './teamPanel.js';
+import { initDashboard, showDashboard } from './dashPanel.js';
 
 // Where to go after signing in, when another page sent the visitor here (?next=events.html).
 const next = new URLSearchParams(location.search).get('next');
@@ -21,14 +22,16 @@ function render() {
   $('tilesHint').textContent = s.signedIn ? 'Choose the SBE events folder above to continue.' : 'Sign in above to open these.';
 }
 
-// The Google bar calls this after sign-in, choosing a folder, Refresh and sign-out.
-function onDriveEvents() {
+// The Google bar calls this with the folder's events after sign-in, choosing a folder, Refresh and sign-out.
+function onDriveEvents(events = []) {
   render();
   const s = driveStatus();
   if (next && APP_PAGES.includes(next) && s.signedIn && s.folder) { location.replace(next); return; }
+  showDashboard(s, events);
   showTeam(s);
 }
 
 render();
+initDashboard();
 initTeam();
 initDriveBar(onDriveEvents, { home: true });

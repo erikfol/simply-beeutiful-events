@@ -32,11 +32,12 @@ let sharedId = null;
 let sharedCreating = null;
 const fileIds = new Map(); // "<folder>/<name>" -> Drive file id, so saves update instead of duplicating
 const subfolders = new Map(); // name -> pending folder id inside the shared folder (e.g. "Inventory Photos")
+const indexed = new Set(); // folders whose whole file list was read at once (see indexAppData)
 
 export function forgetAppData() {
   personalId = null; personalCreating = null;
   eventsFolderId = null; sharedId = null; sharedCreating = null;
-  fileIds.clear(); subfolders.clear();
+  fileIds.clear(); subfolders.clear(); indexed.clear();
 }
 
 // Everything shared is stored next to the events: call when an events folder is chosen.
@@ -72,9 +73,12 @@ export async function sharedAccess() {
 }
 
 // ---------- files in a folder ----------
-async function findIn(folder, name) {
+// forRead: when the folder's whole list was read (indexAppData), a name not on it doesn't exist; saving
+// always searches, so a file someone else just made is updated, not duplicated.
+async function findIn(folder, name, { forRead = false } = {}) {
   const key = `${folder}/${name}`;
   if (fileIds.has(key)) return fileIds.get(key);
+  if (forRead && indexed.has(folder)) return null;
   const found = await listFiles(`name = ${quote(name)} and ${quote(folder)} in parents and trashed = false`, { orderBy: 'modifiedTime desc' });
   const id = found.length ? found[0].id : null;
   if (id) fileIds.set(key, id);
@@ -98,8 +102,20 @@ async function writeIn(folder, name, data) {
 
 async function readIn(folder, name) {
   if (!folder) return null;
-  const id = await findIn(folder, name);
+  const id = await findIn(folder, name, { forRead: true });
   return id ? readJson(id) : null;
+}
+
+// Read the shared folder's file list in one go, so reading many saved files (the home dashboard reads a few
+// per event) doesn't search for each one. Call again to pick up files others have made since.
+export async function indexAppData() {
+  const folder = await sharedFolder({ create: false });
+  if (!folder) return false;
+  const files = await listFiles(`${quote(folder)} in parents and trashed = false`, { orderBy: 'modifiedTime desc' });
+  for (const key of [...fileIds.keys()]) if (key.startsWith(`${folder}/`)) fileIds.delete(key);
+  for (const f of files) { const key = `${folder}/${f.name}`; if (!fileIds.has(key)) fileIds.set(key, f.id); } // newest wins
+  indexed.add(folder);
+  return true;
 }
 
 // Shared data (everything except the personal settings).

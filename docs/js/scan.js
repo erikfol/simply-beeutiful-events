@@ -237,6 +237,23 @@ export function deriveActions(timeline) {
   return out.sort(byDateTime);
 }
 
+/**
+ * Add what was entered on Status Update: a vendor's due date that matches a payment found in the documents
+ * (same day, similar vendor name) gives that payment its status (e.g. Paid); other unpaid due dates are added.
+ * @param actions from deriveActions; @param statusVendors [{name, payment, dueDate, notes}]
+ */
+export function withStatusPayments(actions, statusVendors = []) {
+  const similar = (a, b) => a.toLowerCase().includes(b.toLowerCase()) || b.toLowerCase().includes(a.toLowerCase());
+  const added = [];
+  for (const v of statusVendors.filter(v => v && v.dueDate && v.name)) {
+    const match = actions.find(a => a.type === 'payment' && a.date_iso === v.dueDate && similar(a.vendor, v.name));
+    if (match) { match.statusPayment = v.payment; continue; }
+    if (v.payment === 'Paid') continue;
+    added.push({ id: `status|${v.name}`, type: 'payment', kind: `Payment (${v.payment})`, date_iso: v.dueDate, vendor: v.name, amount: null, source: '', fromStatus: true, snippet: v.notes || '' });
+  }
+  return [...actions, ...added].sort((a, b) => a.date_iso.localeCompare(b.date_iso));
+}
+
 // Stable identity for a dated mention, so a planner's correction survives re-reading the documents.
 export const factId = (e) => `${e.source}|${e.date_raw}`;
 

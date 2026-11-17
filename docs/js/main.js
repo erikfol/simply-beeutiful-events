@@ -18,8 +18,11 @@ import { esc } from './util.js';
 
 const EVENT_BUTTONS = ['btnOverview', 'btnTimeline', 'btnChecklist', 'btnStatus', 'btnDocs', 'btnTime'];
 
-// events.html?event=<id> opens that event first (links from the Vendors page).
-const wantedEvent = new URLSearchParams(location.search).get('event');
+// events.html?event=<id> opens that event first (links from the Vendors page and the home dashboard), and
+// &view=checklist|time|timeline opens that view of it instead of the Overview.
+const params = new URLSearchParams(location.search);
+const wantedEvent = params.get('event');
+let wantedView = params.get('view');
 
 // Event dropdown: the events found in Google Drive. Empty (with a hint) until someone signs in.
 function renderPicker(selectedId) {
@@ -35,10 +38,13 @@ function renderPicker(selectedId) {
 }
 
 // Opening an event shows its Overview (the event hub).
-async function openEvent(id) {
+const VIEWS = { checklist: () => showChecklist(), time: () => showTime(), timeline: () => showTimeline() };
+
+async function openEvent(id, view = '') {
   closePanel();
   $('eventSelect').value = id;
-  if (await loadEvent(id)) showOverview();
+  if (!await loadEvent(id)) return;
+  if (VIEWS[view]) VIEWS[view](); else showOverview();
 }
 
 // Documents finished reading or a correction was saved: redraw whichever view is open.
@@ -60,7 +66,9 @@ function onDriveEvents(events, openFirst) {
   else if (openFirst || !events.some(e => e.id === current)) pick = events[0].id;
   else pick = current; // Refresh: stay on the open event and reload it so new files show up
   renderPicker(pick);
-  openEvent(pick);
+  const view = pick === wantedEvent ? wantedView : '';
+  wantedView = ''; // only the first time
+  openEvent(pick, view);
 }
 
 async function init() {

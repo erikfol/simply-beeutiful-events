@@ -2,7 +2,7 @@
 // contacts, and what the app couldn't read. Every fact links to the document it came from.
 import { state } from './state.js';
 import { $, setStatus, showSection, needSignIn } from './dom.js';
-import { deriveActions } from './scan.js';
+import { deriveActions, withStatusPayments } from './scan.js';
 import { saveCorrections, saveDetails } from './corrections.js';
 import { eventDetails, vendorRows } from './details.js';
 import { rebuildReport, isDriveEvent } from './events.js';
@@ -117,16 +117,7 @@ function when(dateIso, today) {
 // Payments and deadlines from the documents, plus due dates the planner entered on Status Update.
 // A due date entered on Status Update for the same vendor and day as a document payment is one payment, not two.
 function allActions() {
-  const fromDocs = deriveActions(state.currentReport.timeline);
-  const sameVendor = (a, b) => a.toLowerCase().includes(b.toLowerCase()) || b.toLowerCase().includes(a.toLowerCase());
-  const fromStatus = [];
-  for (const v of ((state.currentStatus && state.currentStatus.vendors) || []).filter(v => v.dueDate && v.name)) {
-    const match = fromDocs.find(a => a.type === 'payment' && a.date_iso === v.dueDate && sameVendor(a.vendor, v.name));
-    if (match) { match.statusPayment = v.payment; continue; }
-    if (v.payment === 'Paid') continue;
-    fromStatus.push({ id: `status|${v.name}`, type: 'payment', kind: `Payment (${v.payment})`, date_iso: v.dueDate, vendor: v.name, amount: null, source: '', fromStatus: true, snippet: v.notes || '' });
-  }
-  return [...fromDocs, ...fromStatus].sort((a, b) => a.date_iso.localeCompare(b.date_iso));
+  return withStatusPayments(deriveActions(state.currentReport.timeline), (state.currentStatus && state.currentStatus.vendors) || []);
 }
 
 function actionRow(a, today) {

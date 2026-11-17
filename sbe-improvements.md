@@ -47,7 +47,7 @@ The four jobs:
 | 1 | Timeline builder | ✅ Done, v0.4 (commit `2fee2e4`) | 3–4 weeks |
 | 2 | Google sign-in + Drive connection: events listed from the shared folder, document list with Drive links, timelines and statuses saved to the "SBE App Data" Drive folder | ✅ Done, v0.5 (commits `2f1f93d`, `e9bb522`); first real sign-in against the SBE folder worked September 29, 2026 | 2–3 weeks |
 | 3 | Reading the documents: facts with source links, "needs a look" list, planner corrections, event hub page | ✅ Built, v0.6; matches the Python scanner on the demo and on a real event | 2–3 weeks |
-| 4 | Home dashboard, packages and checklists: action center across all events (overdue / this week / next 30 days / changed in Drive), packages (Bee Blissful, Blossom & Bee, The Queen Bee, Other Event) that set up each event's checklist, tradition checklists, to-do due dates and assignees, calendar view; see `PLANNING_SYSTEM.md`. The basic event checklist moved into Step 1 (Replace Timeline Genius) | Planned (expanded November 16, 2026) | 2–3 weeks |
+| 4 | Home dashboard, packages and checklists: action center across all events (overdue / this week / next 30 days / changed in Drive), packages (Bee Blissful, Blossom & Bee, The Queen Bee, Other Event) that set up each event's checklist, tradition checklists, to-do due dates and assignees, calendar view; see `PLANNING_SYSTEM.md`. The basic event checklist moved into Step 1 (Replace Timeline Genius) | In progress: home dashboard built November 17, 2026 | 2–3 weeks |
 | 5 | Vendors and money: shared vendor contact book, the couple's vendor bookings and payments with totals, client budgets, scouting; see `PLANNING_SYSTEM.md`. The contact book moved into Step 1 | Proposed (November 16, 2026) | about 2 weeks |
 | 6 | Client portal (`CLIENT_PORTAL.md`) plus a payments and contracts tab linking to the all-in-one, and files marked OK to share. Private links and the Apps Script doorway are built in Step 1, for timelines | Proposed | 2–3 weeks |
 | 7 | People, guests and seating: wedding party, accommodations and transportation, guest list and RSVPs, seating board | Proposed | 3–4 weeks |
@@ -105,10 +105,12 @@ Estimates assume part-time work with Claude doing most of the coding. Expected r
 
 ### Next steps
 
-1. Open the real events in the app and check the Overview: payments, deadlines, budget and the *Needs a look* list. Use Fix / Ignore where it read something wrong, and tell Claude about patterns it misses.
-2. Nicole picks the all-in-one business service and signs up in SBE's name (Step 2 in `PLANNING_SYSTEM.md`). Gather the package task lists and her Timeline Genius list (inputs 1 and 2).
-3. Replace Timeline Genius (Step 1 in `PLANNING_SYSTEM.md`, also under *To do*).
-4. Phase 4: home dashboard, packages and checklists across all events (overdue, this week, next 30 days, changed in Drive).
+_Updated November 17, 2026._
+
+1. Open each real event once in the app and check its Overview: payments, deadlines, budget and the *Needs a look* list. Use Fix / Ignore where it read something wrong, and tell Claude about patterns it misses. Opening an event is also what puts its contract dates on the home dashboard.
+2. Finish replacing Timeline Genius. Step 1 in `PLANNING_SYSTEM.md` is built (November 16–17, 2026: lengths, team, time, vendor book, checklist, online links, email). Still to do: the public API key (`GOOGLE_SETUP.md` step 8), one real event run end to end in the app, and Nicole's Timeline Genius renewal date.
+3. Nicole picks the all-in-one business service and signs up in SBE's name (Step 2 in `PLANNING_SYSTEM.md`). Get the package task lists from Grace (input 2).
+4. Phase 4: the home dashboard is built (November 17, 2026). Next: packages and checklist templates, then the calendar and the To Do upgrades.
 
 ### Inventory and reservations (idea, October 9, 2026)
 
