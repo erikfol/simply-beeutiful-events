@@ -125,8 +125,8 @@ Already in *To do* in `sbe-improvements.md`. **Nicole's checklist (November 16, 
 3. ✅ **Time tracking** (built November 16, 2026): a **Time** view for each event in the Event Manager. Each entry has a date, how long ("1:30", "1.5" or "45 min"), who, an optional type (meeting or call, planning and email, vendors, site visit, event day, travel, other) and what it was for. A **Start timer / Stop and log** button fills in the time. Totals by person and by type. Saved per event in "SBE App Data"; two people logging at once keep each other's entries. Entries can be removed but not edited yet.
 4. ✅ **Vendor and contact book** (built November 16, 2026): a **Vendors** page (in every menu and on the home page) with one shared list, grouped by category, with search. Each vendor has a contact person, emails, phones, website, insurance end date, a 1–5 star rating, notes and the events they worked. Insurance that has ended or ends within 30 days is flagged at the top. Each event's Overview marks which of its vendors are in the book, with **Add to book** / **Add this event** per vendor and **Add all to the vendor book**, so the book starts from the vendors found in contracts. Event names on a vendor open that event. Not yet: one button to bring in every event's vendors at once, and clients in the book.
 5. ✅ **Event checklist** (built November 16, 2026): a **Checklist** view for each event in the Event Manager. Each task has a due date (or a quick "1 week / 1 month / 3 months before" worked out from the event date), who does it (SBE, the couple, a vendor or a team member, with suggestions) and notes; a tick box marks it done (with who and when). Tasks are grouped as overdue, due this week, coming up, no due date and done; **Show for** filters to one person or vendor. **Copy tasks from another event** brings over the tasks this event doesn't have, moving due dates to the same distance from this event's date. Packages and checklist templates stay in Phase 4.
-6. **Online timeline for the couple and vendors:** each gets a private link to their own version, always showing the latest times. It uses the Google Apps Script doorway planned for the client portal (Phase 6), built now for timelines only. Nicole approves the script in her Google account once. About 1.5–2 weeks.
-7. **Send from the app:** a **Send** button emails each vendor, and the couple, their link and PDF from Nicole's Gmail, through the same script. About a week.
+6. ✅ **Online timeline links** (built November 16, 2026; needs the one-time API key below before it works for real): **Share online** in the timeline view makes a link for one person or vendor (or the whole timeline), showing the same stops as **View as**. The app saves that version as a file in "SBE App Data/Shared Timelines" and shares only that file as "anyone with the link can view"; the link opens a branded SBE page (`timeline.html`) with their stops, times and lengths, and works on a phone and in print. Saving the timeline updates every link for the event. **Turn off** makes a link stop working. No Apps Script was needed: the page reads the file with a public API key (step 8 in `GOOGLE_SETUP.md`), and nothing is needed from Nicole. Where each time came from and planner-only stops are never shared.
+7. **Send from the app:** a **Send** button emails each vendor, and the couple, their link. Simplest way: through the Gmail of whoever is signed in and clicks Send (one more Google permission at sign-in), so no script is needed; an Apps Script in Nicole's account is the alternative if every email must come from her. About a week.
 
 Used sometimes, already covered: ready-made templates, her own templates, shifting, PDF, phone, and turning old timelines into templates (Erik and Claude do it on request). The AI review is covered without AI: the app reads contract times and warns about conflicts. **Wedding-day text reminders** (used sometimes) stay on the *Later* list; until then, texts from a phone.
 
@@ -181,7 +181,7 @@ Money between the client and SBE lives in the all-in-one. This phase covers the 
 
 ### Phase 6. Client portal (2–3 weeks): ideas 21, 25
 
-Build `CLIENT_PORTAL.md` from the approved mockup. The private links and the Apps Script doorway already exist from Step 1 (for timelines); this phase adds the rest of the portal, plus:
+Build `CLIENT_PORTAL.md` from the approved mockup. Private links already exist from Step 1 (link-shared files read by a public page, for timelines); this phase adds the rest of the portal, and the Apps Script doorway for what clients send back (ticks, comments, uploads), plus:
 
 - **Share marking on files:** each document is **Private** (default) or **OK to share**. Shared files show in the portal.
 - **Payments and contracts tab** linking to the all-in-one (see *The business side of the client portal*).
@@ -227,6 +227,7 @@ The all-in-one handles inquiries and client emails (Step 2). The app adds:
 
 To record in `sbe-improvements.md` when the matching phase starts:
 
+- **Sharing by link (since November 16, 2026):** online timeline links are single files in "SBE App Data/Shared Timelines" shared as "anyone with the link can view". Only those files are ever shared; turning a link off unshares and deletes its file.
 - **Writing to Drive:** the app reads event documents and writes only inside "SBE App Data". Two additions:
   - Phase 6: each event's client portal folder (already in `CLIENT_PORTAL.md`).
   - Phase 8: it creates a new event folder for a booked client. It still never changes existing documents.

@@ -43,7 +43,7 @@ Everything the app saves goes to the shared "SBE App Data" folder inside the SBE
 Create a folder for it inside the SBE events folder in Google Drive, named with the date first (`10.3.26 Alyssa & Mick`), then click **Refresh** in the Google bar.
 
 ## Code layout
-Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` loads `js/main.js`, `inventory.html` loads `js/inventoryPage.js`, `todo.html` loads `js/todoPage.js`, `vendors.html` loads `js/vendorsPage.js`. `calendar.html` and `portal-demo.html` are standalone pages (their own styles and a small inline script, outside the import map).
+Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` loads `js/main.js`, `inventory.html` loads `js/inventoryPage.js`, `todo.html` loads `js/todoPage.js`, `vendors.html` loads `js/vendorsPage.js`, `timeline.html` (the public page an online timeline link opens; no sign-in) loads `js/timelinePage.js`. `calendar.html` and `portal-demo.html` are standalone pages (their own styles and a small inline script, outside the import map).
 
 | File | Job |
 |---|---|
@@ -80,6 +80,10 @@ Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` 
 | `js/timeView.js` | Time view of an event: the form, the timer, the entries and totals |
 | `js/checklist.js` | Checklist rules: tasks with due dates and who does them, quick "1 month before" dates, grouping by when due, copying from another event; saving `event-<id>.checklist.json` (tested) |
 | `js/checklistView.js` | Checklist view of an event: add, edit, tick off and delete tasks, "Show for", copy from another event |
+| `js/share.js` | Online timeline links: one person's version of a timeline (no sources, no planner-only stops), saved in "SBE App Data/Shared Timelines" and shared by link; refreshed when the timeline is saved; turned off (tested) |
+| `js/shareView.js` | "Share online" panel in the timeline view: the event's links (copy, open, turn off) and making a new one |
+| `js/sharedTimeline.js` | What the public page reads: checks a shared timeline file and fetches it with the public API key (tested) |
+| `js/timelinePage.js` | The public timeline page (`timeline.html#<file id>`) |
 | `js/vendors.js` | Vendor book rules: tidy contacts, match a vendor by name or email, add an event's vendors, insurance warnings, search and grouping; saving `vendors.json` (tested) |
 | `js/vendorsPage.js` | Vendors page: the shared vendor and contact book (add, edit, delete, search) |
 | `js/dom.js`, `js/storage.js` | DOM helpers; browser-saved edits and saved templates |

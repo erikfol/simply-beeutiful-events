@@ -136,6 +136,41 @@ header p {
 .timeform { grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); }
 .timeform select { padding:.4rem; border-radius:6px; border:1px solid #ccc; font-size:.95rem; font-family:inherit; min-width:0; }
 .time-table td:first-child, .time-table td.num { white-space:nowrap; }
+/* ---------- online timeline links: the share panel in the app ---------- */
+.share-panel { display:flex; flex-direction:column; gap:.6rem; }
+.share-head { display:flex; justify-content:space-between; align-items:center; gap:.5rem; }
+.share-head h3 { margin:0; }
+.share-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.6rem; }
+.share-link { background:#fff; border:1px solid var(--line); border-radius:10px; padding:.6rem .8rem; display:flex; flex-direction:column; gap:.35rem; min-width:0; }
+.share-when { display:block; color:var(--muted); }
+.share-url { width:100%; min-width:0; padding:.35rem .5rem; border:1px solid var(--line); border-radius:6px; font-size:.85rem; background:var(--blue-wash); color:var(--ink); }
+.panel form.share-new { display:flex; flex-wrap:wrap; align-items:flex-end; gap:.5rem .8rem; }
+.share-new label { display:grid; gap:.2rem; font-size:.85rem; color:#555; }
+.share-new select, .share-new input { padding:.4rem; border-radius:6px; border:1px solid #ccc; font-size:.95rem; min-width:0; }
+.mini-link { font-family:var(--font-ui); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; padding:.3rem .75rem; border:1px solid var(--line); border-radius:999px; background:#fff; color:var(--ink); text-decoration:none; }
+
+/* ---------- the public page an online link opens (timeline.html) ---------- */
+.st-card { display:flex; flex-direction:column; gap:.8rem; }
+.st-head h2 { margin:.1rem 0; }
+.st-for { margin:0; font-family:var(--font-ui); font-size:.78rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--olive-deep); }
+.st-for small { font-weight:500; letter-spacing:.04em; text-transform:none; color:var(--muted); }
+.st-meta { margin:0; color:var(--muted); }
+.st-day h3 { margin:.6rem 0 .3rem; }
+.st-day h3 span { font-weight:400; color:var(--muted); }
+.st-stops { list-style:none; margin:0; padding:0; }
+.st-stop { display:grid; grid-template-columns:8.5rem minmax(0, 1fr); gap:.8rem; padding:.55rem 0; border-top:1px solid var(--line); }
+.st-time { font-weight:700; font-variant-numeric:tabular-nums; }
+.st-time span { display:block; font-weight:400; color:var(--muted); font-size:.85rem; }
+.st-what p { margin:.15rem 0 0; color:#444; font-size:.92rem; }
+.st-tbc { font-size:.75rem; font-style:normal; color:var(--olive-deep); border:1px solid var(--honey); border-radius:4px; padding:0 4px; white-space:nowrap; }
+.st-foot { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.5rem; border-top:1px solid var(--line); padding-top:.6rem; }
+@media (max-width:520px) { .st-stop { grid-template-columns:6.2rem minmax(0, 1fr); gap:.5rem; } }
+@media print {
+  body.shared-timeline > header { display:block !important; }
+  body.shared-timeline main > #stCard { display:flex !important; box-shadow:none; padding:0; }
+  body.shared-timeline .st-foot button, body.shared-timeline footer { display:none !important; }
+}
+
 .ck-list { list-style:none; margin:.3rem 0 1rem; padding:0; display:flex; flex-direction:column; gap:.4rem; }
 .ck-task { background:var(--cream); border:1px solid var(--line); border-radius:10px; padding:.55rem .8rem; display:flex; flex-direction:column; gap:.2rem; }
 .ck-task.ck-overdue { border-left:4px solid #b3261e; }

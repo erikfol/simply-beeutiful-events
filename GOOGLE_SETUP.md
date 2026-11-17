@@ -62,6 +62,22 @@ Everything the app saves (run sheets, vendor statuses, corrections, event detail
 
 Until step 2, other planners can see everything but not save; the app says so and keeps their changes in the browser.
 
+## 8. Online timeline links: a public API key (once, about 5 minutes)
+
+The **Share online** button makes links that open a person's or vendor's timeline on a simple SBE page, without signing in. That page reads the shared timeline file from Google Drive with a public **API key**. Without the key, the button explains that this setup is still needed.
+
+1. In Google Cloud (same project): menu (☰) → **APIs & Services** → **Credentials** → **Create credentials** → **API key**.
+2. Click the new key to edit it. **Name:** `SBE timeline page`.
+3. **Application restrictions:** choose **Websites**, then add both (exactly):
+   - `https://erikfol.github.io/*`
+   - `http://localhost:8000/*`
+4. **API restrictions:** choose **Restrict key** and tick only **Google Drive API**.
+5. Click **Save**, copy the key, and send it to Claude (or paste it into `docs/js/config.js` as `PUBLIC_API_KEY`).
+
+The key is meant to be public, like the Client ID. With it, Google only hands out Drive files that are already shared as "anyone with the link", and only to pages on the SBE site. It can't see or change anything else.
+
+To test: open an event's timeline, click **Share online**, make a link for the couple, click **Open**, and check the page shows their stops. Then click **Turn off** and reload the page: it should say the link is no longer active.
+
 ## Adding another person
 
 1. In Google Cloud: **Google Auth Platform → Audience → Test users → Add users**, add their Google email.

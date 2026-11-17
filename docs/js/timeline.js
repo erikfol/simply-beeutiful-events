@@ -10,6 +10,9 @@ import { docSuggestions } from './suggestions.js';
 import { timelineConflicts } from './checks.js';
 import { applyEdit, fmtLength, stopLength, spanText } from './draft.js';
 import { esc, fmtDate, fmt12, sortDay } from './util.js';
+import { refreshShareLinks } from './share.js';
+import { syncShare } from './shareView.js';
+import { PUBLIC_API_KEY } from './config.js';
 
 let timelineObj = null;
 
@@ -17,6 +20,7 @@ export function showTimeline() {
   if (!state.currentReport) { setStatus('Pick an event first.'); return; }
   showSection('timelineSection');
   $('timelineTitle').textContent = state.currentMeta.name;
+  syncShare();
 
   // 1) Curated run sheet (preferred) — mirrors the Knot template with actual event times
   if (state.currentCurated && state.currentCurated.days) {
@@ -176,6 +180,20 @@ export async function saveTimeline() {
       clearLocal();
       state.isDirty = false; updateDirty();
       setStatus('Saved to Google Drive (SBE App Data).');
+      syncShare();
+      // Online links show the latest times: rewrite each one for this event (in the background).
+      if (PUBLIC_API_KEY) {
+        refreshShareLinks(meta, data).then(r => {
+          if (!r.updated && !r.failed) return;
+          const done = r.updated ? ` Updated ${r.updated} online link${r.updated === 1 ? '' : 's'}.` : '';
+          const bad = r.failed ? ` ${r.failed} online link${r.failed === 1 ? '' : 's'} couldn't be updated; try saving again.` : '';
+          setStatus(`Saved to Google Drive (SBE App Data).${done}${bad}`);
+          syncShare();
+        }).catch(e => {
+          setStatus(`Saved, but the online links weren't updated: ${e.message}`);
+          if (e.name === 'NeedsSignIn') needSignIn();
+        });
+      }
     } catch (e) {
       if (state.currentMeta === meta) persistLocal();
       setStatus(`Not saved to Google Drive: ${e.message} Your changes are kept in this browser; save again once that's fixed.`);

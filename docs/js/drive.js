@@ -165,7 +165,20 @@ export async function uploadFile(name, parentId, bytes, contentType) {
   return (await request('PUT', location, { body: bytes, headers: { 'Content-Type': contentType } })).json();
 }
 
-// Only ever used on files this app created (temporary converted copies, replaced inventory photos).
+// Let anyone with the link read one file. Only used on the online timeline files the app makes for sharing.
+export async function shareWithLink(id) {
+  await request('POST', `${API}/files/${encodeURIComponent(id)}/permissions?supportsAllDrives=true&fields=id`, {
+    body: JSON.stringify({ role: 'reader', type: 'anyone', allowFileDiscovery: false }),
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+// Undo shareWithLink: the file is private again.
+export async function stopLinkSharing(id) {
+  await request('DELETE', `${API}/files/${encodeURIComponent(id)}/permissions/anyoneWithLink?supportsAllDrives=true`);
+}
+
+// Only ever used on files this app created (temporary converted copies, replaced inventory photos, turned-off links).
 export async function deleteFile(id) {
   await request('DELETE', `${API}/files/${encodeURIComponent(id)}`);
 }

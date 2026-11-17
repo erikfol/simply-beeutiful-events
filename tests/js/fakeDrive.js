@@ -90,6 +90,25 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize, convert 
     const exportMatch = /^\/files\/([^/]+)\/export$/.exec(path);
     const permMatch = /^\/files\/([^/]+)\/permissions$/.exec(path);
 
+    // Sharing one file by link (anyone with the link can read), and undoing it.
+    if (method === 'POST' && permMatch) {
+      const f = files.get(decodeURIComponent(permMatch[1]));
+      if (!f) return json(404, { error: { message: 'File not found' } });
+      if (!canWrite(f, who)) return denied();
+      const p = JSON.parse(body);
+      if (p.type !== 'anyone') return json(400, { error: { message: 'Fake Drive only shares with anyone' } });
+      f.anyone = p.role;
+      return json(200, { id: 'anyoneWithLink' });
+    }
+    const permDel = /^\/files\/([^/]+)\/permissions\/anyoneWithLink$/.exec(path);
+    if (method === 'DELETE' && permDel) {
+      const f = files.get(decodeURIComponent(permDel[1]));
+      if (!f || !f.anyone) return json(404, { error: { message: 'Permission not found' } });
+      if (!canWrite(f, who)) return denied();
+      delete f.anyone;
+      return new Response(null, { status: 204 });
+    }
+
     // Only people who can edit an item see its sharing list here (the cautious reading of Drive's rules).
     if (method === 'GET' && permMatch) {
       const f = files.get(decodeURIComponent(permMatch[1]));
@@ -176,8 +195,16 @@ export function createFakeDrive({ me = 'planner@example.com', pageSize, convert 
   // "Anyone with the link" sharing on a file or folder ('reader' or 'writer').
   const shareLink = (id, role = 'reader') => { files.get(id).anyone = role; };
 
+  // What someone without an account gets from Drive with an API key: only files shared by link.
+  const publicFetch = async (url) => {
+    const m = /\/drive\/v3\/files\/([^/?]+)\?alt=media&key=/.exec(url);
+    const f = m && files.get(decodeURIComponent(m[1]));
+    if (!f || !f.anyone) return json(404, { error: { message: 'File not found' } });
+    return new Response(f.content ?? '', { status: 200 });
+  };
+
   return {
-    transport: transportFor(me), as: transportFor, add, share, shareLink, files, calls, me, deleted,
+    transport: transportFor(me), as: transportFor, add, share, shareLink, publicFetch, files, calls, me, deleted,
     expire: () => { expired = true; }, restore: () => { expired = false; },
   };
 }
