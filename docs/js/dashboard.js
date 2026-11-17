@@ -88,9 +88,20 @@ async function eachLimited(items, limit, fn) {
  * Status Update, plus the vendor book and the to-do list. Reads only; nothing is saved.
  */
 export async function loadDashboard(events, today) {
+  const perEvent = await loadEventData(relevantEvents(events, today));
+  const [book, todos] = await Promise.all([loadBook().catch(() => null), loadTodos().catch(() => null)]);
+  return summarize({ events, perEvent, book, todos, today });
+}
+
+/**
+ * For each event: its checklist, its package (setup) and the payment dates and deadlines from its contracts
+ * (null when its documents haven't been read yet). Also used by the calendar. Reads only.
+ * @returns {Promise<Map<driveId, {checklist, setup, actions}>>}
+ */
+export async function loadEventData(events) {
   await indexAppData();
   const perEvent = new Map();
-  await eachLimited(relevantEvents(events, today), 4, async (e) => {
+  await eachLimited(events.filter(e => e.driveId), 4, async (e) => {
     const [checklist, reading, corrections, status, setup] = await Promise.all([
       loadChecklist(e.driveId),
       readEventData(e.driveId, 'reading'),
@@ -100,6 +111,5 @@ export async function loadDashboard(events, today) {
     ]);
     perEvent.set(e.driveId, { checklist, setup, actions: eventActions(reading, corrections, status) });
   });
-  const [book, todos] = await Promise.all([loadBook().catch(() => null), loadTodos().catch(() => null)]);
-  return summarize({ events, perEvent, book, todos, today });
+  return perEvent;
 }

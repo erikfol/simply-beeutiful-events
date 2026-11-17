@@ -43,7 +43,7 @@ Everything the app saves goes to the shared "SBE App Data" folder inside the SBE
 Create a folder for it inside the SBE events folder in Google Drive, named with the date first (`10.3.26 Alyssa & Mick`), then click **Refresh** in the Google bar.
 
 ## Code layout
-Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` loads `js/main.js`, `inventory.html` loads `js/inventoryPage.js`, `todo.html` loads `js/todoPage.js`, `vendors.html` loads `js/vendorsPage.js`, `timeline.html` (the public page an online timeline link opens; no sign-in) loads `js/timelinePage.js`. `calendar.html` and `portal-demo.html` are standalone pages (their own styles and a small inline script, outside the import map).
+Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` loads `js/main.js`, `inventory.html` loads `js/inventoryPage.js`, `todo.html` loads `js/todoPage.js`, `vendors.html` loads `js/vendorsPage.js`, `timeline.html` (the public page an online timeline link opens; no sign-in) loads `js/timelinePage.js`, `schedule.html` (the Calendar; named so it isn't confused with the public booking page `calendar.html`) loads `js/calendarPage.js`. `calendar.html` and `portal-demo.html` are standalone pages (their own styles and a small inline script, outside the import map).
 
 | File | Job |
 |---|---|
@@ -82,6 +82,8 @@ Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` 
 | `js/dashPanel.js` | "At a glance" on the home page |
 | `js/packages.js` | Packages, Queen Bee services and ceremony traditions; checklist templates ("6 weeks before"); which templates apply to an event; adding, removing and moving template tasks on its checklist (tested) |
 | `js/packagesView.js` | The package box and the Templates panel at the top of the Checklist view |
+| `js/calendar.js` | Calendar rules: every event, open task and contract date on its day; month grids, Sunday first (tested) |
+| `js/calendarPage.js` | The Calendar page: month grid, filters, and the day-by-day list |
 | `js/checklist.js` | Checklist rules: tasks with due dates and who does them, quick "1 month before" dates, grouping by when due, copying from another event; saving `event-<id>.checklist.json` (tested) |
 | `js/checklistView.js` | Checklist view of an event: add, edit, tick off and delete tasks, "Show for", copy from another event |
 | `js/share.js` | Online timeline links: one person's version of a timeline (no sources, no planner-only stops), saved in "SBE App Data/Shared Timelines" and shared by link; refreshed when the timeline is saved; turned off (tested) |
