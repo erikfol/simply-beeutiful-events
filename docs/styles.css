@@ -570,6 +570,19 @@ button.mini.danger { background:#b3261e; color:#fff; border-color:#b3261e; }
 .todo-add { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin-top:.3rem; }
 .todo-add input { flex:1 1 240px; padding:.6rem .75rem; border-radius:8px; border:1px solid #ccc; font-size:1rem; min-width:0; }
 .todo-add button { margin:0; }
+.todo-details { flex-basis:100%; display:flex; flex-wrap:wrap; align-items:center; gap:.4rem .9rem; font-size:.85rem; color:#555; }
+.todo-details label { display:flex; align-items:center; gap:.35rem; white-space:nowrap; }
+.todo-add .todo-details input, .todo-details input, .todo-details select { flex:0 1 auto; width:auto; padding:.3rem .4rem; border-radius:6px; border:1px solid #ccc; font-size:.9rem; min-width:0; max-width:16rem; }
+.todo-rename .todo-details { margin:.35rem 0; }
+.todo-for { display:flex; align-items:center; gap:.35rem; font-size:.85rem; }
+.todo-for select { padding:.4rem; border-radius:8px; border:1px solid #ccc; font-size:.9rem; }
+.todo-tags { display:flex; flex-wrap:wrap; gap:.3rem; margin:.25rem 0 0; }
+.todo-tag { font-family:var(--font-ui); font-size:.72rem; font-weight:600; padding:.12rem .55rem; border-radius:999px; background:var(--blue-wash); color:var(--ink); text-decoration:none; white-space:nowrap; }
+.todo-tag.soon { background:var(--honey-wash); }
+.todo-tag.late { background:#fdecea; color:#b3261e; }
+.todo-tag.todo-ev { background:var(--cream); border:1px solid var(--line); }
+.todo-tag.todo-ev:hover { text-decoration:underline; }
+.todo-flash { outline:3px solid var(--honey); }
 .todo-tools input { flex:1 1 200px; padding:.45rem; border-radius:8px; border:1px solid #ccc; font-size:.95rem; min-width:0; }
 #todoCount { color:#666; font-size:.9rem; }
 .todo-head { margin:1.2rem 0 .5rem; border-bottom:1px solid var(--line); padding-bottom:.25rem; font-family:var(--font-head); font-size:1.15rem; font-weight:400; text-transform:uppercase; letter-spacing:.04em; color:var(--ink); }

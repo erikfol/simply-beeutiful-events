@@ -72,7 +72,7 @@ Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` 
 | `js/checks.js` | Pure validation rules: conflicts, missing items, due dates (tested) |
 | `js/util.js` | Pure helpers: formatting, time parsing (tested) |
 | `js/inventory.js`, `js/inventoryPage.js` | Inventory: items, categories, photos (pure parts tested); the page |
-| `js/todo.js` | Pure to-do rules: add, reword, status, notes, search, grouping; saving `todos.json` (tested) |
+| `js/todo.js` | Pure to-do rules: add, reword, status, notes, optional due date / who / event, search, "For", grouping; saving `todos.json` (tested) |
 | `js/todoPage.js` | To Do page: the list, status buttons, notes, edit and delete |
 | `js/team.js` | Team rules: who can open the events folder and save in "SBE App Data", link-sharing warnings, sign-ins noted in `team.json` (tested) |
 | `js/teamPanel.js` | Team section on the home page, with the "Add a team member" steps |

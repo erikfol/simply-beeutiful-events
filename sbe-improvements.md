@@ -47,7 +47,7 @@ The four jobs:
 | 1 | Timeline builder | ✅ Done, v0.4 (commit `2fee2e4`) | 3–4 weeks |
 | 2 | Google sign-in + Drive connection: events listed from the shared folder, document list with Drive links, timelines and statuses saved to the "SBE App Data" Drive folder | ✅ Done, v0.5 (commits `2f1f93d`, `e9bb522`); first real sign-in against the SBE folder worked September 29, 2026 | 2–3 weeks |
 | 3 | Reading the documents: facts with source links, "needs a look" list, planner corrections, event hub page | ✅ Built, v0.6; matches the Python scanner on the demo and on a real event | 2–3 weeks |
-| 4 | Home dashboard, packages and checklists: action center across all events (overdue / this week / next 30 days / changed in Drive), packages (Bee Blissful, Blossom & Bee, The Queen Bee, Other Event) that set up each event's checklist, tradition checklists, to-do due dates and assignees, calendar view; see `PLANNING_SYSTEM.md`. The basic event checklist moved into Step 1 (Replace Timeline Genius) | In progress: home dashboard built November 17, 2026 | 2–3 weeks |
+| 4 | Home dashboard, packages and checklists: action center across all events (overdue / this week / next 30 days / changed in Drive), packages (Bee Blissful, Blossom & Bee, The Queen Bee, Other Event) that set up each event's checklist, tradition checklists, to-do due dates and assignees, calendar view; see `PLANNING_SYSTEM.md`. The basic event checklist moved into Step 1 (Replace Timeline Genius) | ✅ Built November 17, 2026 (dashboard, packages and templates, calendar, to-do details) | 2–3 weeks |
 | 5 | Vendors and money: shared vendor contact book, the couple's vendor bookings and payments with totals, client budgets, scouting; see `PLANNING_SYSTEM.md`. The contact book moved into Step 1 | Proposed (November 16, 2026) | about 2 weeks |
 | 6 | Client portal (`CLIENT_PORTAL.md`) plus a payments and contracts tab linking to the all-in-one, and files marked OK to share. Private links and the Apps Script doorway are built in Step 1, for timelines | Proposed | 2–3 weeks |
 | 7 | People, guests and seating: wedding party, accommodations and transportation, guest list and RSVPs, seating board | Proposed | 3–4 weeks |
@@ -110,7 +110,7 @@ _Updated November 17, 2026._
 1. Open each real event once in the app and check its Overview: payments, deadlines, budget and the *Needs a look* list. Use Fix / Ignore where it read something wrong, and tell Claude about patterns it misses. Opening an event is also what puts its contract dates on the home dashboard.
 2. Finish replacing Timeline Genius. Step 1 in `PLANNING_SYSTEM.md` is built (November 16–17, 2026: lengths, team, time, vendor book, checklist, online links, email). Still to do: the public API key (`GOOGLE_SETUP.md` step 8), one real event run end to end in the app, and Nicole's Timeline Genius renewal date.
 3. Nicole picks the all-in-one business service and signs up in SBE's name (Step 2 in `PLANNING_SYSTEM.md`). Get the package task lists from Grace (input 2).
-4. Phase 4: the home dashboard and packages with checklist templates are built (November 17, 2026). Templates need filling in: from Grace's task lists, or by saving a real event's checklist as a template. The calendar is built too (November 17, 2026). Next: the To Do upgrades.
+4. Phase 4: the home dashboard and packages with checklist templates are built (November 17, 2026). Templates need filling in: from Grace's task lists, or by saving a real event's checklist as a template. The calendar and the To Do upgrades are built too, so Phase 4 is done (November 17, 2026). Next: finish Step 1 (item 2 above), then the inventory reservations or Phase 5 (vendors and money).
 
 ### Inventory and reservations (idea, October 9, 2026)
 
@@ -169,7 +169,8 @@ _Updated November 17, 2026._
 - **Edit** changes the wording; **Delete** removes a to-do (with its notes) or a single note, after an "are you sure".
 - Search looks in the to-dos and their notes.
 - Needs Google sign-in. Saved as `todos.json` in the shared "SBE App Data" folder, so the owner and planners with Editor access share one list. Changes show at once and save in the background, each re-reading the saved list first so two people's changes don't erase each other's. Tested with the fake Drive (10 new tests) and in the browser, including a slow connection and an expired sign-in. Worked against real Google Drive on November 8, 2026: Erik's 16 to-dos (with notes and statuses) saved to "Client Files" → "SBE App Data" and read back after a reload.
-- Not yet (ideas): due dates, linking a to-do to an event, assigning to a person, reordering by hand, editing a note after it's added. Phase 4's action center could later show these alongside the dates found in the documents.
+- **Since November 17, 2026:** a due date, who it's for, and an event on each to-do (all optional), a **For** filter, and dated to-dos on the home dashboard and the Calendar (see Phase 4 in `PLANNING_SYSTEM.md`).
+- Not yet (ideas): reordering by hand, editing a note after it's added.
 
 ### Billing and invoicing reference: HoneyBook
 

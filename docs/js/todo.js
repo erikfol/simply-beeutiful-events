@@ -23,6 +23,27 @@ export const cleanNote = (s) => String(s ?? '').replace(/\r\n?/g, '\n').split('\
 export const emptyTodos = () => ({ updated: null, items: [] });
 export const newId = (prefix = 't') => `${prefix}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
 const iso = () => new Date().toISOString();
+const isDate = (s) => /^\d{4}-\d{2}-\d{2}$/.test(s || '');
+
+// Optional details, stored only when set: a due date, who it's for, and the event it belongs to
+// ({driveId, name, date}, the event folder's name and date).
+function details({ due, who, event } = {}) {
+  const out = {};
+  if (isDate(due)) out.due = due;
+  if (clean(who)) out.who = clean(who);
+  if (event && event.driveId) out.event = { driveId: String(event.driveId), name: clean(event.name), date: isDate(event.date) ? event.date : '' };
+  return out;
+}
+
+// The event a to-do is linked to: the one in the folder's list, or what the to-do remembers of it.
+export function todoEvent(t, events) {
+  if (!t.event) return null;
+  return events.find(e => e.driveId === t.event.driveId)
+    || { id: `drive-${t.event.driveId}`, driveId: t.event.driveId, name: t.event.name, weddingDate: t.event.date || '' };
+}
+
+// The event a to-do is linked to, from an event in the Event Manager's list.
+export const todoEventRef = (e) => (e ? { driveId: e.driveId, name: e.name, date: e.weddingDate || '' } : null);
 
 export function normalizeTodos(data) {
   const items = Array.isArray(data && data.items) ? data.items : [];
@@ -36,6 +57,7 @@ export function normalizeTodos(data) {
           .map(n => ({ id: String(n.id), text: cleanNote(n.text), at: n.at || null, by: clean(n.by) })),
         created: t.created || null, createdBy: clean(t.createdBy), updated: t.updated || null,
         doneAt: status === 'done' ? (t.doneAt || null) : null,
+        ...details(t),
       };
     }),
   };
@@ -53,13 +75,18 @@ function changeOne(list, id, fn, now) {
 }
 
 // The page picks the id and time before saving, so showing the change and saving it give the same result.
-export function addTodo(list, { id = newId(), title, status = 'not-started', by = '' }, now = iso()) {
+export function addTodo(list, { id = newId(), title, status = 'not-started', by = '', due = '', who = '', event = null }, now = iso()) {
   const s = statusOf(status);
-  const todo = { id, title: clean(title), status: s, notes: [], created: now, createdBy: clean(by), updated: now, doneAt: s === 'done' ? now : null };
+  const todo = { id, title: clean(title), status: s, notes: [], created: now, createdBy: clean(by), updated: now, doneAt: s === 'done' ? now : null, ...details({ due, who, event }) };
   return { updated: now, items: [...list.items, todo] };
 }
 
 export const renameTodo = (list, id, title, now = iso()) => changeOne(list, id, t => ({ ...t, title: clean(title) }), now);
+
+// Change the wording and the details (due date, who, event) together; an empty detail is cleared.
+export function updateTodo(list, id, { title, due = '', who = '', event = null }, now = iso()) {
+  return changeOne(list, id, ({ due: _d, who: _w, event: _e, ...t }) => ({ ...t, title: clean(title), ...details({ due, who, event }) }), now);
+}
 
 export function setTodoStatus(list, id, status, now = iso()) {
   const s = statusOf(status);
@@ -79,23 +106,34 @@ export function removeNote(list, id, noteId, now = iso()) {
 
 export const removeTodo = (list, id, now = iso()) => ({ updated: now, items: list.items.filter(t => t.id !== id) });
 
-// Search words must all appear in the to-do or one of its notes.
+// Search words must all appear in the to-do, one of its notes, who it's for or its event.
 export function filterTodos(items, text = '') {
   const words = clean(text).toLowerCase().split(' ').filter(Boolean);
   if (!words.length) return items;
   return items.filter(t => {
-    const hay = `${t.title} ${t.notes.map(n => n.text).join(' ')}`.toLowerCase();
+    const hay = `${t.title} ${t.notes.map(n => n.text).join(' ')} ${t.who || ''} ${t.event ? t.event.name : ''}`.toLowerCase();
     return words.every(w => hay.includes(w));
   });
 }
 
-// Groups for display: in progress, not started, done. Newest first; done ones by when they were finished.
+// "For" choices: everyone a to-do is for, A-Z, without repeats (ignoring capitals).
+export function whoChoices(items) {
+  const names = new Map();
+  for (const t of items) if (t.who && !names.has(t.who.toLowerCase())) names.set(t.who.toLowerCase(), t.who);
+  return [...names.values()].sort((a, b) => a.localeCompare(b));
+}
+
+export const filterFor = (items, who) => (who ? items.filter(t => (t.who || '').toLowerCase() === who.toLowerCase()) : items);
+
+// Groups for display: in progress, not started, done. To-dos with a due date first (soonest first), then
+// the rest newest first; done ones by when they were finished.
 export function groupByStatus(items) {
   const newest = (a, b) => (b.created || '').localeCompare(a.created || '');
+  const byDue = (a, b) => (a.due && b.due ? a.due.localeCompare(b.due) : a.due ? -1 : b.due ? 1 : 0) || newest(a, b);
   const lastDone = (a, b) => (b.doneAt || b.updated || '').localeCompare(a.doneAt || a.updated || '') || newest(a, b);
   return GROUP_ORDER.map(key => ({
     key, label: statusLabel(key),
-    items: items.filter(t => t.status === key).sort(key === 'done' ? lastDone : newest),
+    items: items.filter(t => t.status === key).sort(key === 'done' ? lastDone : byDue),
   }));
 }
 

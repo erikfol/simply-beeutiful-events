@@ -4,6 +4,7 @@ import { $, setStatus, needSignIn } from './dom.js';
 import { isConfigured } from './google.js';
 import { initDriveBar, driveStatus } from './drivebar.js';
 import { loadEventData } from './dashboard.js';
+import { loadTodos } from './todo.js';
 import { calendarEvents, calendarItems, byDate, monthGrid, shiftMonth, parseMonth, monthKey, eventTitle } from './calendar.js';
 import { esc, todayISO } from './util.js';
 
@@ -19,7 +20,7 @@ const MAX_CHIPS = 3;
 const KIND = { event: 'Event', task: 'Task', payment: 'Payment', deadline: 'Deadline' };
 const visible = (it) => (it.kind === 'event' ? show.event : it.kind === 'task' ? show.task : show.money);
 const eventUrl = (e, view = '') => `events.html?event=${encodeURIComponent(e.id)}${view ? `&view=${view}` : ''}`;
-const itemUrl = (it) => eventUrl(it.event, it.kind === 'task' ? 'checklist' : '');
+const itemUrl = (it) => (it.todo ? `todo.html#t-${encodeURIComponent(it.todo.id)}` : eventUrl(it.event, it.kind === 'task' ? 'checklist' : ''));
 const monthName = (y, m) => new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString(undefined, { month: 'long', year: 'numeric', timeZone: 'UTC' });
 const dayLabel = (d) => new Date(`${d}T12:00:00`).toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
 const weekdayNames = () => Array.from({ length: 7 }, (_, i) => new Date(Date.UTC(2027, 0, 3 + i)).toLocaleDateString(undefined, { weekday: 'short', timeZone: 'UTC' }));
@@ -37,8 +38,8 @@ function message() {
 // What a chip or list line says, and the extra detail for its tooltip.
 function describe(it) {
   if (it.kind === 'event') return { text: it.title, more: it.pkg || '' };
-  const ev = eventTitle(it.event);
-  if (it.kind === 'task') return { text: it.title, more: [ev, it.who].filter(Boolean).join(' · ') };
+  const ev = it.event ? eventTitle(it.event) : '';
+  if (it.kind === 'task') return { text: it.title, more: [it.todo ? 'To Do' : '', ev, it.who].filter(Boolean).join(' · ') };
   return { text: `${it.title}${it.vendor ? ` · ${it.vendor}` : ''}`, more: [ev, it.paid ? 'Paid' : it.late ? 'Date passed, not marked paid' : ''].filter(Boolean).join(' · ') };
 }
 
@@ -104,9 +105,9 @@ async function reload() {
   loaded = false; render();
   try {
     const recent = calendarEvents(events, TODAY);
-    const perEvent = await loadEventData(recent);
+    const [perEvent, todos] = await Promise.all([loadEventData(recent), loadTodos().catch(() => null)]);
     if (ticket !== seq) return;
-    items = calendarItems({ events, perEvent, today: TODAY });
+    items = calendarItems({ events, perEvent, today: TODAY, todos });
     loaded = true;
     const unread = recent.filter(e => (perEvent.get(e.driveId) || {}).actions == null).length;
     setStatus(unread ? `Contract dates show for events opened at least once in the Event Manager (${unread} not opened yet).` : '');

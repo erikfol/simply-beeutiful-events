@@ -65,3 +65,18 @@ test('every event, open task and contract date lands on its day', () => {
   assert.equal(by('Harper').pkg, 'The Queen Bee');
   assert.deepEqual(byDate(items).get('2027-06-12').map(i => i.kind), ['event', 'deadline']);
 });
+
+test('to-dos with a due date show on the calendar as tasks, linked to their event when they have one', () => {
+  const harper = ev('h', '6.12.27 Harper-Bennett Wedding', '2027-06-12');
+  const todos = { items: [
+    { id: 't1', title: 'Order linens', status: 'not-started', due: '2026-11-15', who: 'Grace', event: { driveId: 'h', name: harper.name } },
+    { id: 't2', title: 'Renew website', status: 'in-progress', due: '2026-12-01' },
+    { id: 't3', title: 'Done', status: 'done', due: '2026-11-20' },
+    { id: 't4', title: 'Undated', status: 'not-started' },
+  ] };
+  const items = calendarItems({ events: [harper], perEvent: new Map(), today: TODAY, todos }).filter(i => i.todo);
+  assert.deepEqual(items.map(i => [i.date, i.kind, i.title, i.late, i.event && i.event.driveId]), [
+    ['2026-11-15', 'task', 'Order linens', true, 'h'],
+    ['2026-12-01', 'task', 'Renew website', false, null],
+  ]);
+});

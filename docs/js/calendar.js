@@ -4,6 +4,7 @@ import { taskState, addDays } from './checklist.js';
 import { normalizeSetup, setupText } from './packages.js';
 import { parseEventFolderName } from './driveEvents.js';
 import { daysBetween, fmt$ } from './util.js';
+import { todoEvent } from './todo.js';
 
 // Events from up to this many days ago are loaded (a year back, so last season's months aren't empty).
 export const CALENDAR_PAST_DAYS = 400;
@@ -21,8 +22,12 @@ const KIND_ORDER = { event: 0, payment: 1, deadline: 2, task: 3 };
  * Tasks: open ones only, late when overdue. Payments: paid when marked so on Status Update; late when the date
  * passed and it isn't checked or paid.
  */
-export function calendarItems({ events, perEvent, today }) {
+export function calendarItems({ events, perEvent, today, todos = null }) {
   const items = [];
+  // to-dos with a due date, as tasks (todo: the to-do, so the calendar links to the To Do page)
+  for (const t of ((todos && todos.items) || []).filter(x => x.status !== 'done' && x.due)) {
+    items.push({ date: t.due, kind: 'task', title: t.title, who: t.who || '', event: todoEvent(t, events), todo: t, late: t.due < today });
+  }
   for (const e of events) {
     if (!e.weddingDate) continue;
     const data = perEvent.get(e.driveId) || {};

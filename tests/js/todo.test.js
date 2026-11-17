@@ -168,3 +168,39 @@ test('a planner without Editor access can see the list but not change it', async
   assert.equal((await loadTodos()).items[0].title, 'Call the florist');
   await assert.rejects(changeTodos(l => setTodoStatus(l, 'a', 'done')), /Editor access/);
 });
+
+test('a to-do can have a due date, who it is for, and an event, all optional', async () => {
+  const { updateTodo, whoChoices, filterFor, todoEvent, todoEventRef } = await import('../../docs/js/todo.js');
+  const harper = { id: 'drive-h1', driveId: 'h1', name: '6.12.27 Harper-Bennett Wedding', weddingDate: '2027-06-12' };
+  let list = addTodo(emptyTodos(), { id: 'a', title: 'Order linens', due: '2026-11-20', who: ' Grace ', event: todoEventRef(harper) }, T1);
+  assert.deepEqual([list.items[0].due, list.items[0].who, list.items[0].event], ['2026-11-20', 'Grace', { driveId: 'h1', name: '6.12.27 Harper-Bennett Wedding', date: '2027-06-12' }]);
+  list = addTodo(list, { id: 'b', title: 'Call the bank', due: 'soon' }, T1);
+  assert.equal('due' in list.items[1], false, 'details are only stored when set');
+
+  list = updateTodo(list, 'a', { title: 'Order ivory linens', due: '', who: 'Nicole', event: null }, T2);
+  const a = list.items[0];
+  assert.deepEqual([a.title, a.who, 'due' in a, 'event' in a, a.created], ['Order ivory linens', 'Nicole', false, false, T1], 'an emptied detail is cleared');
+  assert.throws(() => updateTodo(list, 'gone', { title: 'x' }), /Someone else deleted/);
+
+  const saved = normalizeTodos({ items: [{ id: 'x', title: 'Keep', due: '2026-12-01', who: 'Grace', event: { driveId: 'h1', name: 'Harper', date: 'bad' } }, { id: 'y', title: 'Plain' }] });
+  assert.deepEqual(saved.items[0].event, { driveId: 'h1', name: 'Harper', date: '' });
+  assert.equal('who' in saved.items[1], false);
+
+  assert.deepEqual(todoEvent(saved.items[0], [harper]), harper, 'the event from the folder when it is there');
+  assert.deepEqual(todoEvent(saved.items[0], []).name, 'Harper', 'otherwise what the to-do remembers');
+  assert.equal(todoEvent(saved.items[1], [harper]), null);
+});
+
+test('"For", search and order use the new details', async () => {
+  const { whoChoices, filterFor } = await import('../../docs/js/todo.js');
+  let list = emptyTodos();
+  list = addTodo(list, { id: 'old', title: 'Old undated' }, T1);
+  list = addTodo(list, { id: 'new', title: 'New undated', who: 'grace' }, T3);
+  list = addTodo(list, { id: 'late', title: 'Later due', due: '2026-12-20', who: 'Grace' }, T2);
+  list = addTodo(list, { id: 'soon', title: 'Sooner due', due: '2026-11-20', who: 'Nicole', event: { driveId: 'h', name: '6.12.27 Harper-Bennett Wedding' } }, T2);
+  assert.deepEqual(groupByStatus(list.items)[1].items.map(t => t.id), ['soon', 'late', 'new', 'old'], 'dated first, soonest first; then newest');
+  assert.deepEqual(whoChoices(list.items), ['grace', 'Nicole'], 'one entry per person, ignoring capitals');
+  assert.deepEqual(filterFor(list.items, 'GRACE').map(t => t.id), ['new', 'late']);
+  assert.deepEqual(filterTodos(list.items, 'harper').map(t => t.id), ['soon'], 'search finds the event');
+  assert.deepEqual(filterTodos(list.items, 'nicole').map(t => t.id), ['soon'], 'and who it is for');
+});

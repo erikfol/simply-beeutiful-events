@@ -20,11 +20,16 @@ export function initDashboard() {
   });
 }
 
+// Checklist tasks link to their event's Checklist; to-dos to the To Do page.
 function taskList(rows, late) {
-  return `<ul class="dash-list">${rows.map(({ event, task, days }) => `<li>
-      <a href="${esc(eventUrl(event, 'checklist'))}"><strong>${esc(task.title)}</strong></a>
-      <span class="dash-sub">${eventName(event)}${task.who ? ` · ${esc(task.who)}` : ''} · ${late ? `<span class="ck-late">${lateText(days)}</span>` : `${esc(shortDate(task.due))} (${daysText(days)})`}</span>
-    </li>`).join('')}</ul>`;
+  return `<ul class="dash-list">${rows.map(({ event, task, days, todo }) => {
+    const href = todo ? `todo.html#t-${encodeURIComponent(todo.id)}` : eventUrl(event, 'checklist');
+    const where = [todo ? 'To Do' : '', event ? eventName(event) : ''].filter(Boolean).join(' · ');
+    return `<li>
+      <a href="${esc(href)}"><strong>${esc(task.title)}</strong></a>
+      <span class="dash-sub">${where}${task.who ? ` · ${esc(task.who)}` : ''} · ${late ? `<span class="ck-late">${lateText(days)}</span>` : `${esc(shortDate(task.due))} (${daysText(days)})`}</span>
+    </li>`;
+  }).join('')}</ul>`;
 }
 
 function moneyList(rows, passed) {
@@ -53,7 +58,7 @@ function body(d) {
       t.soon.length ? `<h4>Due this week</h4>${taskList(t.soon, false)}` : '',
       t.month.length ? `<h4>Next ${AHEAD_DAYS} days</h4>${taskList(t.month, false)}` : '',
     ].join('')
-    : none(`Nothing due in the next ${AHEAD_DAYS} days. Tasks come from each event's Checklist.`);
+    : none(`Nothing due in the next ${AHEAD_DAYS} days. Tasks come from each event's Checklist and from to-dos with a due date.`);
 
   const m = d.money;
   const moneyCount = m.passed.length + m.ahead.length;

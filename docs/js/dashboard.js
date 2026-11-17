@@ -5,7 +5,7 @@ import { indexAppData, readEventData } from './appdata.js';
 import { buildReport, deriveActions, withStatusPayments, SCANNER_VERSION } from './scan.js';
 import { loadChecklist, taskState } from './checklist.js';
 import { loadBook, insuranceState } from './vendors.js';
-import { loadTodos } from './todo.js';
+import { loadTodos, todoEvent } from './todo.js';
 import { daysBetween } from './util.js';
 import { normalizeSetup, setupText } from './packages.js';
 
@@ -59,7 +59,16 @@ export function summarize({ events, perEvent, book = null, todos = null, today }
       else if (d >= 0 && d <= AHEAD_DAYS && !paid) money.ahead.push({ event: e, action: a, days: d });
     }
   }
-  const byDue = (a, b) => (a.task.due || '').localeCompare(b.task.due || '') || a.event.weddingDate.localeCompare(b.event.weddingDate);
+  // To-dos with a due date join the checklist tasks (with their event, when they have one).
+  for (const t of ((todos && todos.items) || []).filter(x => x.status !== 'done' && x.due)) {
+    const days = daysBetween(today, t.due);
+    const row = { event: todoEvent(t, events), task: { title: t.title, due: t.due, who: t.who || '' }, days, todo: t };
+    if (days < 0) tasks.overdue.push(row);
+    else if (days <= 7) tasks.soon.push(row);
+    else if (days <= AHEAD_DAYS) tasks.month.push(row);
+  }
+  const wd = (r) => (r.event ? r.event.weddingDate || '' : '');
+  const byDue = (a, b) => (a.task.due || '').localeCompare(b.task.due || '') || wd(a).localeCompare(wd(b));
   const byDate = (a, b) => a.action.date_iso.localeCompare(b.action.date_iso) || a.event.weddingDate.localeCompare(b.event.weddingDate);
   tasks.overdue.sort(byDue); tasks.soon.sort(byDue); tasks.month.sort(byDue);
   money.passed.sort(byDate); money.ahead.sort(byDate);

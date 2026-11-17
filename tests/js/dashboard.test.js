@@ -73,19 +73,25 @@ test('the dashboard gathers upcoming events, tasks due soon, and contract dates 
     { id: 'v2', name: 'Juniper Lane', insuranceExpires: '2026-12-01' },
     { id: 'v3', name: 'Fine', insuranceExpires: '2027-12-01' },
   ] };
-  const todos = { items: [{ status: 'in-progress' }, { status: 'not-started' }, { status: 'not-started' }, { status: 'done' }] };
+  const todos = { items: [{ status: 'in-progress' }, { status: 'not-started' }, { status: 'not-started' }, { status: 'done' },
+    { id: 't1', title: 'Order linens', status: 'not-started', due: '2026-11-15', who: 'Grace', event: { driveId: 'h', name: '6.12.27 Harper-Bennett Wedding', date: '2027-06-12' } },
+    { id: 't2', title: 'Renew website', status: 'in-progress', due: '2026-12-01' },
+    { id: 't3', title: 'Finished', status: 'done', due: '2026-11-01' }] };
   const d = summarize({ events: [harper, lopez, old, unread], perEvent, book, todos, today: TODAY });
 
   assert.deepEqual(d.upcoming.map(u => [u.event.driveId, u.days, u.open, u.overdue]), [['u', 18, 0, 0], ['h', 207, 4, 1]], 'soonest first; past events are not "coming up"');
   assert.deepEqual(d.upcoming.map(u => u.pkg), ['The Queen Bee · Sikh', ''], 'each event\'s package, when chosen');
-  assert.deepEqual(d.tasks.overdue.map(r => r.task.id), ['x', 'a'], 'overdue tasks from past events still show');
-  assert.deepEqual(d.tasks.soon.map(r => r.task.id), ['b']);
-  assert.deepEqual(d.tasks.month.map(r => r.task.id), ['c']);
+  const ids = (rows) => rows.map(r => (r.todo ? `todo:${r.todo.id}` : r.task.id));
+  assert.deepEqual(ids(d.tasks.overdue), ['x', 'a', 'todo:t1'], 'overdue tasks from past events still show, and overdue to-dos');
+  assert.deepEqual(ids(d.tasks.soon), ['b']);
+  assert.deepEqual(ids(d.tasks.month), ['todo:t2', 'c'], 'a to-do without an event still shows');
+  assert.equal(d.tasks.overdue[2].event.driveId, 'h', "a to-do's event is the one from the folder");
+  assert.equal(d.tasks.month[0].event, null);
   assert.deepEqual(d.money.passed.map(m => m.action.vendor), ['Juniper'], 'checked and paid ones drop off');
   assert.deepEqual(d.money.ahead.map(m => m.action.vendor), ['Hearth']);
   assert.deepEqual(d.unread.map(e => e.driveId), ['u']);
   assert.deepEqual(d.insurance.map(x => x.vendor.name), ['Bluebell Blooms', 'Juniper Lane']);
-  assert.deepEqual(d.todo, { inProgress: 1, notStarted: 2 });
+  assert.deepEqual(d.todo, { inProgress: 2, notStarted: 3 });
 });
 
 // ---------- with the fake Google Drive ----------
