@@ -11,7 +11,7 @@ import { showDocuments } from './docs.js';
 import { showOverview, renderOverview, onOverviewClick, onOverviewSubmit } from './overview.js';
 import { showTime, onTimeClick, onTimeSubmit } from './timeView.js';
 import { showChecklist, onChecklistClick, onChecklistSubmit, onChecklistChange, onChecklistToggle } from './checklistView.js';
-import { toggleShare, onShareClick, onShareSubmit, onShareChange } from './shareView.js';
+import { toggleShare, onShareClick, onShareSubmit, onShareChange, onShareInput } from './shareView.js';
 import { initDriveBar } from './drivebar.js';
 import { ROLES } from './roles.js';
 import { esc } from './util.js';
@@ -96,6 +96,7 @@ async function init() {
   on('sharePanel', 'click', onShareClick);
   on('sharePanel', 'submit', onShareSubmit);
   on('sharePanel', 'change', onShareChange);
+  on('sharePanel', 'input', onShareInput);
   on('panel', 'submit', onPanelSubmit);
   on('panel', 'click', onPanelClick);
   on('panel', 'change', onPanelChange);

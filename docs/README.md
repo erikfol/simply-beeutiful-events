@@ -81,7 +81,7 @@ Plain ES modules, no build step. `index.html` loads `js/home.js`, `events.html` 
 | `js/checklist.js` | Checklist rules: tasks with due dates and who does them, quick "1 month before" dates, grouping by when due, copying from another event; saving `event-<id>.checklist.json` (tested) |
 | `js/checklistView.js` | Checklist view of an event: add, edit, tick off and delete tasks, "Show for", copy from another event |
 | `js/share.js` | Online timeline links: one person's version of a timeline (no sources, no planner-only stops), saved in "SBE App Data/Shared Timelines" and shared by link; refreshed when the timeline is saved; turned off (tested) |
-| `js/shareView.js` | "Share online" panel in the timeline view: the event's links (copy, open, turn off) and making a new one |
+| `js/shareView.js` | "Share online" panel in the timeline view: the event's links (copy, open, email, turn off) and making a new one; Email opens a filled-in Gmail message (`share.js` builds it) |
 | `js/sharedTimeline.js` | What the public page reads: checks a shared timeline file and fetches it with the public API key (tested) |
 | `js/timelinePage.js` | The public timeline page (`timeline.html#<file id>`) |
 | `js/vendors.js` | Vendor book rules: tidy contacts, match a vendor by name or email, add an event's vendors, insurance warnings, search and grouping; saving `vendors.json` (tested) |

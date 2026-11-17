@@ -6,7 +6,7 @@ import { useTransport } from '../../docs/js/drive.js';
 import { forgetAppData, useEventsFolder, sharedAccess } from '../../docs/js/appdata.js';
 import {
   buildSnapshot, stopCount, linkUrl, eventTitle, normalizeShares, audienceOf, loadShares, createShareLink,
-  refreshShareLinks, turnOffShareLink, SHARE_FOLDER,
+  refreshShareLinks, turnOffShareLink, SHARE_FOLDER, emailDraft, parseRecipients, gmailComposeUrl, mailtoUrl, markEmailed,
 } from '../../docs/js/share.js';
 import { normalizeSnapshot, fetchSnapshot, linkId, LinkError } from '../../docs/js/sharedTimeline.js';
 
@@ -77,6 +77,32 @@ test('fetchSnapshot explains a missing or turned-off link plainly', async () => 
   await assert.rejects(fetchSnapshot('abcdefghij12', 'KEY', async () => new Response('', { status: 500 })), /Try again/);
 });
 
+test('the email for a link greets a person by name, a business with a plain hello, and carries the link', () => {
+  const url = 'https://erikfol.github.io/simply-beeutiful-events/timeline.html#abc123DEF_-xyz';
+  const couple = emailDraft({ url, meta: META, label: 'Olivia & James', sender: 'Nicole', dateText: 'Sat, Jun 12, 2027' });
+  assert.equal(couple.subject, 'Your timeline for Harper-Bennett Wedding (Sat, Jun 12, 2027)');
+  const lines = couple.body.split('\n');
+  assert.equal(lines[0], 'Hi Olivia & James,');
+  assert.ok(lines.includes('Here is your timeline for Harper-Bennett Wedding, Sat, Jun 12, 2027 at Willow Brook Barn:'));
+  assert.ok(lines.includes(url), 'the link is on its own line, so it stays clickable');
+  assert.deepEqual(lines.slice(-3), ['Thank you,', 'Nicole', 'Simply Beeutiful Events']);
+  const vendor = emailDraft({ url, meta: { name: 'Lopez-Kim' }, label: 'Juniper Lane Photography' });
+  assert.equal(vendor.body.split('\n')[0], 'Hi,', 'no "Hi Juniper Lane Photography"');
+  assert.equal(vendor.subject, 'Your timeline for Lopez-Kim');
+  assert.deepEqual(vendor.body.split('\n').slice(-2), ['Thank you,', 'Simply Beeutiful Events']);
+});
+
+test('email addresses, the Gmail message and other email apps', () => {
+  assert.deepEqual(parseRecipients(' june@juniper.example, events@hearth.example; june@juniper.example '), ['june@juniper.example', 'events@hearth.example']);
+  assert.deepEqual(parseRecipients(''), []);
+  assert.equal(parseRecipients('june@juniper, x'), null);
+  const gmail = new URL(gmailComposeUrl({ to: ['a@x.example', 'b@y.example'], subject: 'Hi & bye', body: 'Line 1\nhttps://x/y#z', account: 'nicole@example.com' }));
+  assert.equal(gmail.origin + gmail.pathname, 'https://mail.google.com/mail/');
+  assert.deepEqual(Object.fromEntries(gmail.searchParams), { view: 'cm', fs: '1', tf: '1', to: 'a@x.example,b@y.example', su: 'Hi & bye', body: 'Line 1\nhttps://x/y#z', authuser: 'nicole@example.com' });
+  assert.equal(new URL(gmailComposeUrl({ subject: 's', body: 'b' })).searchParams.has('to'), false, 'no "to" yet is fine');
+  assert.equal(mailtoUrl({ to: ['a@x.example'], subject: 'Hi & bye', body: 'L1\nL2' }), 'mailto:a%40x.example?subject=Hi%20%26%20bye&body=L1%0AL2');
+});
+
 test('normalizeShares keeps only usable links', () => {
   const s = normalizeShares({ links: [{ id: 'a', role: 'photo', label: ' Juniper ' }, { id: 'b', role: 'nope' }, { role: 'couple' }, { id: 'c', role: '' }] });
   assert.deepEqual(s.links.map(l => [l.id, l.role, l.label]), [['a', 'photo', 'Juniper'], ['c', '', '']]);
@@ -139,6 +165,13 @@ test('turning a link off makes it stop working, even when someone else made it',
   await assert.rejects(fetchSnapshot(link.id, 'KEY', drive.publicFetch), /no longer active/);
   assert.deepEqual((await loadShares(ids.harper)).links, []);
   await turnOffShareLink(meta, link.id, NOW); // already off: no error
+});
+
+test('opening a link\'s email is noted on the link', async () => {
+  const link = await createShareLink({ meta, curated: CURATED, role: 'photo', label: 'Juniper Lane Photography' }, NOW);
+  await markEmailed(meta, link.id, ['june@juniper.example'], 'Nicole', '2026-11-17T09:00:00.000Z');
+  const saved = (await loadShares(ids.harper)).links[0];
+  assert.deepEqual([saved.emailedTo, saved.emailedAt, saved.emailedBy], ['june@juniper.example', '2026-11-17T09:00:00.000Z', 'Nicole']);
 });
 
 test('a planner without Editor access cannot make links', async () => {

@@ -59,8 +59,62 @@ export function normalizeShares(data) {
     updated: (data && data.updated) || null,
     links: links.filter(l => l && l.id && ROLE_KEYS.includes(l.role || '')).map(l => ({
       id: String(l.id), role: l.role || '', label: clean(l.label), created: l.created || null, createdBy: clean(l.createdBy), updated: l.updated || null,
+      emailedTo: clean(l.emailedTo), emailedAt: l.emailedAt || null, emailedBy: clean(l.emailedBy),
     })),
   };
+}
+
+// ---------- emailing a link ----------
+
+// A greeting name: a person or couple ("Olivia & James"), not a business ("Juniper Lane Photography").
+const BUSINESS = /\b(photography|photo|studios?|catering|caterers?|florals?|florist|flowers|band|dj|rentals?|events?|llc|inc|co|company|venue|barn|hall|coach|lines|shuttle|bakery|cakes?)\b/i;
+const greetingName = (label) => { const s = clean(label); return s && !BUSINESS.test(s) ? s : ''; };
+
+/**
+ * The email that goes with a link: subject and message, ready to change before sending.
+ * @param {{url, meta, label, sender, dateText}} args dateText: the event date as people read it
+ */
+export function emailDraft({ url, meta, label = '', sender = '', dateText = '' }) {
+  const event = eventTitle(meta);
+  const when = [dateText, clean(meta.venue)].filter(Boolean).join(' at ');
+  const hello = greetingName(label);
+  const subject = `Your timeline for ${event}${dateText ? ` (${dateText})` : ''}`;
+  const lines = [
+    `Hi${hello ? ` ${hello}` : ''},`,
+    '',
+    `Here is your timeline for ${event}${when ? `, ${when}` : ''}:`,
+    url,
+    '',
+    'It shows the times that involve you, and it always has the latest version, so you can come back to it anytime. Times marked "to be confirmed" may still change.',
+    '',
+    "Please let me know if anything doesn't work for you.",
+    '',
+    'Thank you,',
+    ...(clean(sender) ? [clean(sender)] : []),
+    'Simply Beeutiful Events',
+  ];
+  return { subject, body: lines.join('\n') };
+}
+
+// "a@x.com, b@y.com" -> the addresses without repeats; null when one doesn't look like an email address.
+export function parseRecipients(text) {
+  const list = String(text ?? '').split(/[,;\s]+/).map(e => e.trim()).filter(Boolean);
+  return list.every(e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) ? [...new Set(list)] : null;
+}
+
+// Gmail's own "new message" page with everything filled in; account picks which signed-in Gmail opens.
+export function gmailComposeUrl({ to = [], subject = '', body = '', account = '' }) {
+  const p = new URLSearchParams({ view: 'cm', fs: '1', tf: '1' });
+  if (to.length) p.set('to', to.join(','));
+  p.set('su', subject);
+  p.set('body', body);
+  if (account) p.set('authuser', account);
+  return `https://mail.google.com/mail/?${p}`;
+}
+
+// The same message for any other email app (mailto: link).
+export function mailtoUrl({ to = [], subject = '', body = '' }) {
+  return `mailto:${to.map(encodeURIComponent).join(',')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 // ---------- with Google Drive ----------
@@ -115,6 +169,14 @@ export async function refreshShareLinks(meta, curated, now = iso()) {
   }
   if (done.length) await changeShares(meta.driveId, s => ({ updated: now, links: s.links.map(l => (done.includes(l.id) ? { ...l, updated: now } : l)) }));
   return { updated: done.length, failed };
+}
+
+// Note on the link that its email was opened in Gmail (or another email app) for these people.
+export async function markEmailed(meta, id, to, by = '', now = iso()) {
+  await changeShares(meta.driveId, s => ({
+    updated: now,
+    links: s.links.map(l => (l.id === id ? { ...l, emailedTo: to.join(', '), emailedAt: now, emailedBy: clean(by) } : l)),
+  }));
 }
 
 // Turn a link off: its file stops being shared and is deleted, and it leaves the event's list.
